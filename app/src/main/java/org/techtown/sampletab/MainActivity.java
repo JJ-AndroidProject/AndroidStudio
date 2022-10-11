@@ -6,6 +6,9 @@ import static java.security.AccessController.getContext;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationManagerCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
@@ -14,8 +17,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,8 +33,12 @@ import android.widget.Toast;
 
 import com.google.android.material.tabs.TabLayout;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Set;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -38,7 +49,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
+        /*          NotificationListener start                 */
+        //permissionGrantred(); // Notification 관련 권한 설정 함수
+        //textList.setText(fileRead()); // 처음 어플을 실행했을 때 data.txt 파일을 읽고 화면에 출력해줌
+        /*            NotificationListener end                 */
 
         // 뷰페이저를 이용해서 화면을 좌우로 볼 수 있음
         ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
@@ -48,6 +62,50 @@ public class MainActivity extends AppCompatActivity {
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabLayout);
         tabLayout.setupWithViewPager(viewPager);
     }
+
+
+    /*          NotificationListener start                 */
+    // 새로운 인텐트가 오는 경우
+    @Override
+    protected void onNewIntent(Intent intent){
+        //textList.setText(intent.getStringExtra("line"));
+        super.onNewIntent(intent);
+    }
+    // 처음 실행할 때 권한 설정하는 창을 보여줌
+    private void permissionGrantred() {
+        // Broadcast receiver에 대한 권한 설정
+        String[] permissions = {Manifest.permission.RECEIVE_SMS};
+        int permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.RECEIVE_SMS);
+        if(permissionCheck == PackageManager.PERMISSION_DENIED){
+            ActivityCompat.requestPermissions(this, permissions, 1);
+        }
+
+        // Notification Listener에 대한 권한 설정
+        Set<String> sets = NotificationManagerCompat.getEnabledListenerPackages(this);
+        if (sets != null && sets.contains(getPackageName())) {
+        } else {
+            startActivity(new Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS"));
+        }
+    }
+    // 어플을 처음 실행할 때 Mydate 의 위치에 data.txt 파일을 읽고 String으로 리턴하는 함수
+    private String fileRead(){
+        String text = "";
+        // data.txt 파일 위치
+        File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/MyData/data.txt");
+        try{
+            BufferedReader reader = new BufferedReader(new FileReader(file));
+            StringBuffer buffer = new StringBuffer();
+            String line;
+            while((line=reader.readLine()) != null){
+                text = text + line+"\n";
+            }
+            reader.close();
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return text;
+    }
+    /*            NotificationListener end                 */
 }
 
 class PageAdapter extends FragmentPagerAdapter{
