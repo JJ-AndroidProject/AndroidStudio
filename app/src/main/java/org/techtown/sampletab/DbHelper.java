@@ -1,5 +1,5 @@
 package org.techtown.sampletab;
-
+// https://m.blog.naver.com/nife0719/221035148567
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -43,6 +43,14 @@ public class DbHelper {
         mDB = mDBHelper.getWritableDatabase();
         return this;
     }
+    public void create(){
+        mDBHelper.onCreate(mDB);
+    }
+
+    public void close(){
+        mDB.close();
+    }
+    /*                                      */
 
     public long insertColumn(String userid, int input , int output ){ //데이터 삽입(Insert)
         ContentValues values = new ContentValues();
@@ -75,13 +83,7 @@ public class DbHelper {
     }
 
 
-    public void create(){
-        mDBHelper.onCreate(mDB);
-    }
 
-    public void close(){
-        mDB.close();
-    }
 }
 
 

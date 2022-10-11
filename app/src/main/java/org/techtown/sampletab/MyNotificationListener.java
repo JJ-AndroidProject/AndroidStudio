@@ -8,15 +8,19 @@ import android.os.Environment;
 import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 
 public class MyNotificationListener extends NotificationListenerService {
+    ArrayList<String> targetList = new ArrayList<>(Arrays.asList("입금", "출금", "계좌", "카드", "대금", "NH카드", "nh카드", "농협", "kb", "KB", "국민", "승인", "결제", "잔액", "입출금", "NH스마트알림"));
     public final static String TAG = "MyNotificationListener";
 
 
@@ -30,8 +34,18 @@ public class MyNotificationListener extends NotificationListenerService {
     @Override
     public void onNotificationPosted(StatusBarNotification sbn) {
         super.onNotificationPosted(sbn);
-        fileSave(sbn);
-        fileRead();
+        String find = sbn.getNotification().extras.getCharSequence(Notification.EXTRA_TEXT).toString();
+        int check = 0;
+        for(String text : targetList){
+            if(find.contains(text)){
+                check = 1;
+                break;
+            }
+        }
+        if(check == 1){
+            fileSave(sbn);
+            fileRead();
+        }
         /*
         String tag = "onNotificationPosted";
         Notification notification = sbn.getNotification();
@@ -74,6 +88,7 @@ public class MyNotificationListener extends NotificationListenerService {
             e.printStackTrace();
         }
     }
+
     // /Mydate 의 위치에 data.txt 파일을 읽는다.
     private String fileRead(){
         String text = "";
@@ -91,6 +106,7 @@ public class MyNotificationListener extends NotificationListenerService {
         }catch(Exception e){
             e.printStackTrace();
         }
+        //Toast.makeText(this, "fileread", Toast.LENGTH_SHORT).show();
         return text;
     }
 
@@ -101,5 +117,6 @@ public class MyNotificationListener extends NotificationListenerService {
         // intent에 담을 데이터의 키 값과 데이터
         intent.putExtra("line", line);
         context.startActivity(intent); // Intent에 데이터를 담은 뒤 Activity에 보낸다.
+        //Toast.makeText(context, "SendToActivity", Toast.LENGTH_SHORT).show();
     }
 }

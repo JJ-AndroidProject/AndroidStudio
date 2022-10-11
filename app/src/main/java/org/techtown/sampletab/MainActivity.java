@@ -12,6 +12,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.PagerAdapter;
@@ -41,17 +42,16 @@ import java.util.Calendar;
 import java.util.Set;
 
 public class MainActivity extends AppCompatActivity {
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         /*          NotificationListener start                 */
-        //permissionGrantred(); // Notification 관련 권한 설정 함수
+        permissionGrantred(); // Notification 관련 권한 설정 함수
         //textList.setText(fileRead()); // 처음 어플을 실행했을 때 data.txt 파일을 읽고 화면에 출력해줌
+        //new BlankFragment4().textSetting(fileRead());
+
         /*            NotificationListener end                 */
 
         // 뷰페이저를 이용해서 화면을 좌우로 볼 수 있음
@@ -61,6 +61,8 @@ public class MainActivity extends AppCompatActivity {
         // 상단에 제목이 있는 부분
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabLayout);
         tabLayout.setupWithViewPager(viewPager);
+
+
     }
 
 
@@ -68,7 +70,14 @@ public class MainActivity extends AppCompatActivity {
     // 새로운 인텐트가 오는 경우
     @Override
     protected void onNewIntent(Intent intent){
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         //textList.setText(intent.getStringExtra("line"));
+        Bundle bundle = new Bundle();
+        bundle.putString("MessageData", intent.getStringExtra("line"));
+        BlankFragment4 blankFragment4 = new BlankFragment4();
+        blankFragment4.setArguments(bundle);
+        transaction.commit();
+        Toast.makeText(this, "onNewIntent", LENGTH_SHORT).show();
         super.onNewIntent(intent);
     }
     // 처음 실행할 때 권한 설정하는 창을 보여줌
@@ -108,6 +117,8 @@ public class MainActivity extends AppCompatActivity {
     /*            NotificationListener end                 */
 }
 
+
+/*               Fragment start                 */
 class PageAdapter extends FragmentPagerAdapter{
     private ArrayList<Fragment> list;
     Context context;
@@ -118,9 +129,11 @@ class PageAdapter extends FragmentPagerAdapter{
         list.add(new BlankFragment1());
         list.add(new BlankFragment2());
         list.add(new BlankFragment3());
+        list.add(new BlankFragment4());
+        list.add(new BlankFragment5());
         this.context = con; // Toast를 사용하기 위해 임시로 추가함
         //Toast.makeText(context, "PageAdapter 작동", LENGTH_SHORT).show();
-        //Log.e("PageAdapter", "PageAdapter 작동");
+        Log.e("PageAdapter", "PageAdapter 작동");
     }
 
     // 탭 레이아웃에 있는 제목을 보여줌
@@ -130,7 +143,9 @@ class PageAdapter extends FragmentPagerAdapter{
         if(position == 0) return "지출";
         else if(position == 1) return "수입";
         else if(position == 2) return "지출 패턴";
-        Toast.makeText(context, "getPageTitle 작동", LENGTH_SHORT).show();
+        else if(position == 3) return "알림 확인용";
+        else if(position == 4) return "테스트";
+        //Toast.makeText(context, "getPageTitle 작동", LENGTH_SHORT).show();
         Log.e("getPageTitle", "getPageTitle 작동");
         return null;
     }
@@ -139,7 +154,7 @@ class PageAdapter extends FragmentPagerAdapter{
     @Override
     public Fragment getItem(int position) {
         //Toast.makeText(context, "getItem 작동", LENGTH_SHORT).show();
-        //Log.e("getItem", "getItem 작동");
+        Log.e("getItem", "getItem 작동");
         return list.get(position);
     }
 
@@ -148,3 +163,4 @@ class PageAdapter extends FragmentPagerAdapter{
         return list.size();
     }
 }
+/*               Fragment end                    */
