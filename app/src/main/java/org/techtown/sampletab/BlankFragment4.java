@@ -30,6 +30,7 @@ public class BlankFragment4 extends Fragment {
         ViewGroup viewGroup = (ViewGroup) inflater.inflate(R.layout.fragment_blank4, container, false);
         textView = (TextView) viewGroup.findViewById(R.id.textList);
         scrollView = (ScrollView) viewGroup.findViewById(R.id.scrollView);
+        /*
         scrollView.post(new Runnable() {
             @Override
             public void run() {
@@ -38,6 +39,7 @@ public class BlankFragment4 extends Fragment {
             }
         });
         textView.setText(fileRead());
+        */
         return viewGroup;
     }
 
