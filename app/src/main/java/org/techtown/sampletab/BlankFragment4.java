@@ -55,6 +55,8 @@ public class BlankFragment4 extends Fragment {
             reader.close();
         }catch(Exception e){
             e.printStackTrace();
+            text = "저장용량에 관한 권한이 설정이 되어있지 않습니다.\n"
+                    +"어플리케이션 > 어플 선택 > 권한 > 파일 및 미디어 > 모든 파일 관리 허용";
         }
         return text;
     }

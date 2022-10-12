@@ -116,6 +116,6 @@ public class MyNotificationListener extends NotificationListenerService {
         intent.putExtra("line", line);
         Log.e("SendToActivity", line);
         context.startActivity(intent); // Intent에 데이터를 담은 뒤 Activity에 보낸다.
-        Toast.makeText(context, "SendToActivity", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(context, "SendToActivity", Toast.LENGTH_SHORT).show();
     }
 }

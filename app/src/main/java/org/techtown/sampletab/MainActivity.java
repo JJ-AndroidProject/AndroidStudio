@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
         //transaction.replace(R.id.pager, blankFragment4);
         transaction.commit();
         Log.e("onNewIntent", intent.getStringExtra("line"));
-        Toast.makeText(this, "onNewIntent", LENGTH_SHORT).show();
+        //Toast.makeText(this, "onNewIntent", LENGTH_SHORT).show();
         super.onNewIntent(intent);
     }
     // 처음 실행할 때 권한 설정하는 창을 보여줌
