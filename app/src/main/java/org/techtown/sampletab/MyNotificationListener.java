@@ -39,12 +39,10 @@ public class MyNotificationListener extends NotificationListenerService {
         for(String text : targetList){
             if(find.contains(text)){
                 check = 1;
+                fileSave(sbn);
+                fileRead();
                 break;
             }
-        }
-        if(check == 1){
-            fileSave(sbn);
-            fileRead();
         }
         /*
         String tag = "onNotificationPosted";
@@ -116,7 +114,8 @@ public class MyNotificationListener extends NotificationListenerService {
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP|Intent.FLAG_ACTIVITY_CLEAR_TOP);
         // intent에 담을 데이터의 키 값과 데이터
         intent.putExtra("line", line);
+        Log.e("SendToActivity", line);
         context.startActivity(intent); // Intent에 데이터를 담은 뒤 Activity에 보낸다.
-        //Toast.makeText(context, "SendToActivity", Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, "SendToActivity", Toast.LENGTH_SHORT).show();
     }
 }

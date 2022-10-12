@@ -72,11 +72,13 @@ public class MainActivity extends AppCompatActivity {
     protected void onNewIntent(Intent intent){
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         //textList.setText(intent.getStringExtra("line"));
-        Bundle bundle = new Bundle();
-        bundle.putString("MessageData", intent.getStringExtra("line"));
         BlankFragment4 blankFragment4 = new BlankFragment4();
+        Bundle bundle = new Bundle();
+        bundle.putString("line", intent.getStringExtra("line"));
         blankFragment4.setArguments(bundle);
+        //transaction.replace(R.id.pager, blankFragment4);
         transaction.commit();
+        Log.e("onNewIntent", intent.getStringExtra("line"));
         Toast.makeText(this, "onNewIntent", LENGTH_SHORT).show();
         super.onNewIntent(intent);
     }
