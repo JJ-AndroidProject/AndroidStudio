@@ -15,5 +15,4 @@ public class DataBases {
                     +INPUT+" integer not null , "
                     +OUTPUT+" integer not null ); ";
         }
-
 }
