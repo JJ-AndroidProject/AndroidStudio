@@ -20,7 +20,7 @@ import java.util.Arrays;
 import java.util.Date;
 
 public class MyNotificationListener extends NotificationListenerService {
-    ArrayList<String> targetList = new ArrayList<>(Arrays.asList("입금", "출금", "계좌", "카드", "대금", "NH카드", "nh카드", "농협", "kb", "KB", "국민", "승인", "결제", "잔액", "입출금", "NH스마트알림"));
+    ArrayList<String> targetList = new ArrayList<>(Arrays.asList("입금", "출금", "계좌", "카드", "대금", "NH카드", "nh카드", "농협", "kb", "KB", "국민", "승인", "결제", "잔액", "입출금", "NH스마트알림", "카카오뱅크"));
     public final static String TAG = "MyNotificationListener";
 
 
@@ -34,15 +34,9 @@ public class MyNotificationListener extends NotificationListenerService {
     @Override
     public void onNotificationPosted(StatusBarNotification sbn) {
         super.onNotificationPosted(sbn);
-        String find = sbn.getNotification().extras.getCharSequence(Notification.EXTRA_TEXT).toString();
-        int check = 0;
-        for(String text : targetList){
-            if(find.contains(text)){
-                check = 1;
-                fileSave(sbn);
-                fileRead();
-                break;
-            }
+        if(lineContains(sbn)){
+            fileSave(sbn);
+            fileRead();
         }
         /*
         String tag = "onNotificationPosted";
@@ -58,6 +52,20 @@ public class MyNotificationListener extends NotificationListenerService {
         Toast.makeText(this, "onNotificationPosted call("+sbn.getPackageName()+")", Toast.LENGTH_SHORT).show();
         String line = sbn.getPackageName()+"\n"+sbn.getId()+"\n"+sbn.getPostTime()+"\n"+extras.getString(Notification.EXTRA_TITLE)+"\n"+extras.getCharSequence(Notification.EXTRA_TEXT);
         */
+    }
+
+    private boolean lineContains(StatusBarNotification sbn){
+        int check = 0;
+        Bundle extras = sbn.getNotification().extras;
+        String title = extras.getString(Notification.EXTRA_TITLE);
+        String text = extras.getCharSequence(Notification.EXTRA_TEXT).toString();
+        String subtext = extras.getCharSequence(Notification.EXTRA_SUB_TEXT).toString();
+        for(String c : targetList){
+            if (title.contains(c)){ return true;}
+            if (text.contains(c)){ return true;}
+            if (subtext.contains(c)){ return true;}
+        }
+        return false;
     }
     
     // 파일 저장
