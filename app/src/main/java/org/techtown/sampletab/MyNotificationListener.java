@@ -35,11 +35,9 @@ public class MyNotificationListener extends NotificationListenerService {
     public void onNotificationPosted(StatusBarNotification sbn) {
         super.onNotificationPosted(sbn);
         if(sbn != null){
-            if(lineContains(sbn)){
-                //Toast.makeText(this, "lineContains on", Toast.LENGTH_SHORT).show();
-                fileSave(sbn);
-                fileRead();
-            }
+            //Toast.makeText(this, "lineContains on", Toast.LENGTH_SHORT).show();
+            fileSave(sbn);
+            fileRead();
         }
         /*
         String tag = "onNotificationPosted";
@@ -55,22 +53,6 @@ public class MyNotificationListener extends NotificationListenerService {
         Toast.makeText(this, "onNotificationPosted call("+sbn.getPackageName()+")", Toast.LENGTH_SHORT).show();
         String line = sbn.getPackageName()+"\n"+sbn.getId()+"\n"+sbn.getPostTime()+"\n"+extras.getString(Notification.EXTRA_TITLE)+"\n"+extras.getCharSequence(Notification.EXTRA_TEXT);
         */
-    }
-
-    private boolean lineContains(StatusBarNotification sbn){
-        int check = 0;
-        Bundle extras = sbn.getNotification().extras;
-        if(extras != null){
-            String title = extras.getString(Notification.EXTRA_TITLE);
-            String text = extras.getCharSequence(Notification.EXTRA_TEXT)+"";
-            String subtext = extras.getCharSequence(Notification.EXTRA_SUB_TEXT)+"";
-            for(String c : targetList){
-                if (title.contains(c)){ return true;}
-                if (text.contains(c)){ return true;}
-                if (subtext.contains(c)){ return true;}
-            }
-        }
-        return false;
     }
     
     // 파일 저장
