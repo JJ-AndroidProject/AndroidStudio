@@ -50,7 +50,7 @@ public class BlankFragment1 extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //Toast.makeText(getContext(), "프래그먼트 1 생성", Toast.LENGTH_SHORT).show();
-        //Log.e("BlankFragment1-onCreate", "BlankFragment1-onCreate 작동");
+        Log.e("BlankFragment1-onCreate", "BlankFragment1-onCreate 작동");
 
     }
 
@@ -82,7 +82,9 @@ public class BlankFragment1 extends Fragment {
             items.add(new SubRecyclerItem(2022, 10, 28, LocalTime.now(), "Test3", 8065));
         }
 
-
+        adapter = new Adapter(getActivity(), list, items);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recyclerView.setAdapter(adapter);
 
         //before, after버튼에 리스너 달기
         btn_before.setOnClickListener(new View.OnClickListener() {
@@ -102,7 +104,9 @@ public class BlankFragment1 extends Fragment {
                     list.add(new MainRecyclerItem(year, (month+1), (i+1), str));
                 }
                 Toast.makeText(getContext(), "before가 눌렸습니다", Toast.LENGTH_SHORT).show();
-
+                adapter = new Adapter(getActivity(), list, items);
+                recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+                recyclerView.setAdapter(adapter);
             }
         });
         btn_after.setOnClickListener(new View.OnClickListener() {
@@ -121,14 +125,15 @@ public class BlankFragment1 extends Fragment {
                     String str =year + "." + (month + 1) + "." + (i + 1);
                     list.add(new MainRecyclerItem(year, (month+1), (i+1), str));
                 }
+                adapter = new Adapter(getActivity(), list, items);
+                recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+                recyclerView.setAdapter(adapter);
                 Toast.makeText(getContext(), "after가 눌렸습니다", Toast.LENGTH_SHORT).show();
             }
         });
         //Toast.makeText(getContext(), "프래그먼트 1 작동", Toast.LENGTH_SHORT).show();
 
-        adapter = new Adapter(getActivity(), list, items);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        recyclerView.setAdapter(adapter);
+
         return viewGroup;
     }
 
