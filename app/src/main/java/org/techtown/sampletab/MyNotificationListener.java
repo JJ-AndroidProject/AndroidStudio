@@ -3,6 +3,7 @@ package org.techtown.sampletab;
 import android.app.Notification;
 import android.content.Context;
 import android.content.Intent;
+import android.nfc.Tag;
 import android.os.Bundle;
 import android.os.Environment;
 import android.service.notification.NotificationListenerService;
@@ -20,7 +21,6 @@ import java.util.Arrays;
 import java.util.Date;
 
 public class MyNotificationListener extends NotificationListenerService {
-    ArrayList<String> targetList = new ArrayList<>(Arrays.asList("입금", "출금", "계좌", "카드", "대금", "NH카드", "nh카드", "농협", "kb", "KB", "국민", "승인", "결제", "잔액", "입출금", "NH스마트알림", "카카오뱅크"));
     public final static String TAG = "MyNotificationListener";
 
 
@@ -34,13 +34,10 @@ public class MyNotificationListener extends NotificationListenerService {
     @Override
     public void onNotificationPosted(StatusBarNotification sbn) {
         super.onNotificationPosted(sbn);
-        if(sbn != null){
-            if(lineContains(sbn)){
-                //Toast.makeText(this, "lineContains on", Toast.LENGTH_SHORT).show();
-                fileSave(sbn);
-                fileRead();
-            }
-        }
+        if(findText(sbn)){ // targetList에 있는 단어가 title, text, subText에 있다면 내용을 저장한다.
+            fileSave(sbn);
+            fileRead();
+        };
         /*
         String tag = "onNotificationPosted";
         Notification notification = sbn.getNotification();
@@ -57,17 +54,27 @@ public class MyNotificationListener extends NotificationListenerService {
         */
     }
 
-    private boolean lineContains(StatusBarNotification sbn){
-        int check = 0;
-        Bundle extras = sbn.getNotification().extras;
-        if(extras != null){
-            String title = extras.getString(Notification.EXTRA_TITLE);
-            String text = extras.getCharSequence(Notification.EXTRA_TEXT)+"";
-            String subtext = extras.getCharSequence(Notification.EXTRA_SUB_TEXT)+"";
-            for(String c : targetList){
-                if (title.contains(c)){ return true;}
-                if (text.contains(c)){ return true;}
-                if (subtext.contains(c)){ return true;}
+    // targetList에 있는 단어가 title, text, subText에 있다면 내용을 저장한다.
+    private boolean findText(StatusBarNotification sbn){
+        ArrayList<String> targetList
+                = new ArrayList<>(Arrays.asList("입금", "출금", "계좌", "카드", "대금", "NH카드", "nh카드"
+                , "농협", "kb", "KB", "국민", "승인", "결제", "잔액", "입출금", "NH스마트알림", "카카오뱅크"));
+        if(sbn.getPackageName() != null){
+            try{
+                Notification notification = sbn.getNotification();
+                Bundle extras = sbn.getNotification().extras;
+                for(String target : targetList){
+                    String title = extras.getString(Notification.EXTRA_TITLE);
+                    String text = extras.getString(Notification.EXTRA_TEXT);
+                    String subText = extras.getString(Notification.EXTRA_SUB_TEXT);
+                    if(title.contains(target) || text.contains(target) || subText.contains(target)) {
+                        Log.e(TAG, "Notification findText 작동");
+                        return true;
+                    }
+                }
+            }catch(NullPointerException e){
+                Log.e(TAG, "NullPointerException Catch");
+                return false;
             }
         }
         return false;
@@ -81,7 +88,7 @@ public class MyNotificationListener extends NotificationListenerService {
         try{
             String dirPath = Environment.getExternalStorageDirectory().getAbsolutePath()+"/MyData";
             File dir = new File(dirPath);
-            Log.d("fileSave", "dirPath : "+dir.toString());
+            Log.d("fileSave", "dirPath : "+dir.toString()+"\n");
             if(!dir.exists()) dir.mkdir(); // /MyData 폴더가 없으면 생성
             File file = new File(dir+"/data.txt");
             if(!file.exists()) file.createNewFile(); // data.txt 파일이 없으면 생성
@@ -127,7 +134,7 @@ public class MyNotificationListener extends NotificationListenerService {
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP|Intent.FLAG_ACTIVITY_CLEAR_TOP);
         // intent에 담을 데이터의 키 값과 데이터
         intent.putExtra("line", line);
-        Log.e("SendToActivity", line);
+        //Log.e("SendToActivity", line);
         context.startActivity(intent); // Intent에 데이터를 담은 뒤 Activity에 보낸다.
         //Toast.makeText(context, "SendToActivity", Toast.LENGTH_SHORT).show();
     }
