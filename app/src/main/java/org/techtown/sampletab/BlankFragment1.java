@@ -75,12 +75,17 @@ public class BlankFragment1 extends Fragment {
             String str =year + "." + (month + 1) + "." + (i + 1);
             list.add(new MainRecyclerItem(year, (month+1), (i+1), str));
         }
-
+        items.clear();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             items.add(new SubRecyclerItem(2022, 10, 25, LocalTime.now(), "Test1", 5000));
             items.add(new SubRecyclerItem(2022, 10, 26, LocalTime.now(), "Test2", 60000));
             items.add(new SubRecyclerItem(2022, 10, 28, LocalTime.now(), "Test3", 8065));
             items.add(new SubRecyclerItem(2022, 10, 28, LocalTime.now(), "Test4", 5480));
+            items.add(new SubRecyclerItem(2022, 10, 28, LocalTime.now(), "Test5", 15480));
+            items.add(new SubRecyclerItem(2022, 10, 28, LocalTime.now(), "Test6", 55480));
+            items.add(new SubRecyclerItem(2022, 10, 28, LocalTime.now(), "Test7", 95480));
+            items.add(new SubRecyclerItem(2022, 10, 28, LocalTime.now(), "Test8", 1280));
+            items.add(new SubRecyclerItem(2022, 10, 28, LocalTime.now(), "Test9", 580));
         }
 
         adapter = new Adapter(getActivity(), list, items);
@@ -112,7 +117,7 @@ public class BlankFragment1 extends Fragment {
                 데이터베이스에서 해당하는 월에 대한 데이터를 가져온다.
                 */
 
-                Toast.makeText(getContext(), "before가 눌렸습니다", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getContext(), "before가 눌렸습니다", Toast.LENGTH_SHORT).show();
                 adapter = new Adapter(getActivity(), list, items);
                 recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
                 recyclerView.setAdapter(adapter);
@@ -141,10 +146,10 @@ public class BlankFragment1 extends Fragment {
                 데이터베이스에서 해당하는 월에 대한 데이터를 가져온다.
                 */
 
+                //Toast.makeText(getContext(), "after가 눌렸습니다", Toast.LENGTH_SHORT).show();
                 adapter = new Adapter(getActivity(), list, items);
                 recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
                 recyclerView.setAdapter(adapter);
-                Toast.makeText(getContext(), "after가 눌렸습니다", Toast.LENGTH_SHORT).show();
             }
         });
         return viewGroup;

@@ -20,6 +20,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,6 +56,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull Adapter.ViewHolder holder, @SuppressLint("RecyclerView") final int position){
+        DecimalFormat decFormat = new DecimalFormat("###,###"); // 3자리마다 콤마를 찍어주는 포맷
         List<BlankFragment1.SubRecyclerItem> item = new ArrayList<BlankFragment1.SubRecyclerItem>();
         column = 0; // item_list의 리사이클러뷰가 가지고 있는 아이템의 개수를 0으로 초기화
         total = 0; // 일별 소비한 금액의 총액을 0으로 초기화
@@ -73,7 +75,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
         holder.recyclerView.setAdapter(adapter);
 
         holder.textView.setText(list.get(position).getTitle()); // item_list.xml에서 textView의 text를 수정
-        holder.totalSpend.setText(total+" 원");  // item_list.xml에서 totalSpendTextView의 text를 수정
+        holder.totalSpend.setText(decFormat.format(total)+" 원");  // item_list.xml에서 totalSpendTextView의 text를 수정
         holder.onBind(position);
         holder.textView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -131,12 +133,13 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
             this.position = position;
             changeVisibility(selectedItems.get(position));
         }
-
+        // 애니메이션의 크기가 일정하지 않은 것 같음
         private void changeVisibility(final boolean isExpanded) {
             // height 값을 dp로 지정해서 넣고싶으면 아래 소스를 이용
-            int dpValue = 70;
+            int dpValue = 75;
             float d = context.getResources().getDisplayMetrics().density;
-            int height = (int) (dpValue * column);
+            Log.e("changeVisibility", "d : "+d+", column : "+column);
+            int height = (int) ((dpValue+d) * column);
 
             // ValueAnimator.ofInt(int... values)는 View가 변할 값을 지정, 인자는 int 배열
             ValueAnimator va = isExpanded ? ValueAnimator.ofInt(0, height) : ValueAnimator.ofInt(height, 0);
