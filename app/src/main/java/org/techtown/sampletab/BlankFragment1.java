@@ -70,7 +70,7 @@ public class BlankFragment1 extends Fragment {
 
 
 
-
+        list.clear();
         for(int i = 0; i<lastday; i++){
             String str =year + "." + (month + 1) + "." + (i + 1);
             list.add(new MainRecyclerItem(year, (month+1), (i+1), str));

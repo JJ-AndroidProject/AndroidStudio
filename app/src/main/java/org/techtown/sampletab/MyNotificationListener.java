@@ -34,10 +34,16 @@ public class MyNotificationListener extends NotificationListenerService {
     @Override
     public void onNotificationPosted(StatusBarNotification sbn) {
         super.onNotificationPosted(sbn);
-        if(findText(sbn)){ // targetList에 있는 단어가 title, text, subText에 있다면 내용을 저장한다.
+        if(findText(sbn) == true){
             fileSave(sbn);
             fileRead();
+        }
+
+        /*
+        if(findText(sbn)){ // targetList에 있는 단어가 title, text, subText에 있다면 내용을 저장한다.
+
         };
+        */
         /*
         String tag = "onNotificationPosted";
         Notification notification = sbn.getNotification();
@@ -57,25 +63,27 @@ public class MyNotificationListener extends NotificationListenerService {
     // targetList에 있는 단어가 title, text, subText에 있다면 내용을 저장한다.
     private boolean findText(StatusBarNotification sbn){
         ArrayList<String> targetList
-                = new ArrayList<>(Arrays.asList("입금", "출금", "계좌", "카드", "대금", "NH카드", "nh카드"
-                , "농협", "kb", "KB", "국민", "승인", "결제", "잔액", "입출금", "NH스마트알림", "카카오뱅크"));
-        if(sbn.getPackageName() != null){
-            try{
-                Notification notification = sbn.getNotification();
-                Bundle extras = sbn.getNotification().extras;
-                for(String target : targetList){
-                    String title = extras.getString(Notification.EXTRA_TITLE);
-                    String text = extras.getString(Notification.EXTRA_TEXT);
-                    String subText = extras.getString(Notification.EXTRA_SUB_TEXT);
-                    if(title.contains(target) || text.contains(target) || subText.contains(target)) {
-                        Log.e(TAG, "Notification findText 작동");
-                        return true;
+                = new ArrayList<>(Arrays.asList("출금", "입금"));
+        ArrayList<String> bank = new ArrayList<>(Arrays.asList("kbstar.kbbank", "nh.mobilenoti", "android.messaging"));
+        try{
+            Notification notification = sbn.getNotification();
+            Bundle extras = sbn.getNotification().extras;
+            for(String t : bank){
+                if(sbn.getPackageName().contains(t)){
+                    for(String target : targetList){
+                        String title = extras.getString(Notification.EXTRA_TITLE);
+                        String text = extras.getString(Notification.EXTRA_TEXT);
+                        String subText = extras.getString(Notification.EXTRA_SUB_TEXT);
+                        if(title.contains(target) || text.contains(target) || subText.contains(target)) {
+                            Log.e(TAG, "Notification findText 작동");
+                            return true;
+                        }
                     }
                 }
-            }catch(NullPointerException e){
-                Log.e(TAG, "NullPointerException Catch");
-                return false;
             }
+        }catch(NullPointerException e){
+            Log.e(TAG, "NullPointerException Catch");
+            return false;
         }
         return false;
     }

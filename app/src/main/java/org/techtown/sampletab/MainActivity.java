@@ -19,9 +19,11 @@ import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
@@ -42,6 +44,8 @@ import java.util.Calendar;
 import java.util.Set;
 
 public class MainActivity extends AppCompatActivity {
+    static final int PERMISSIONS_REQUEST = 0x00000001;
+    static final int REQUEST_CODE = 0x00000001;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,9 +66,7 @@ public class MainActivity extends AppCompatActivity {
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabLayout);
         tabLayout.setupWithViewPager(viewPager);
 
-
     }
-
 
     /*          NotificationListener start                 */
     // 새로운 인텐트가 오는 경우
@@ -84,15 +86,9 @@ public class MainActivity extends AppCompatActivity {
         */
         super.onNewIntent(intent);
     }
+
     // 처음 실행할 때 권한 설정하는 창을 보여줌
     private void permissionGrantred() {
-        // Broadcast receiver에 대한 권한 설정
-        String[] permissions = {Manifest.permission.RECEIVE_SMS};
-        int permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.RECEIVE_SMS);
-        if(permissionCheck == PackageManager.PERMISSION_DENIED){
-            ActivityCompat.requestPermissions(this, permissions, 1);
-        }
-
         // Notification Listener에 대한 권한 설정
         Set<String> sets = NotificationManagerCompat.getEnabledListenerPackages(this);
         if (sets != null && sets.contains(getPackageName())) {
@@ -100,6 +96,7 @@ public class MainActivity extends AppCompatActivity {
             startActivity(new Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS"));
         }
     }
+
     // 어플을 처음 실행할 때 Mydate 의 위치에 data.txt 파일을 읽고 String으로 리턴하는 함수
     private String fileRead(){
         String text = "";
