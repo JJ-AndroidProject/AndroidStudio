@@ -25,6 +25,7 @@ import java.util.List;
 
 
 public class BlankFragment1 extends Fragment {
+    //commit test
     //현재 연도, 달, 그 달의 마지막 날짜를 받는다.
     Calendar cal = Calendar.getInstance();
     int year = cal.get(Calendar.YEAR);
