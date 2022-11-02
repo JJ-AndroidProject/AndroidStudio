@@ -21,12 +21,14 @@
             android:text="테스트 아이템"
             android:textSize="20dp" />
 
-        <Button
-            android:id="@+id/button"
+        <TextView
+            android:id="@+id/totalSpendTextView"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
-            android:text="Button" />
+            android:gravity="center"
+            android:textSize="20dp"
+            android:text="total" />
     </RelativeLayout>
 
     <androidx.recyclerview.widget.RecyclerView

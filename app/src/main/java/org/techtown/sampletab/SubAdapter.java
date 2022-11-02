@@ -14,6 +14,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,7 +36,11 @@ public class SubAdapter extends RecyclerView.Adapter<SubAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.timeText.setText(items.get(position).time.toString());
+        String time = "";
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            time = items.get(position).time.format(DateTimeFormatter.ofPattern("HH:mm"));
+        }
+        holder.timeText.setText(time);
         holder.titleText.setText(items.get(position).title);
         holder.moneyText.setText(Double.toString(items.get(position).money));
     }

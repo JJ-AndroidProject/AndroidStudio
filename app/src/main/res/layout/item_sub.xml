@@ -10,7 +10,7 @@
     <TextView
         android:id="@+id/SubTimeText"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="27dp"
         android:layout_alignParentLeft="true"
         android:gravity="left"
         android:text="서브 텍스트 화면"
@@ -19,7 +19,7 @@
     <TextView
         android:id="@+id/SubTitleText"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="27dp"
         android:layout_weight="1"
         android:gravity="center"
         android:text="TextView"
@@ -28,7 +28,7 @@
     <TextView
         android:id="@+id/SubMoneyText"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="27dp"
         android:layout_weight="1"
         android:gravity="right"
         android:text="TextView"

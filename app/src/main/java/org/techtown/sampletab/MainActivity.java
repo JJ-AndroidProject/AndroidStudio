@@ -70,6 +70,7 @@ public class MainActivity extends AppCompatActivity {
     // 새로운 인텐트가 오는 경우
     @Override
     protected void onNewIntent(Intent intent){
+        /*
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         //textList.setText(intent.getStringExtra("line"));
         BlankFragment4 blankFragment4 = new BlankFragment4();
@@ -80,6 +81,7 @@ public class MainActivity extends AppCompatActivity {
         transaction.commit();
         Log.e("onNewIntent", intent.getStringExtra("line"));
         //Toast.makeText(this, "onNewIntent", LENGTH_SHORT).show();
+        */
         super.onNewIntent(intent);
     }
     // 처음 실행할 때 권한 설정하는 창을 보여줌
@@ -131,8 +133,6 @@ class PageAdapter extends FragmentPagerAdapter{
         list.add(new BlankFragment1());
         list.add(new BlankFragment2());
         list.add(new BlankFragment3());
-        list.add(new BlankFragment4());
-        list.add(new BlankFragment5());
         this.context = con; // Toast를 사용하기 위해 임시로 추가함
         //Toast.makeText(context, "PageAdapter 작동", LENGTH_SHORT).show();
         Log.e("PageAdapter", "PageAdapter 작동");

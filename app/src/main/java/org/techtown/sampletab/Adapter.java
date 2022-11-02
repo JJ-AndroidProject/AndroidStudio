@@ -32,6 +32,8 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
     private List<BlankFragment1.MainRecyclerItem> list;
     private List<BlankFragment1.SubRecyclerItem> items;
     private Context context;
+    private int column; // item_list가 가지고 있는 아이템의 개수를 담고 있습니다.
+    private int total; // 해당하는 날짜에 소비한 총 금액을 담고 있습니다.
 
     public Adapter(Context context, List<BlankFragment1.MainRecyclerItem> list, List<BlankFragment1.SubRecyclerItem> items){
         this.context = context;
@@ -54,11 +56,16 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull Adapter.ViewHolder holder, @SuppressLint("RecyclerView") final int position){
         List<BlankFragment1.SubRecyclerItem> item = new ArrayList<BlankFragment1.SubRecyclerItem>();
+        column = 0; // item_list의 리사이클러뷰가 가지고 있는 아이템의 개수를 0으로 초기화
+        total = 0; // 일별 소비한 금액의 총액을 0으로 초기화
         for(int i=0;i<items.size();i++){
-            if(items.get(i).getYear() == list.get(position).getYear()
+            // item_list의 리사이클러뷰에 들어가는 아이템을 해당하는 날짜에 배치되도록 함
+            if(items.get(i).getYear() == list.get(position).getYear() 
                     && items.get(i).getMonth() == list.get(position).getMonth()
                     && items.get(i).getDay() == list.get(position).getDay()){
                 item.add(items.get(i));
+                column++; // 아이템의 개수를 1 증가
+                total += items.get(i).money; // 사용한 금액을 total에 추가
             }
         }
         holder.recyclerView.setLayoutManager(new LinearLayoutManager(context));
@@ -66,7 +73,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
         holder.recyclerView.setAdapter(adapter);
 
         holder.textView.setText(list.get(position).getTitle()); // item_list.xml에서 textView의 text를 수정
-        holder.button.setText("Button");  // item_list.xml에서 button의 text를 수정
+        holder.totalSpend.setText(total+" 원");  // item_list.xml에서 totalSpendTextView의 text를 수정
         holder.onBind(position);
         holder.textView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -75,13 +82,13 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
                     // 펼쳐진 Item을 클릭 시
                     selectedItems.delete(position);
                 } else {
-                    // 직전의 클릭됐던 Item의 클릭상태를 지움
-                    selectedItems.delete(prePosition);
+                    // 직전의 클릭됐던 Item의 클릭상태를 지움 (삭제 예정)
+                    //selectedItems.delete(prePosition);
                     // 클릭한 Item의 position을 저장
                     selectedItems.put(position, true);
                 }
-                // 해당 포지션의 변화를 알림
-                if (prePosition != -1) notifyItemChanged(prePosition);
+                // 해당 포지션의 변화를 알림 (삭제 예정)
+                //if (prePosition != -1) notifyItemChanged(prePosition);
                 notifyItemChanged(position);
                 // 클릭된 position 저장
                 prePosition = position;
@@ -98,9 +105,8 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
     public class ViewHolder extends RecyclerView.ViewHolder{
         private int position;
         public TextView textView;
-        public Button button;
+        public TextView totalSpend;
         public LinearLayout linearLayout;
-        public RelativeLayout relativeLayout;
         public RecyclerView recyclerView;
 
         OnViewHolderItemClickListener onViewHolderItemClickListener;
@@ -108,7 +114,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
         public ViewHolder(View view){
             super(view);
             textView = (TextView) view.findViewById(R.id.textView);
-            button = (Button) view.findViewById(R.id.button);
+            totalSpend = (TextView) view.findViewById(R.id.totalSpendTextView);
             linearLayout = (LinearLayout) view.findViewById(R.id.linearLayout);
             recyclerView = (RecyclerView) view.findViewById(R.id.recyclerViewSub);
             linearLayout.setOnClickListener(new View.OnClickListener(){
@@ -128,14 +134,14 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
 
         private void changeVisibility(final boolean isExpanded) {
             // height 값을 dp로 지정해서 넣고싶으면 아래 소스를 이용
-            int dpValue = 200;
+            int dpValue = 70;
             float d = context.getResources().getDisplayMetrics().density;
-            int height = (int) (dpValue * d);
+            int height = (int) (dpValue * column);
 
             // ValueAnimator.ofInt(int... values)는 View가 변할 값을 지정, 인자는 int 배열
             ValueAnimator va = isExpanded ? ValueAnimator.ofInt(0, height) : ValueAnimator.ofInt(height, 0);
             // Animation이 실행되는 시간, n/1000초
-            va.setDuration(100);
+            va.setDuration(10);
             va.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                 @Override
                 public void onAnimationUpdate(ValueAnimator animation) {

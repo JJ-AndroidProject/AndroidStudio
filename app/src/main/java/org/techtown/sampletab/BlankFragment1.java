@@ -80,6 +80,7 @@ public class BlankFragment1 extends Fragment {
             items.add(new SubRecyclerItem(2022, 10, 25, LocalTime.now(), "Test1", 5000));
             items.add(new SubRecyclerItem(2022, 10, 26, LocalTime.now(), "Test2", 60000));
             items.add(new SubRecyclerItem(2022, 10, 28, LocalTime.now(), "Test3", 8065));
+            items.add(new SubRecyclerItem(2022, 10, 28, LocalTime.now(), "Test4", 5480));
         }
 
         adapter = new Adapter(getActivity(), list, items);
@@ -89,6 +90,7 @@ public class BlankFragment1 extends Fragment {
         //before, after버튼에 리스너 달기
         btn_before.setOnClickListener(new View.OnClickListener() {
             @Override
+            // before 버튼
             public void onClick(View view) {
                 cal.set(year, month - 1, 1);
                 year = cal.get(Calendar.YEAR);
@@ -98,11 +100,18 @@ public class BlankFragment1 extends Fragment {
 
                 datetext.setText(date);
 
-                list.clear();
+                list.clear(); // 월별 일을 표시해주는 리스트를 초기화
                 for(int i = 0; i<lastday; i++){
                     String str =year + "." + (month + 1) + "." + (i + 1);
                     list.add(new MainRecyclerItem(year, (month+1), (i+1), str));
                 }
+
+                /* 해당하는 달에 대한 item_sub의 리사이클러뷰에 들어갈 아이템을 불러와야한다.
+                items.clear(); // items 리스트를 초기화 한다.
+
+                데이터베이스에서 해당하는 월에 대한 데이터를 가져온다.
+                */
+
                 Toast.makeText(getContext(), "before가 눌렸습니다", Toast.LENGTH_SHORT).show();
                 adapter = new Adapter(getActivity(), list, items);
                 recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -111,6 +120,7 @@ public class BlankFragment1 extends Fragment {
         });
         btn_after.setOnClickListener(new View.OnClickListener() {
             @Override
+            // after 버튼
             public void onClick(View view) {
                 cal.set(year, month + 1, 1);
                 year = cal.get(Calendar.YEAR);
@@ -125,15 +135,18 @@ public class BlankFragment1 extends Fragment {
                     String str =year + "." + (month + 1) + "." + (i + 1);
                     list.add(new MainRecyclerItem(year, (month+1), (i+1), str));
                 }
+                /* 해당하는 달에 대한 item_sub의 리사이클러뷰에 들어갈 아이템을 불러와야한다.
+                items.clear(); // items 리스트를 초기화 한다.
+
+                데이터베이스에서 해당하는 월에 대한 데이터를 가져온다.
+                */
+
                 adapter = new Adapter(getActivity(), list, items);
                 recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
                 recyclerView.setAdapter(adapter);
                 Toast.makeText(getContext(), "after가 눌렸습니다", Toast.LENGTH_SHORT).show();
             }
         });
-        //Toast.makeText(getContext(), "프래그먼트 1 작동", Toast.LENGTH_SHORT).show();
-
-
         return viewGroup;
     }
 
