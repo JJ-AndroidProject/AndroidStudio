@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<andriodx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <androidx.preference.PreferenceCategory
+        android:title="시작일 설정">
+        <androidx.preference.ListPreference
+            android:defaultValue="1"
+            android:entries="@array/startDay"
+            android:entryValues="@array/monthStart_values"
+            android:negativeButtonText="@null"
+            android:positiveButtonText="@null"
+            android:key="start_day"
+            android:title="월 시작일 설정" />
+    </androidx.preference.PreferenceCategory>
+
+    <androidx.preference.PreferenceCategory
+        android:title="데이터 관리">
+
+        <Preference
+            android:title="데이터 삭제"
+            android:key="delete_data"/>
+        <Preference
+            android:defaultValue="false"
+            android:key="backup_data"
+            android:summary="데이터를 구글드라이브에 백업합니다."
+            android:title="데이터 백업"/>
+        <Preference
+            android:defaultValue="false"
+            android:key="recovery_data"
+            android:summary="구글드라이브에서 데이터를 복구합니다."
+            android:title="데이터 복구"/>
+
+    </androidx.preference.PreferenceCategory>
+
+    <androidx.preference.PreferenceCategory
+        android:title="지출 상한선">
+        <androidx.preference.SwitchPreference
+            android:defaultValue="false"
+            android:key="use_max_expenses"
+            android:title="지출 상한 경고 사용"/>
+        <androidx.preference.EditTextPreference
+            android:key="max_expenses"
+            android:title="지출 상한선"
+            android:dependency="use_max_expenses" />
+    </androidx.preference.PreferenceCategory>
+
+    <androidx.preference.PreferenceCategory
+        android:title="계좌 관리">
+        <Preference
+            android:key="add_account"
+            android:title="계좌 추가"/>
+        <Preference
+            android:title="계좌 삭제"
+            android:key="delete_account"/>
+    </androidx.preference.PreferenceCategory>
+
+    <androidx.preference.PreferenceCategory
+        android:title="비밀번호">
+        <androidx.preference.SwitchPreference
+            android:defaultValue="false"
+            android:key="use_password"
+            android:title="비밀번호 사용"/>
+        <Preference
+            android:key="password"
+            android:title="비밀번호 입력"
+            android:dependency="use_password" />
+    </androidx.preference.PreferenceCategory>
+
+</andriodx.preference.PreferenceScreen>
