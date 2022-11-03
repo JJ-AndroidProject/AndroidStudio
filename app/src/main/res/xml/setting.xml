@@ -64,6 +64,7 @@
             android:key="password"
             android:title="비밀번호 입력"
             android:dependency="use_password" />
+
     </androidx.preference.PreferenceCategory>
 
 </andriodx.preference.PreferenceScreen>
