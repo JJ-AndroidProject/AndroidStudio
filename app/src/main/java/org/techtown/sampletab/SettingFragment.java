@@ -8,6 +8,7 @@ import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceManager;
 
 public class SettingFragment extends PreferenceFragmentCompat{
+
     private static final String SETTING_STARTDAY = "start_day";
     private static final String SETTING_DELETEDATA = "delete_data";
     private static final String SETTING_BACKUPDATA = "backup_data";
