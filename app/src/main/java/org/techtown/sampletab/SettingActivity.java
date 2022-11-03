@@ -6,7 +6,7 @@ import android.os.Bundle;
 
 public class SettingActivity extends AppCompatActivity {
 
-    public static int startDay = 9;
+    public static int startDay = 28;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,6 +22,12 @@ public class SettingActivity extends AppCompatActivity {
             before after 월별 시작일 값으로 수정
         */
 
+        /*
+         1순위 월시작일
+         2순위 데이터 백업&복구 (클릭이벤트만)
+         3순위 계좌 관리 (액티비티)
 
+        폰트 크기 변경 추가하기
+         */
     }
 }

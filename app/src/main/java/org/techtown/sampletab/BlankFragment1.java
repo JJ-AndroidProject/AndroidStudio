@@ -70,12 +70,14 @@ public class BlankFragment1 extends Fragment {
         list.clear();
 
         int flag = 0;
+        int monthtmp = month;
+        int yeartmp = year;
         int startday = SettingActivity.startDay - 1;
         int i = startday;
         while(true){
-            if(i > lastday){
-                i = 1;
-                month++;
+            if(i >= lastday){
+                i = 0;
+                monthtmp++;
             }
             if(i == startday)
                 flag++;
@@ -83,13 +85,13 @@ public class BlankFragment1 extends Fragment {
             if(flag > 1)
                 break;
 
-            if(month > 11){
-                month = 0;
-                year++;
+            if(monthtmp > 11){
+                monthtmp = 0;
+                yeartmp++;
             }
 
-            String str =year + "." + (month + 1) + "." + (i + 1);
-            list.add(new MainRecyclerItem(year, (month+1), (i+1), str));
+            String str =yeartmp + "." + (monthtmp + 1) + "." + (i + 1);
+            list.add(new MainRecyclerItem(yeartmp, (monthtmp+ 1), (i+1), str));
             i++;
         }
 
@@ -124,9 +126,30 @@ public class BlankFragment1 extends Fragment {
                 datetext.setText(date);
 
                 list.clear(); // 월별 일을 표시해주는 리스트를 초기화
-                for(int i = 0; i<lastday; i++){
-                    String str =year + "." + (month + 1) + "." + (i + 1);
-                    list.add(new MainRecyclerItem(year, (month+1), (i+1), str));
+                int flag = 0;
+                int monthtmp = month;
+                int yeartmp = year;
+                int startday = SettingActivity.startDay - 1;
+                int i = startday;
+                while(true){
+                    if(i >= lastday){
+                        i = 0;
+                        monthtmp++;
+                    }
+                    if(i == startday)
+                        flag++;
+
+                    if(flag > 1)
+                        break;
+
+                    if(monthtmp > 11){
+                        monthtmp = 0;
+                        yeartmp++;
+                    }
+
+                    String str =yeartmp + "." + (monthtmp + 1) + "." + (i + 1);
+                    list.add(new MainRecyclerItem(yeartmp, (monthtmp+ 1), (i+1), str));
+                    i++;
                 }
 
                 /* 해당하는 달에 대한 item_sub의 리사이클러뷰에 들어갈 아이템을 불러와야한다.
@@ -154,9 +177,30 @@ public class BlankFragment1 extends Fragment {
                 datetext.setText(date);
 
                 list.clear();
-                for(int i = 0; i<lastday; i++){
-                    String str =year + "." + (month + 1) + "." + (i + 1);
-                    list.add(new MainRecyclerItem(year, (month+1), (i+1), str));
+                int flag = 0;
+                int monthtmp = month;
+                int yeartmp = year;
+                int startday = SettingActivity.startDay - 1;
+                int i = startday;
+                while(true){
+                    if(i >= lastday){
+                        i = 0;
+                        monthtmp++;
+                    }
+                    if(i == startday)
+                        flag++;
+
+                    if(flag > 1)
+                        break;
+
+                    if(monthtmp > 11){
+                        monthtmp = 0;
+                        yeartmp++;
+                    }
+
+                    String str =yeartmp + "." + (monthtmp + 1) + "." + (i + 1);
+                    list.add(new MainRecyclerItem(yeartmp, (monthtmp+ 1), (i+1), str));
+                    i++;
                 }
                 /* 해당하는 달에 대한 item_sub의 리사이클러뷰에 들어갈 아이템을 불러와야한다.
                 items.clear(); // items 리스트를 초기화 한다.
