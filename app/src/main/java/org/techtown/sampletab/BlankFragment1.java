@@ -67,14 +67,32 @@ public class BlankFragment1 extends Fragment {
         btn_after = (Button) viewGroup.findViewById(R.id.btnafter);
         datetext.setText(date);
         recyclerView = (RecyclerView) viewGroup.findViewById(R.id.recyclerView);
-
-
-
         list.clear();
-        for(int i = 0; i<lastday; i++){
+
+        int flag = 0;
+        int startday = SettingActivity.startDay - 1;
+        int i = startday;
+        while(true){
+            if(i > lastday){
+                i = 1;
+                month++;
+            }
+            if(i == startday)
+                flag++;
+
+            if(flag > 1)
+                break;
+
+            if(month > 11){
+                month = 0;
+                year++;
+            }
+
             String str =year + "." + (month + 1) + "." + (i + 1);
             list.add(new MainRecyclerItem(year, (month+1), (i+1), str));
+            i++;
         }
+
         items.clear();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             items.add(new SubRecyclerItem(2022, 10, 25, LocalTime.now(), "Test1", 5000));
