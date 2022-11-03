@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_setting);
 
         /*          NotificationListener start                 */
         permissionGrantred(); // Notification 관련 권한 설정 함수
@@ -153,7 +153,7 @@ class PageAdapter extends FragmentPagerAdapter{
     @Override
     public Fragment getItem(int position) {
         //Toast.makeText(context, "getItem 작동", LENGTH_SHORT).show();
-        Log.e("getItem", "getItem 작동");
+        Log.e("getItem", "  getItem 작동");
         return list.get(position);
     }
 
