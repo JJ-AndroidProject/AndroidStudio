@@ -1,5 +1,5 @@
 package org.techtown.sampletab;
-// https://m.blog.naver.com/nife0719/221035148567
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
