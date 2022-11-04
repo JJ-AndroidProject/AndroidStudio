@@ -23,23 +23,21 @@ import android.widget.Switch;
 import android.widget.Toast;
 
 public class SettingActivity extends AppCompatActivity {
-
+    //뒤로가기 버튼 생성
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.top_back_menu, menu) ;
         return true;
     }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id. back :
-                finish();// 액티비티의 화면 전환
+                finish();
                 return true;
         }
         return super.onOptionsItemSelected(item);
     }
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,24 +45,20 @@ public class SettingActivity extends AppCompatActivity {
         setContentView(R.layout.activity_setting);
 
         TextView monthStart = (TextView) findViewById(R.id.month_start);
-        TextView dataManagement = (TextView) findViewById(R.id.data_management);
-        TextView dataDelete = (TextView) findViewById(R.id.data_delete);
         TextView dataBackup = (TextView) findViewById(R.id.data_backup);
         TextView dataRestore = (TextView) findViewById(R.id.data_restore);
         Switch warning = (Switch) findViewById(R.id.warning);
         TextView upperLine = (TextView) findViewById(R.id.upper_line);
         TextView accountManagement = (TextView) findViewById(R.id.account_management);
-        TextView accountAdd = (TextView) findViewById(R.id.account_add);
         Switch passwordUse = (Switch) findViewById(R.id.password_use);
         TextView passwordInput = (TextView) findViewById(R.id.password_input);
 
-
-
+        //월 시작일 리스너
         monthStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Toast.makeText(getApplicationContext(), "월 시작일이 눌렸습니다", LENGTH_SHORT).show();
 
+                //월 시작일 설정 클릭 시 다이얼로그 띄워줌
                 View dlgView = View.inflate(SettingActivity.this, R.layout.month_start_dialog, null);
 
                 EditText receiveStartDay = dlgView.findViewById(R.id.receive_start_day);
@@ -74,18 +68,19 @@ public class SettingActivity extends AppCompatActivity {
                 msDialog.setMessage("1~28의 숫자를 입력해 주세요");
                 msDialog.setView(dlgView);
                 msDialog.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                    //입력받은 시작일이 1~28이라면 Preference에 저장해줌
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         int day;
                         String str = receiveStartDay.getText().toString();
                         day = Integer.parseInt(str);
                         if(day < 1 || day > 28){
-                            Toast.makeText(SettingActivity.this, "잘못된 입력입니다.", LENGTH_LONG);
+                            Toast.makeText(SettingActivity.this, "잘못된 입력입니다.", LENGTH_LONG).show();
                         }
                         else {
                             str = ("월 시작일이 " + day + "일로 저장되었습니다.");
                             PreferenceManager.setInt(SettingActivity.this, "startDayKey", day);
-                            Toast.makeText(SettingActivity.this, str, LENGTH_SHORT);
+                            Toast.makeText(SettingActivity.this, str, LENGTH_SHORT).show();
                         }
 
                     }
@@ -94,20 +89,7 @@ public class SettingActivity extends AppCompatActivity {
             }
         });
 
-        dataManagement.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-
-        dataDelete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-
+        // 데이터 백업 리스너
         dataBackup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -115,6 +97,7 @@ public class SettingActivity extends AppCompatActivity {
             }
         });
 
+        //데이터 복구 리스너
         dataRestore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -122,6 +105,7 @@ public class SettingActivity extends AppCompatActivity {
             }
         });
 
+        // 지출 상한 경고 리스너
         warning.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -129,6 +113,7 @@ public class SettingActivity extends AppCompatActivity {
             }
         });
 
+        // 지출 상한선 리스너
         upperLine.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -136,26 +121,24 @@ public class SettingActivity extends AppCompatActivity {
             }
         });
 
+        // 계좌 관리 리스너
         accountManagement.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent = new Intent(getApplicationContext(), AccountManagement.class);
+                startActivity(intent);
             }
         });
 
-        accountAdd.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-
+        //비밀번호 사용 리스너
         passwordUse.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), "비밀번호 사용이 눌렸습니다", LENGTH_SHORT).show();
+
             }
         });
+
+        //비밀번호 추가 리스너
         passwordInput.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -163,10 +146,7 @@ public class SettingActivity extends AppCompatActivity {
             }
         });
 
-        /*
-        그룹으로 묶을 수 있는 부분은 최대한 묶어서 사용
-        계좌 관리 클릭시 액티비티 띄우기
-
+        /*계좌 관리 클릭시 액티비티 띄우기
         폰트 크기 변경 추가하기
          */
     }
