@@ -7,6 +7,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 public class AccountManagement extends AppCompatActivity {
     Button btn_account_add, btn_account_delete;
@@ -39,6 +40,10 @@ public class AccountManagement extends AppCompatActivity {
         btn_account_add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Toast.makeText(getApplicationContext(), "계좌 추가가 눌렸습니다", Toast.LENGTH_SHORT).show();
+                /*
+                    여기에 계좌 추가 작성
+                 */
 
             }
         });
@@ -47,6 +52,10 @@ public class AccountManagement extends AppCompatActivity {
         btn_account_delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Toast.makeText(getApplicationContext(), "계좌 삭제가 눌렸습니다", Toast.LENGTH_SHORT).show();
+                /*
+                    여기에 계좌 삭제 작성
+                 */
 
             }
         });

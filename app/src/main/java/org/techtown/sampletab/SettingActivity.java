@@ -22,6 +22,8 @@ import android.widget.TextView;
 import android.widget.Switch;
 import android.widget.Toast;
 
+import org.w3c.dom.Text;
+
 public class SettingActivity extends AppCompatActivity {
     //뒤로가기 버튼 생성
     @Override
@@ -52,7 +54,7 @@ public class SettingActivity extends AppCompatActivity {
         TextView accountManagement = (TextView) findViewById(R.id.account_management);
         Switch passwordUse = (Switch) findViewById(R.id.password_use);
         TextView passwordInput = (TextView) findViewById(R.id.password_input);
-
+        TextView fontSize = (TextView) findViewById(R.id.font_size);
         //월 시작일 리스너
         monthStart.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -146,8 +148,13 @@ public class SettingActivity extends AppCompatActivity {
             }
         });
 
-        /*계좌 관리 클릭시 액티비티 띄우기
-        폰트 크기 변경 추가하기
-         */
+        //폰트 크기 변경 리스너
+        fontSize.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
     }
 }

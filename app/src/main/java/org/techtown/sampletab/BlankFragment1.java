@@ -77,20 +77,13 @@ public class BlankFragment1 extends Fragment {
         int i = startday;
         while(true){
             if(i >= lastday){
-                i = 0;
-                monthtmp++;
+                i = 0;  monthtmp++;
             }
-            if(i == startday)
-                flag++;
-
-            if(flag > 1)
-                break;
-
+            if(i == startday) flag++;
+            if(flag > 1) break;
             if(monthtmp > 11){
-                monthtmp = 0;
-                yeartmp++;
+                monthtmp = 0;   yeartmp++;
             }
-
             String str =yeartmp + "." + (monthtmp + 1) + "." + (i + 1);
             list.add(new MainRecyclerItem(yeartmp, (monthtmp+ 1), (i+1), str));
             i++;
@@ -134,20 +127,13 @@ public class BlankFragment1 extends Fragment {
                 int i = startday;
                 while(true){
                     if(i >= lastday){
-                        i = 0;
-                        monthtmp++;
+                        i = 0;  monthtmp++;
                     }
-                    if(i == startday)
-                        flag++;
-
-                    if(flag > 1)
-                        break;
-
+                    if(i == startday) flag++;
+                    if(flag > 1) break;
                     if(monthtmp > 11){
-                        monthtmp = 0;
-                        yeartmp++;
+                        monthtmp = 0;   yeartmp++;
                     }
-
                     String str =yeartmp + "." + (monthtmp + 1) + "." + (i + 1);
                     list.add(new MainRecyclerItem(yeartmp, (monthtmp+ 1), (i+1), str));
                     i++;
@@ -185,20 +171,13 @@ public class BlankFragment1 extends Fragment {
                 int i = startday;
                 while(true){
                     if(i >= lastday){
-                        i = 0;
-                        monthtmp++;
+                        i = 0;  monthtmp++;
                     }
-                    if(i == startday)
-                        flag++;
-
-                    if(flag > 1)
-                        break;
-
+                    if(i == startday) flag++;
+                    if(flag > 1) break;
                     if(monthtmp > 11){
-                        monthtmp = 0;
-                        yeartmp++;
+                        monthtmp = 0;   yeartmp++;
                     }
-
                     String str =yeartmp + "." + (monthtmp + 1) + "." + (i + 1);
                     list.add(new MainRecyclerItem(yeartmp, (monthtmp+ 1), (i+1), str));
                     i++;
