@@ -17,7 +17,9 @@
             <EditText
                 android:id="@+id/receive_start_day"
                 android:layout_width="300dp"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                android:inputType="number"
+                android:digits="0123456789"/>
         </LinearLayout>
 
         <LinearLayout

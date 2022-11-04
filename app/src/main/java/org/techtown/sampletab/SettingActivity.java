@@ -1,5 +1,6 @@
 package org.techtown.sampletab;
 
+import static android.widget.Toast.LENGTH_LONG;
 import static android.widget.Toast.LENGTH_SHORT;
 import static java.security.AccessController.getContext;
 
@@ -8,8 +9,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -17,9 +21,25 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Switch;
 import android.widget.Toast;
-import android.content.SharedPreferences;
 
 public class SettingActivity extends AppCompatActivity {
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.top_back_menu, menu) ;
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id. back :
+                finish();// 액티비티의 화면 전환
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,10 +63,7 @@ public class SettingActivity extends AppCompatActivity {
         monthStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), "월 시작일이 눌렸습니다", LENGTH_SHORT).show();
-
-                Context monthStartContext = getApplicationContext();
-                LayoutInflater inflater = (LayoutInflater)monthStartContext.getSystemService(LAYOUT_INFLATER_SERVICE);
+                //Toast.makeText(getApplicationContext(), "월 시작일이 눌렸습니다", LENGTH_SHORT).show();
 
                 View dlgView = View.inflate(SettingActivity.this, R.layout.month_start_dialog, null);
 
@@ -54,20 +71,26 @@ public class SettingActivity extends AppCompatActivity {
 
                 AlertDialog.Builder msDialog = new AlertDialog.Builder(SettingActivity.this);
                 msDialog.setTitle("월 시작일 설정");
-                msDialog.setMessage("시작일을 입력해주세요");
+                msDialog.setMessage("1~28의 숫자를 입력해 주세요");
                 msDialog.setView(dlgView);
                 msDialog.setPositiveButton("확인", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
+                        int day;
                         String str = receiveStartDay.getText().toString();
-                        PreferenceManager.setInt(SettingActivity.this, "startDayKey", Integer.parseInt(str));
+                        day = Integer.parseInt(str);
+                        if(day < 1 || day > 28){
+                            Toast.makeText(SettingActivity.this, "잘못된 입력입니다.", LENGTH_LONG);
+                        }
+                        else {
+                            str = ("월 시작일이 " + day + "일로 저장되었습니다.");
+                            PreferenceManager.setInt(SettingActivity.this, "startDayKey", day);
+                            Toast.makeText(SettingActivity.this, str, LENGTH_SHORT);
+                        }
 
-                        //Toast.makeText(getApplicationContext(), startDay, LENGTH_SHORT).show();
                     }
                 });
                 msDialog.show();
-                //Toast.makeText(getApplicationContext(), startDay, LENGTH_SHORT).show();
-
             }
         });
 
@@ -140,19 +163,9 @@ public class SettingActivity extends AppCompatActivity {
             }
         });
 
-
         /*
-            각 클릭 이벤트 처리하는 부분이 필요하다.
-            sharedpreferences 를 사용하여 설정한 데이터를 저장하고 불러온다.
-            그룹으로 묶을 수 있는 부분은 최대한 묶어서 사용
-            월별 시작일 다이얼로그 만들고 입력 받아서 startDay에 저장하면 됨
-            before after 월별 시작일 값으로 수정
-        */
-
-        /*
-         1순위 월시작일
-         2순위 데이터 백업&복구 (클릭이벤트만)
-         3순위 계좌 관리 (액티비티)
+        그룹으로 묶을 수 있는 부분은 최대한 묶어서 사용
+        계좌 관리 클릭시 액티비티 띄우기
 
         폰트 크기 변경 추가하기
          */

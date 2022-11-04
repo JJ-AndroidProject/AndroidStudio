@@ -74,7 +74,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         /*          NotificationListener start                 */
         permissionGrantred(); // Notification 관련 권한 설정 함수
         //textList.setText(fileRead()); // 처음 어플을 실행했을 때 data.txt 파일을 읽고 화면에 출력해줌
