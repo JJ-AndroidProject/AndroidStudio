@@ -131,10 +131,6 @@ public class DbHelper {
 
     }
 
-    private View getView() { // 이 부분을 이벤트 리스너와 조합해서 변경 할 예정
-        return null;
-    }
-
 
     public void create(){
         mDBHelper.onCreate(mDB);
