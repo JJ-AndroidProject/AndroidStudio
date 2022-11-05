@@ -34,6 +34,7 @@ public class MyNotificationListener extends NotificationListenerService {
     @Override
     public void onNotificationPosted(StatusBarNotification sbn) {
         super.onNotificationPosted(sbn);
+
         if(findText(sbn) == true){
             fileSave(sbn);
             fileRead();
@@ -61,10 +62,28 @@ public class MyNotificationListener extends NotificationListenerService {
     }
 
     // targetList에 있는 단어가 title, text, subText에 있다면 내용을 저장한다.
+    // messaging은 TITLE(전화번호로 분류)
+    // 지원하는 은행 : 농협(NH), KB국민은행, IBK기업은행, 카카오뱅크, 토스, 우리은행, 케이뱅크 지원 예정
+    /*
+    이름           어플 패키지명
+    일반 메시지      android.messaging
+    KB국민은행       kbstar.kbbank
+    농협(NH)        nh.mobilenoti
+    IBK기업은행      ibk.android.ionebank
+    카카오뱅크       kakaobank.channel
+    케이뱅크        kbankwith.smartbank
+
+    우리은행
+    토스
+
+
+
+    */
     private boolean findText(StatusBarNotification sbn){
         ArrayList<String> targetList
                 = new ArrayList<>(Arrays.asList("출금", "입금"));
-        ArrayList<String> bank = new ArrayList<>(Arrays.asList("kbstar.kbbank", "nh.mobilenoti", "android.messaging"));
+        ArrayList<String> bank = new ArrayList<>(Arrays.asList(
+                "kbstar.kbbank", "nh.mobilenoti", "android.messaging", "kbankwith.smartbank", "ibk.android.ionebank", "kakaobank.channel"));
         try{
             Notification notification = sbn.getNotification();
             Bundle extras = sbn.getNotification().extras;
@@ -82,7 +101,7 @@ public class MyNotificationListener extends NotificationListenerService {
                 }
             }
         }catch(NullPointerException e){
-            Log.e(TAG, "NullPointerException Catch");
+            Log.e(TAG, "NullPointerException Catch"); // 값이 null 일 때 발생하는 오류를 catch 한다.
             return false;
         }
         return false;
