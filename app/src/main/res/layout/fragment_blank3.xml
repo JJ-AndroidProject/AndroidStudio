@@ -6,11 +6,24 @@
     tools:context=".BlankFragment3">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
+
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:textSize="30sp"
-        android:gravity="center"
-        android:text="Fragment 3" />
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="Fragment 3"
+                android:textSize="20dp" />
+        </LinearLayout>
+    </ScrollView>
 
 </FrameLayout>

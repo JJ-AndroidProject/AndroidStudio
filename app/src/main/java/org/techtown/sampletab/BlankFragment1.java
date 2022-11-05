@@ -25,8 +25,6 @@ import java.util.List;
 
 
 public class BlankFragment1 extends Fragment {
-    //commit test 1234
-    //commit test 1234
     //현재 연도, 달, 그 달의 마지막 날짜를 받는다.
     Calendar cal = Calendar.getInstance();
     int year = cal.get(Calendar.YEAR);
@@ -78,6 +76,10 @@ public class BlankFragment1 extends Fragment {
             list.add(new MainRecyclerItem(year, (month+1), (i+1), str));
         }
         items.clear();
+
+
+
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             items.add(new SubRecyclerItem(2022, 10, 25, LocalTime.now(), "Test1", 5000));
             items.add(new SubRecyclerItem(2022, 10, 26, LocalTime.now(), "Test2", 60000));

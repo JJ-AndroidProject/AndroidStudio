@@ -34,10 +34,10 @@ public class MyNotificationListener extends NotificationListenerService {
     @Override
     public void onNotificationPosted(StatusBarNotification sbn) {
         super.onNotificationPosted(sbn);
-
         if(findText(sbn) == true){
             fileSave(sbn);
             fileRead();
+            dbInsert(sbn);
         }
 
         /*
@@ -61,6 +61,20 @@ public class MyNotificationListener extends NotificationListenerService {
         */
     }
 
+
+
+    void dbInsert(StatusBarNotification sbn){
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Bundle extras = sbn.getNotification().extras;
+        String packageName = sbn.getPackageName();
+        String postTime = format.format(new Date().getTime());
+        String title = extras.getString(Notification.EXTRA_TITLE);
+        String text = extras.getCharSequence(Notification.EXTRA_TEXT)+"";
+        String subText = extras.getCharSequence(Notification.EXTRA_SUB_TEXT)+"";
+        DBcommand command = new DBcommand(this);
+        command.insertData(postTime, packageName, "xxx-xxxx-xxxx-xx", title, "미정", "0", text);
+    }
+
     // targetList에 있는 단어가 title, text, subText에 있다면 내용을 저장한다.
     // messaging은 TITLE(전화번호로 분류)
     // 지원하는 은행 : 농협(NH), KB국민은행, IBK기업은행, 카카오뱅크, 토스, 우리은행, 케이뱅크 지원 예정
@@ -75,9 +89,6 @@ public class MyNotificationListener extends NotificationListenerService {
 
     우리은행
     토스
-
-
-
     */
     private boolean findText(StatusBarNotification sbn){
         ArrayList<String> targetList
