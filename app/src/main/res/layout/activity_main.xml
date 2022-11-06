@@ -16,9 +16,6 @@
         app:tabTextColor="#BFBFBF" />
 
 
-
-
-
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/pager"
         android:layout_width="match_parent"
