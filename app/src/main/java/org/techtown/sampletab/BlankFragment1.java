@@ -76,6 +76,10 @@ public class BlankFragment1 extends Fragment {
             list.add(new MainRecyclerItem(year, (month+1), (i+1), str));
         }
         items.clear();
+
+
+
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             items.add(new SubRecyclerItem(2022, 10, 25, LocalTime.now(), "Test1", 5000));
             items.add(new SubRecyclerItem(2022, 10, 26, LocalTime.now(), "Test2", 60000));
