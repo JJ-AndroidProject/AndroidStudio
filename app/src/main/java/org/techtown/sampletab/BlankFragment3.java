@@ -16,6 +16,7 @@ public class BlankFragment3 extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         ViewGroup viewGroup = (ViewGroup) inflater.inflate(R.layout.fragment_blank3, container, false);
+        /*         테스트용으로 사용중 나중에는 지출 패턴으로 사용             */
         textView = (TextView) viewGroup.findViewById(R.id.textView);
         DBcommand command = new DBcommand(getContext());
         String line = command.selectAll();

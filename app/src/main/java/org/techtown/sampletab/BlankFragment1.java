@@ -1,5 +1,6 @@
 package org.techtown.sampletab;
 
+import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -95,6 +96,38 @@ public class BlankFragment1 extends Fragment {
 
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            /*                    수정 중인 부분                          */
+            String line = "";
+            DBOpenHelper dbOpenHelper = new DBOpenHelper(this.getContext());
+            dbOpenHelper.open();
+            dbOpenHelper.create();
+            Cursor cursor = dbOpenHelper.selectColumns();
+            Log.e("DB", cursor.getCount()+"개");
+            int count = 1;
+            while(cursor.moveToNext()){
+                
+                int postTimeInt = cursor.getColumnIndex("posttime");
+                int bankNameInt = cursor.getColumnIndex("bankname");
+                int accountNumberInt = cursor.getColumnIndex("accountnumber");
+                int titleInt = cursor.getColumnIndex("title");
+                int typeInt = cursor.getColumnIndex("type");
+                int moneyInt = cursor.getColumnIndex("money");
+                int detailInt = cursor.getColumnIndex("detail");
+
+                String postTime = cursor.getString(postTimeInt);
+                String bankName = cursor.getString(bankNameInt);
+                String accountNumber = cursor.getString(accountNumberInt);
+                String title = cursor.getString(titleInt);
+                String type = cursor.getString(typeInt);
+                String money = cursor.getString(moneyInt);
+                String detail = cursor.getString(detailInt);
+
+                String result = postTime+"||"+bankName+"||"+accountNumber+"||"+title+"||"+type+"||"+money+"||"+detail;
+                line += count+"번 : "+result+"\n";
+                Log.e("DB : ", result);
+                count++;
+            }
+            /*                                              */
             items.add(new SubRecyclerItem(2022, 10, 25, LocalTime.now(), "Test1", 5000));
             items.add(new SubRecyclerItem(2022, 10, 26, LocalTime.now(), "Test2", 60000));
             items.add(new SubRecyclerItem(2022, 10, 28, LocalTime.now(), "Test3", 8065));

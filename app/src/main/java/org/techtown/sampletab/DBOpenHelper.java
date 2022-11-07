@@ -64,7 +64,7 @@ public class DBOpenHelper {
     }
 
     /*                         */
-    public long insertColumn(String posttime, String bankname, String accountnumber, String title, String type, String money, String detail){
+    public long insertColumn(String posttime, String bankname, String accountnumber, String title, String type, int money, String detail){
         ContentValues values = new ContentValues();
         values.put("posttime", posttime);
         values.put("bankname", bankname);
@@ -90,7 +90,7 @@ class DBcommand{
         dbOpenHelper.create();
     }
 
-    void insertData(String posttime, String bankname, String accountnumber, String title, String type, String money, String detail){
+    void insertData(String posttime, String bankname, String accountnumber, String title, String type, int money, String detail){
         DBOpenHelper dbOpenHelper = new DBOpenHelper(this.context);
         dbOpenHelper.open();
         dbOpenHelper.create();

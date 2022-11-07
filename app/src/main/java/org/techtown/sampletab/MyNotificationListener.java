@@ -62,7 +62,7 @@ public class MyNotificationListener extends NotificationListenerService {
     }
 
 
-
+    // 테스트용 데이터베이스 insert
     void dbInsert(StatusBarNotification sbn){
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Bundle extras = sbn.getNotification().extras;
@@ -72,7 +72,27 @@ public class MyNotificationListener extends NotificationListenerService {
         String text = extras.getCharSequence(Notification.EXTRA_TEXT)+"";
         String subText = extras.getCharSequence(Notification.EXTRA_SUB_TEXT)+"";
         DBcommand command = new DBcommand(this);
-        command.insertData(postTime, packageName, "xxx-xxxx-xxxx-xx", title, "미정", "0", text);
+        command.insertData(postTime, packageName, "xxx-xxxx-xxxx-xx", title, "미정", 0, text);
+    }
+
+    // NH에서 오는 알림에 대한 insert
+    void NHInsert(StatusBarNotification sbn){
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Bundle extras = sbn.getNotification().extras;
+        String packageName = sbn.getPackageName();
+        String postTime = format.format(new Date().getTime());
+        String title = extras.getString(Notification.EXTRA_TITLE);
+        String text = extras.getCharSequence(Notification.EXTRA_TEXT)+"";
+        String subText = extras.getCharSequence(Notification.EXTRA_SUB_TEXT)+"";
+
+        String[] line = text.split(" ");
+        String bankName = line[0];
+        int money = -1;
+        if(line[1].contains("출금")){
+            money = Integer.parseInt(line[1].replace("출금", "").replace("원", ""));
+        }
+        DBcommand command = new DBcommand(this);
+        command.insertData(postTime, line[0], line[4], line[5], "미정", money, subText);
     }
 
     // targetList에 있는 단어가 title, text, subText에 있다면 내용을 저장한다.
@@ -81,7 +101,7 @@ public class MyNotificationListener extends NotificationListenerService {
     /*
     이름           어플 패키지명
     일반 메시지      android.messaging
-    KB국민은행       kbstar.kbbank
+    KB국민은행
     농협(NH)        nh.mobilenoti
     IBK기업은행      ibk.android.ionebank
     카카오뱅크       kakaobank.channel
@@ -90,6 +110,7 @@ public class MyNotificationListener extends NotificationListenerService {
     우리은행
     토스
     */
+    // 메시지를 거르는 역활
     private boolean findText(StatusBarNotification sbn){
         ArrayList<String> targetList
                 = new ArrayList<>(Arrays.asList("출금", "입금"));
