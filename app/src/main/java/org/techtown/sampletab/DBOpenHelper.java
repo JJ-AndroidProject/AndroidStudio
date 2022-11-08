@@ -123,7 +123,7 @@ class DBcommand{
             String accountNumber = cursor.getString(accountNumberInt);
             String title = cursor.getString(titleInt);
             String type = cursor.getString(typeInt);
-            String money = cursor.getString(moneyInt);
+            int money = cursor.getInt(moneyInt);
             String detail = cursor.getString(detailInt);
 
             String result = postTime+"||"+bankName+"||"+accountNumber+"||"+title+"||"+type+"||"+money+"||"+detail;

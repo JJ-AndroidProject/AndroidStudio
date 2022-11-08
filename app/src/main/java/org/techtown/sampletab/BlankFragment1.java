@@ -17,6 +17,8 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -69,6 +71,7 @@ public class BlankFragment1 extends Fragment {
         btn_after = (Button) viewGroup.findViewById(R.id.btnafter);
         datetext.setText(date);
         recyclerView = (RecyclerView) viewGroup.findViewById(R.id.recyclerView);
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         list.clear();
 
         int flag = 0;
@@ -85,63 +88,25 @@ public class BlankFragment1 extends Fragment {
             if(monthtmp > 11){
                 monthtmp = 0;   yeartmp++;
             }
-            String str =yeartmp + "." + (monthtmp + 1) + "." + (i + 1);
-            list.add(new MainRecyclerItem(yeartmp, (monthtmp+ 1), (i+1), str));
+            String str = yeartmp + "." + (monthtmp + 1) + "." + (i + 1);
+            String setDay = yeartmp + "-" + (monthtmp + 1) + "-" + (i + 1);
+            try {
+                String day = format.format((format.parse(setDay)));
+                list.add(new MainRecyclerItem(day, str));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
             i++;
         }
-
         items.clear();
-
-
-
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            /*                    수정 중인 부분                          */
-            String line = "";
-            DBOpenHelper dbOpenHelper = new DBOpenHelper(this.getContext());
-            dbOpenHelper.open();
-            dbOpenHelper.create();
-            Cursor cursor = dbOpenHelper.selectColumns();
-            Log.e("DB", cursor.getCount()+"개");
-            int count = 1;
-            while(cursor.moveToNext()){
-                
-                int postTimeInt = cursor.getColumnIndex("posttime");
-                int bankNameInt = cursor.getColumnIndex("bankname");
-                int accountNumberInt = cursor.getColumnIndex("accountnumber");
-                int titleInt = cursor.getColumnIndex("title");
-                int typeInt = cursor.getColumnIndex("type");
-                int moneyInt = cursor.getColumnIndex("money");
-                int detailInt = cursor.getColumnIndex("detail");
-
-                String postTime = cursor.getString(postTimeInt);
-                String bankName = cursor.getString(bankNameInt);
-                String accountNumber = cursor.getString(accountNumberInt);
-                String title = cursor.getString(titleInt);
-                String type = cursor.getString(typeInt);
-                String money = cursor.getString(moneyInt);
-                String detail = cursor.getString(detailInt);
-
-                String result = postTime+"||"+bankName+"||"+accountNumber+"||"+title+"||"+type+"||"+money+"||"+detail;
-                line += count+"번 : "+result+"\n";
-                Log.e("DB : ", result);
-                count++;
-            }
-            /*                                              */
-            items.add(new SubRecyclerItem(2022, 10, 25, LocalTime.now(), "Test1", 5000));
-            items.add(new SubRecyclerItem(2022, 10, 26, LocalTime.now(), "Test2", 60000));
-            items.add(new SubRecyclerItem(2022, 10, 28, LocalTime.now(), "Test3", 8065));
-            items.add(new SubRecyclerItem(2022, 10, 28, LocalTime.now(), "Test4", 5480));
-            items.add(new SubRecyclerItem(2022, 10, 28, LocalTime.now(), "Test5", 15480));
-            items.add(new SubRecyclerItem(2022, 10, 28, LocalTime.now(), "Test6", 55480));
-            items.add(new SubRecyclerItem(2022, 10, 28, LocalTime.now(), "Test7", 95480));
-            items.add(new SubRecyclerItem(2022, 10, 28, LocalTime.now(), "Test8", 1280));
-            items.add(new SubRecyclerItem(2022, 10, 28, LocalTime.now(), "Test9", 580));
+        try{
+            dbSelect();
+            adapter = new Adapter(getActivity(), list, items);
+            recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+            recyclerView.setAdapter(adapter);
+        }catch(Exception e){
+            e.printStackTrace();
         }
-
-        adapter = new Adapter(getActivity(), list, items);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        recyclerView.setAdapter(adapter);
 
         //before, after버튼에 리스너 달기
         btn_before.setOnClickListener(new View.OnClickListener() {
@@ -171,8 +136,14 @@ public class BlankFragment1 extends Fragment {
                     if(monthtmp > 11){
                         monthtmp = 0;   yeartmp++;
                     }
-                    String str =yeartmp + "." + (monthtmp + 1) + "." + (i + 1);
-                    list.add(new MainRecyclerItem(yeartmp, (monthtmp+ 1), (i+1), str));
+                    String str = yeartmp + "." + (monthtmp + 1) + "." + (i + 1);
+                    String setDay = yeartmp + "-" + (monthtmp + 1) + "-" + (i + 1);
+                    try {
+                        String day = format.format((format.parse(setDay)));
+                        list.add(new MainRecyclerItem(day, str));
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
                     i++;
                 }
 
@@ -183,9 +154,15 @@ public class BlankFragment1 extends Fragment {
                 */
 
                 //Toast.makeText(getContext(), "before가 눌렸습니다", Toast.LENGTH_SHORT).show();
-                adapter = new Adapter(getActivity(), list, items);
-                recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-                recyclerView.setAdapter(adapter);
+                items.clear();
+                try{
+                    dbSelect();
+                    adapter = new Adapter(getActivity(), list, items);
+                    recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+                    recyclerView.setAdapter(adapter);
+                }catch(Exception e){
+                    e.printStackTrace();
+                }
             }
         });
         btn_after.setOnClickListener(new View.OnClickListener() {
@@ -215,8 +192,14 @@ public class BlankFragment1 extends Fragment {
                     if(monthtmp > 11){
                         monthtmp = 0;   yeartmp++;
                     }
-                    String str =yeartmp + "." + (monthtmp + 1) + "." + (i + 1);
-                    list.add(new MainRecyclerItem(yeartmp, (monthtmp+ 1), (i+1), str));
+                    String str = yeartmp + "." + (monthtmp + 1) + "." + (i + 1);
+                    String setDay = yeartmp + "-" + (monthtmp + 1) + "-" + (i + 1);
+                    try {
+                        String day = format.format((format.parse(setDay)));
+                        list.add(new MainRecyclerItem(day, str));
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
                     i++;
                 }
                 /* 해당하는 달에 대한 item_sub의 리사이클러뷰에 들어갈 아이템을 불러와야한다.
@@ -226,53 +209,95 @@ public class BlankFragment1 extends Fragment {
                 */
 
                 //Toast.makeText(getContext(), "after가 눌렸습니다", Toast.LENGTH_SHORT).show();
-                adapter = new Adapter(getActivity(), list, items);
-                recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-                recyclerView.setAdapter(adapter);
+                items.clear();
+                try{
+                    dbSelect();
+                    adapter = new Adapter(getActivity(), list, items);
+                    recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+                    recyclerView.setAdapter(adapter);
+                }catch(Exception e){
+                    e.printStackTrace();
+                }
             }
         });
         return viewGroup;
     }
 
+    void dbSelect() throws ParseException {
+
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        int flag = 0;
+        int monthtmp = month;
+        int yeartmp = year;
+        int startday = PreferenceManager.getInt(getContext(), "startDayKey")-1;
+        int i = startday;
+        String startLine = yeartmp+"-"+(monthtmp+1)+"-"+(startday+1);
+        String lastLine = yeartmp+"-"+(monthtmp+2)+"-"+(startday+1);
+        String start = format.format(format.parse(startLine));
+        String last = format.format(format.parse(lastLine));
+        Log.e("TEST", "start : "+start+" last : "+last);
+
+        DBOpenHelper dbOpenHelper = new DBOpenHelper(this.getContext());
+        dbOpenHelper.open();
+        dbOpenHelper.create();
+        Cursor cursor = dbOpenHelper.selectColumns();
+        Log.e("DB", cursor.getCount()+"개");
+        int count = 1;
+        //items.clear();
+        while(cursor.moveToNext()) {
+            int postTimeInt = cursor.getColumnIndex("posttime");
+            String postTime = cursor.getString(postTimeInt);
+            String date = format.format(format.parse(postTime));
+            if(start.compareTo(date) <= 0 && last.compareTo(date) >= 0) {
+                Log.e("TEST", "postTime : "+postTime+" PostTime이 start보다 크다");
+                int titleInt = cursor.getColumnIndex("title");
+                int moneyInt = cursor.getColumnIndex("money");
+                /*
+                int bankNameInt = cursor.getColumnIndex("bankname");
+                int accountNumberInt = cursor.getColumnIndex("accountnumber");
+                int typeInt = cursor.getColumnIndex("type");
+                int detailInt = cursor.getColumnIndex("detail");
+                String bankName = cursor.getString(bankNameInt);
+                String accountNumber = cursor.getString(accountNumberInt);
+                String type = cursor.getString(typeInt);
+                String detail = cursor.getString(detailInt);
+                */
+                String title = cursor.getString(titleInt);
+                int money = cursor.getInt(moneyInt);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    items.add(new SubRecyclerItem(date, LocalTime.parse(postTime.split(" ")[1]), title, money));
+                }
+            }
+            /*
+            String result = postTime + "||" + bankName + "||" + accountNumber + "||" + title + "||" + type + "||" + money + "||" + detail;
+            line += count + "번 : " + result + "\n";
+            Log.e("DB : ", result);
+            count++;
+            */
+        }
+    }
+
     public class MainRecyclerItem{
-        int year;
-        int month;
-        int day;
+        String day;
         String title;
-        int getYear(){
-            return this.year;
-        }
-        int getMonth(){
-            return this.month;
-        }
-        int getDay(){
+        String getDay(){
             return this.day;
         }
         String getTitle(){
             return this.title;
         }
-        public MainRecyclerItem(int year, int month, int day, String title){
-            this.year = year;
-            this.month = month;
+        public MainRecyclerItem(String day, String title){
             this.day = day;
             this.title = title;
         }
     }
 
     public class SubRecyclerItem{
-        int year;
-        int month;
-        int day;
+        String day;
         LocalTime time;
         String title;
         double money;
-        int getYear(){
-            return this.year;
-        }
-        int getMonth(){
-            return this.month;
-        }
-        int getDay(){
+        String getDay(){
             return this.day;
         }
         LocalTime getTime(){return this.time;}
@@ -282,9 +307,7 @@ public class BlankFragment1 extends Fragment {
         double getMoney(){
             return this.money;
         }
-        public SubRecyclerItem(int year, int month, int day, LocalTime time, String title, double money){
-            this.year = year;
-            this.month = month;
+        public SubRecyclerItem(String day, LocalTime time, String title, double money){
             this.day = day;
             this.time = time;
             this.title = title;
