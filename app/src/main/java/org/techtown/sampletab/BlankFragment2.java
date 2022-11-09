@@ -143,6 +143,7 @@ public class BlankFragment2 extends Fragment {
             @Override
             public void onClick(View view) {
                 //여기에 입력 다이얼로그 생성
+                Toast.makeText(getContext(), "수입 직접 입력", Toast.LENGTH_SHORT).show();
             }
         });
         return viewGroup;
