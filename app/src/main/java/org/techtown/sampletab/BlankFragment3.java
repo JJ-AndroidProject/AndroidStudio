@@ -19,7 +19,7 @@ public class BlankFragment3 extends Fragment {
         /*         테스트용으로 사용중 나중에는 지출 패턴으로 사용             */
         textView = (TextView) viewGroup.findViewById(R.id.textView);
         DBcommand command = new DBcommand(getContext());
-        String line = command.selectAll();
+        String line = command.selectAllOutput();
         textView.setText(line);
         return viewGroup;
     }

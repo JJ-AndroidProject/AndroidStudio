@@ -78,7 +78,6 @@ public class DBOpenHelper {
         db.close();
     }
 
-    /*                         */
     public long insertColumnOutput(String posttime, String bankname, String accountnumber, String title, String type, int money, String detail){
         ContentValues values = new ContentValues();
         values.put("posttime", posttime);
@@ -91,8 +90,23 @@ public class DBOpenHelper {
         return db.insert("output", null, values);
     }
 
+    public long insertColumnInput(String posttime, String bankname, String accountnumber, String title, String type, int money, String detail){
+        ContentValues values = new ContentValues();
+        values.put("posttime", posttime);
+        values.put("bankname", bankname);
+        values.put("accountnumber", accountnumber);
+        values.put("title", title);
+        values.put("type", type);
+        values.put("money", money);
+        values.put("detail", detail);
+        return db.insert("input", null, values);
+    }
+
     public Cursor selectColumnsOutput(){
         return db.rawQuery("SELECT * FROM output", null);
+    }
+    public Cursor selectColumnsInput(){
+        return db.rawQuery("SELECT * FROM input", null);
     }
 }
 
@@ -116,12 +130,55 @@ class DBcommand{
         }
     }
 
-    String selectAll(){
+    void insertDataInput(String posttime, String bankname, String accountnumber, String title, String type, int money, String detail){
+        DBOpenHelper dbOpenHelper = new DBOpenHelper(this.context);
+        dbOpenHelper.open();
+        dbOpenHelper.create();
+        if(dbOpenHelper.insertColumnInput(posttime, bankname, accountnumber, title, type, money, detail) != -1) {
+            Log.e("DBinsert", "데이터 추가 성공");
+        }else{
+            Log.e("DBinsert", "posttime이 중복된 데이터");
+        }
+    }
+
+    String selectAllOutput(){
         String line = "";
         DBOpenHelper dbOpenHelper = new DBOpenHelper(this.context);
         dbOpenHelper.open();
         dbOpenHelper.create();
         Cursor cursor = dbOpenHelper.selectColumnsOutput();
+        Log.e("DB", cursor.getCount()+"개");
+        int count = 1;
+        while(cursor.moveToNext()){
+            int postTimeInt = cursor.getColumnIndex("posttime");
+            int bankNameInt = cursor.getColumnIndex("bankname");
+            int accountNumberInt = cursor.getColumnIndex("accountnumber");
+            int titleInt = cursor.getColumnIndex("title");
+            int typeInt = cursor.getColumnIndex("type");
+            int moneyInt = cursor.getColumnIndex("money");
+            int detailInt = cursor.getColumnIndex("detail");
+
+            String postTime = cursor.getString(postTimeInt);
+            String bankName = cursor.getString(bankNameInt);
+            String accountNumber = cursor.getString(accountNumberInt);
+            String title = cursor.getString(titleInt);
+            String type = cursor.getString(typeInt);
+            int money = cursor.getInt(moneyInt);
+            String detail = cursor.getString(detailInt);
+
+            String result = postTime+"||"+bankName+"||"+accountNumber+"||"+title+"||"+type+"||"+money+"||"+detail;
+            line += count+"번 : "+result+"\n";
+            Log.e("DB : ", result);
+            count++;
+        }
+        return line;
+    }
+    String selectAllInput(){
+        String line = "";
+        DBOpenHelper dbOpenHelper = new DBOpenHelper(this.context);
+        dbOpenHelper.open();
+        dbOpenHelper.create();
+        Cursor cursor = dbOpenHelper.selectColumnsInput();
         Log.e("DB", cursor.getCount()+"개");
         int count = 1;
         while(cursor.moveToNext()){

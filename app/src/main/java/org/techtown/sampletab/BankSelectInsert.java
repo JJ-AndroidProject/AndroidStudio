@@ -1,9 +1,18 @@
 package org.techtown.sampletab;
 
 import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.service.notification.StatusBarNotification;
+import android.util.Log;
+
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -24,21 +33,27 @@ import java.util.Date;
 public class BankSelectInsert {
     SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     Context context;
+
     public BankSelectInsert(StatusBarNotification sbn, Context context){
         this.context = context;
+
         String packageName = sbn.getPackageName();
-        if(packageName.contains("android.messaging")){
-            messaging(sbn);
-        }else if(packageName.contains("kbstar.kbbank")){
-            KBInsert(sbn);
-        }else if(packageName.contains("nh.mobilenoti")){
-            NHInsert(sbn);
-        }else if(packageName.contains("ibk.android.ionebank")){
-            IBKInsert(sbn);
-        }else if(packageName.contains("kakaobank.channel")){
-            KaKaOInsert(sbn);
-        }else if(packageName.contains("kbankwith.smartbank")){
-            KBankInsert(sbn);
+        try{
+            if(packageName.contains("android.messaging")){
+                messaging(sbn);
+            }else if(packageName.contains("kbstar.kbbank")){
+                KBInsert(sbn);
+            }else if(packageName.contains("nh.mobilenoti")){
+                NHInsert(sbn);
+            }else if(packageName.contains("ibk.android.ionebank")){
+                IBKInsert(sbn);
+            }else if(packageName.contains("kakaobank.channel")){
+                KaKaOInsert(sbn);
+            }else if(packageName.contains("kbankwith.smartbank")){
+                KBankInsert(sbn);
+            }
+        }catch(Exception e){
+            e.printStackTrace();
         }
     }
 
@@ -62,7 +77,7 @@ public class BankSelectInsert {
         }else if(line[0].split(" ")[0].contains("입금금")){
             DBcommand command = new DBcommand(context);
             //PostTime, BankName, AccountNumber, Title, Type, Money, Detail
-            //command.insertDataOutput(postTime, bank, account, title, "미정", money, subText);
+            command.insertDataInput(postTime, bank, account, title, "미정", money, subText);
         }
    }
 
@@ -76,8 +91,8 @@ public class BankSelectInsert {
 
         String bank = "카카오뱅크";
         String[] line = text.split(" ");
-        String title = line[0];
-        String account = line[3].replace("입출금통장(", "").replace(")", "");
+        String title = line[3];
+        String account = line[1].replace("입출금통장(", "").replace(")", "");
         int money = Integer.parseInt(titleNoti.split(" ")[1].replace("원", ""));
 
         if(titleNoti.contains("출금")){ // output 테이블에 추가
@@ -87,7 +102,7 @@ public class BankSelectInsert {
         }else if(titleNoti.contains("입금")){ // input 테이블에 추가
             DBcommand command = new DBcommand(context);
             //PostTime, BankName, AccountNumber, Title, Type, Money, Detail
-            //command.insertDataOutput(postTime, bank, account, title, "미정", money, subText);
+            command.insertDataInput(postTime, bank, account, title, "미정", money, subText);
         }
     }
 
@@ -111,10 +126,9 @@ public class BankSelectInsert {
             //PostTime, BankName, AccountNumber, Title, Type, Money, Detail
             command.insertDataOutput(postTime, bank, account, title, "미정", money, subText);
         }else if(a[0].contains("입금")){ // input 테이블에 추가
-
             DBcommand command = new DBcommand(context);
             //PostTime, BankName, AccountNumber, Title, Type, Money, Detail
-            //command.insertDataOutput(postTime, bank, account, title, "미정", money, subText);
+            command.insertDataInput(postTime, bank, account, title, "미정", money, subText);
         }
     }
 
@@ -139,7 +153,7 @@ public class BankSelectInsert {
         }else if(line[5].contains("입금")){ // input 테이블에 추가
             DBcommand command = new DBcommand(context);
             //PostTime, BankName, AccountNumber, Title, Type, Money, Detail
-            //command.insertDataOutput(postTime, bank, account, title, "미정", money, subText);
+            command.insertDataInput(postTime, bank, account, title, "미정", money, subText);
         }
     }
 
@@ -159,15 +173,18 @@ public class BankSelectInsert {
 
         String[] line = text.split("\\n");
         String[] a = line[0].split(" ");
-        String title = line[1].split(" ")[2];
+        String title = line[1].split(" ")[3];
         String bank = a[0];
-        String account = line[1].split(" ")[1];
+        String account = line[1].split(" ")[2];
         int money = Integer.parseInt(a[1].replace("출금", "").replace("원", ""));
-
-        if(line[0].contains("출금")){
+        if(line[0].contains("출금")) {
             DBcommand command = new DBcommand(context);
             //PostTime, BankName, AccountNumber, Title, Type, Money, Detail
             command.insertDataOutput(postTime, bank, account, title, "미정", money, subText);
+        }else if(line[0].contains("입금")){
+            DBcommand command = new DBcommand(context);
+            //PostTime, BankName, AccountNumber, Title, Type, Money, Detail
+            command.insertDataInput(postTime, bank, account, title, "미정", money, subText);
         }
     }
 }

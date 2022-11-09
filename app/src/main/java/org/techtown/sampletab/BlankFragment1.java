@@ -15,15 +15,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 
 
@@ -100,7 +97,7 @@ public class BlankFragment1 extends Fragment {
         }
         items.clear();
         try{
-            dbSelect();
+            dbSelectOutput();
             adapter = new Adapter(getActivity(), list, items);
             recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
             recyclerView.setAdapter(adapter);
@@ -156,7 +153,7 @@ public class BlankFragment1 extends Fragment {
                 //Toast.makeText(getContext(), "before가 눌렸습니다", Toast.LENGTH_SHORT).show();
                 items.clear();
                 try{
-                    dbSelect();
+                    dbSelectOutput();
                     adapter = new Adapter(getActivity(), list, items);
                     recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
                     recyclerView.setAdapter(adapter);
@@ -211,7 +208,7 @@ public class BlankFragment1 extends Fragment {
                 //Toast.makeText(getContext(), "after가 눌렸습니다", Toast.LENGTH_SHORT).show();
                 items.clear();
                 try{
-                    dbSelect();
+                    dbSelectOutput();
                     adapter = new Adapter(getActivity(), list, items);
                     recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
                     recyclerView.setAdapter(adapter);
@@ -223,7 +220,7 @@ public class BlankFragment1 extends Fragment {
         return viewGroup;
     }
 
-    void dbSelect() throws ParseException {
+    void dbSelectOutput() throws ParseException {
 
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         int flag = 0;
@@ -241,7 +238,7 @@ public class BlankFragment1 extends Fragment {
         dbOpenHelper.open();
         dbOpenHelper.create();
         Cursor cursor = dbOpenHelper.selectColumnsOutput();
-        Log.e("DB", cursor.getCount()+"개");
+        Log.e("Cursor", "Cursor : "+cursor.getCount()+"개");
         int count = 1;
         //items.clear();
         while(cursor.moveToNext()) {
@@ -252,28 +249,50 @@ public class BlankFragment1 extends Fragment {
                 Log.e("TEST", "postTime : "+postTime+" PostTime이 start보다 크다");
                 int titleInt = cursor.getColumnIndex("title");
                 int moneyInt = cursor.getColumnIndex("money");
-                /*
-                int bankNameInt = cursor.getColumnIndex("bankname");
-                int accountNumberInt = cursor.getColumnIndex("accountnumber");
-                int typeInt = cursor.getColumnIndex("type");
-                int detailInt = cursor.getColumnIndex("detail");
-                String bankName = cursor.getString(bankNameInt);
-                String accountNumber = cursor.getString(accountNumberInt);
-                String type = cursor.getString(typeInt);
-                String detail = cursor.getString(detailInt);
-                */
                 String title = cursor.getString(titleInt);
                 int money = cursor.getInt(moneyInt);
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                     items.add(new SubRecyclerItem(date, LocalTime.parse(postTime.split(" ")[1]), title, money));
                 }
             }
-            /*
-            String result = postTime + "||" + bankName + "||" + accountNumber + "||" + title + "||" + type + "||" + money + "||" + detail;
-            line += count + "번 : " + result + "\n";
-            Log.e("DB : ", result);
-            count++;
-            */
+        }
+    }
+
+    void dbSelectInput() throws ParseException {
+
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        int flag = 0;
+        int monthtmp = month;
+        int yeartmp = year;
+        int startday = PreferenceManager.getInt(getContext(), "startDayKey")-1;
+        int i = startday;
+        String startLine = yeartmp+"-"+(monthtmp+1)+"-"+(startday+1);
+        String lastLine = yeartmp+"-"+(monthtmp+2)+"-"+(startday+1);
+        String start = format.format(format.parse(startLine));
+        String last = format.format(format.parse(lastLine));
+        Log.e("TEST", "start : "+start+" last : "+last);
+
+        DBOpenHelper dbOpenHelper = new DBOpenHelper(this.getContext());
+        dbOpenHelper.open();
+        dbOpenHelper.create();
+        Cursor cursor = dbOpenHelper.selectColumnsInput();
+        Log.e("Cursor", "Cursor : "+cursor.getCount()+"개");
+        int count = 1;
+        //items.clear();
+        while(cursor.moveToNext()) {
+            int postTimeInt = cursor.getColumnIndex("posttime");
+            String postTime = cursor.getString(postTimeInt);
+            String date = format.format(format.parse(postTime));
+            if(start.compareTo(date) <= 0 && last.compareTo(date) >= 0) {
+                Log.e("TEST", "postTime : "+postTime+" PostTime이 start보다 크다");
+                int titleInt = cursor.getColumnIndex("title");
+                int moneyInt = cursor.getColumnIndex("money");
+                String title = cursor.getString(titleInt);
+                int money = cursor.getInt(moneyInt);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    items.add(new SubRecyclerItem(date, LocalTime.parse(postTime.split(" ")[1]), title, money));
+                }
+            }
         }
     }
 
