@@ -14,6 +14,7 @@ import android.util.Log;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -32,6 +33,7 @@ import java.util.Date;
 
 public class BankSelectInsert {
     SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    DecimalFormat decFormat = new DecimalFormat("###,###");
     Context context;
 
     public BankSelectInsert(StatusBarNotification sbn, Context context){
@@ -163,9 +165,6 @@ public class BankSelectInsert {
     
     // NH(농협)에서 오는 알림 데이터베이스에 Insert 해주는 함수
     private void NHInsert(StatusBarNotification sbn){
-        // 농협 출금100원
-        // 11/06 04:10 302-****-7764-41 김종원
-        // 잔액603,416원
         Bundle extras = sbn.getNotification().extras;
         String postTime = format.format(new Date().getTime());
         String text = extras.getCharSequence(Notification.EXTRA_TEXT)+"";
@@ -180,7 +179,8 @@ public class BankSelectInsert {
         if(line[0].contains("출금")) {
             DBcommand command = new DBcommand(context);
             //PostTime, BankName, AccountNumber, Title, Type, Money, Detail
-            command.insertDataOutput(postTime, bank, account, title, "미정", money, subText);
+            command.insertDataOutput(postTime, bank, account, title, "미정", money, subText); // output 테이블에 데이터를 저장
+            new NotificationMessages(context, title, bank+"(출금) : "+decFormat.format(money)); // 상단에 알림을 보내주는 클래스
         }else if(line[0].contains("입금")){
             DBcommand command = new DBcommand(context);
             //PostTime, BankName, AccountNumber, Title, Type, Money, Detail

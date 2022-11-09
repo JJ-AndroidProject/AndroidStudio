@@ -92,7 +92,6 @@ public class MainActivity extends AppCompatActivity {
         // 상단에 제목이 있는 부분
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabLayout);
         tabLayout.setupWithViewPager(viewPager);
-
     }
 
 
