@@ -12,10 +12,12 @@ import android.util.Log;
 
 public class DBOpenHelper {
 
-    private static final String DATABASE_NAME = "expenses.db";
+    private static final String DATABASE_OUTPUT = "output.db";
+    private static final String DATABASE_INPUT = "input.db";
     private static final int DATABASE_VERSION = 1;
     public static SQLiteDatabase db;
     private DatabaseHelper databaseHelper;
+    //private DatabaseHelper databaseHelperInput;
     private Context context;
 
     private class DatabaseHelper extends SQLiteOpenHelper {
@@ -26,21 +28,34 @@ public class DBOpenHelper {
 
         @Override
         public void onCreate(SQLiteDatabase db){
-            String query = "create table if not exists expenses(" +
+            // 지출 테이블
+            String outputTable = "create table if not exists output(" +
                     "posttime text not null PRIMARY KEY," +
                     "bankname text not null ," +
                     "accountnumber text , " +
                     "title text not null ," +
                     "type text not null ," +
                     "money integer not null , " +
-                    "detail text );";
-            //db.execSQL("DROP TABLE IF EXISTS expenses");
-            db.execSQL(query);
+                    "detail text);";
+            db.execSQL(outputTable);
+            // 수입 테이블
+            //db.execSQL("DROP TABLE IF EXISTS input");
+
+            String inputTable = "create table if not exists input(" +
+                    "posttime text not null PRIMARY KEY," +
+                    "bankname text not null ," +
+                    "accountnumber text , " +
+                    "title text not null ," +
+                    "type text not null ," +
+                    "money integer not null , " +
+                    "detail text);";
+            db.execSQL(inputTable);
+
         }
 
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion){
-            db.execSQL("DROP TABLE IF EXISTS expenses");
+            db.execSQL("DROP TABLE IF EXISTS output");
             onCreate(db);
         }
     }
@@ -50,7 +65,7 @@ public class DBOpenHelper {
     }
 
     public DBOpenHelper open() throws SQLException {
-        databaseHelper = new DatabaseHelper(context, DATABASE_NAME, null, DATABASE_VERSION);
+        databaseHelper = new DatabaseHelper(context, DATABASE_OUTPUT, null, DATABASE_VERSION);
         db = databaseHelper.getWritableDatabase();
         return this;
     }
@@ -64,7 +79,7 @@ public class DBOpenHelper {
     }
 
     /*                         */
-    public long insertColumn(String posttime, String bankname, String accountnumber, String title, String type, int money, String detail){
+    public long insertColumnOutput(String posttime, String bankname, String accountnumber, String title, String type, int money, String detail){
         ContentValues values = new ContentValues();
         values.put("posttime", posttime);
         values.put("bankname", bankname);
@@ -73,11 +88,11 @@ public class DBOpenHelper {
         values.put("type", type);
         values.put("money", money);
         values.put("detail", detail);
-        return db.insert("expenses", null, values);
+        return db.insert("output", null, values);
     }
 
-    public Cursor selectColumns(){
-        return db.rawQuery("SELECT * FROM expenses", null);
+    public Cursor selectColumnsOutput(){
+        return db.rawQuery("SELECT * FROM output", null);
     }
 }
 
@@ -90,11 +105,11 @@ class DBcommand{
         dbOpenHelper.create();
     }
 
-    void insertData(String posttime, String bankname, String accountnumber, String title, String type, int money, String detail){
+    void insertDataOutput(String posttime, String bankname, String accountnumber, String title, String type, int money, String detail){
         DBOpenHelper dbOpenHelper = new DBOpenHelper(this.context);
         dbOpenHelper.open();
         dbOpenHelper.create();
-        if(dbOpenHelper.insertColumn(posttime, bankname, accountnumber, title, type, money, detail) != -1) {
+        if(dbOpenHelper.insertColumnOutput(posttime, bankname, accountnumber, title, type, money, detail) != -1) {
             Log.e("DBinsert", "데이터 추가 성공");
         }else{
             Log.e("DBinsert", "posttime이 중복된 데이터");
@@ -106,7 +121,7 @@ class DBcommand{
         DBOpenHelper dbOpenHelper = new DBOpenHelper(this.context);
         dbOpenHelper.open();
         dbOpenHelper.create();
-        Cursor cursor = dbOpenHelper.selectColumns();
+        Cursor cursor = dbOpenHelper.selectColumnsOutput();
         Log.e("DB", cursor.getCount()+"개");
         int count = 1;
         while(cursor.moveToNext()){

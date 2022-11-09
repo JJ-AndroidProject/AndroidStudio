@@ -35,8 +35,8 @@ public class MyNotificationListener extends NotificationListenerService {
     public void onNotificationPosted(StatusBarNotification sbn) {
         super.onNotificationPosted(sbn);
         if(findText(sbn) == true){
-            fileSave(sbn);
-            fileRead();
+            //fileSave(sbn);
+            //fileRead();
             dbInsert(sbn);
         }
 
@@ -72,7 +72,7 @@ public class MyNotificationListener extends NotificationListenerService {
         String text = extras.getCharSequence(Notification.EXTRA_TEXT)+"";
         String subText = extras.getCharSequence(Notification.EXTRA_SUB_TEXT)+"";
         DBcommand command = new DBcommand(this);
-        command.insertData(postTime, packageName, "xxx-xxxx-xxxx-xx", title, "미정", 0, text);
+        command.insertDataOutput(postTime, packageName, "xxx-xxxx-xxxx-xx", title, "미정", 0, text);
     }
 
     // NH에서 오는 알림에 대한 insert
@@ -92,7 +92,7 @@ public class MyNotificationListener extends NotificationListenerService {
             money = Integer.parseInt(line[1].replace("출금", "").replace("원", ""));
         }
         DBcommand command = new DBcommand(this);
-        command.insertData(postTime, line[0], line[4], line[5], "미정", money, subText);
+        command.insertDataOutput(postTime, line[0], line[4], line[5], "미정", money, subText);
     }
 
     // targetList에 있는 단어가 title, text, subText에 있다면 내용을 저장한다.
@@ -101,7 +101,7 @@ public class MyNotificationListener extends NotificationListenerService {
     /*
     이름           어플 패키지명
     일반 메시지      android.messaging
-    KB국민은행
+    KB국민은행      kbstar.kbbank
     농협(NH)        nh.mobilenoti
     IBK기업은행      ibk.android.ionebank
     카카오뱅크       kakaobank.channel

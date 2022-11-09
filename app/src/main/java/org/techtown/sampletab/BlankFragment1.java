@@ -240,7 +240,7 @@ public class BlankFragment1 extends Fragment {
         DBOpenHelper dbOpenHelper = new DBOpenHelper(this.getContext());
         dbOpenHelper.open();
         dbOpenHelper.create();
-        Cursor cursor = dbOpenHelper.selectColumns();
+        Cursor cursor = dbOpenHelper.selectColumnsOutput();
         Log.e("DB", cursor.getCount()+"개");
         int count = 1;
         //items.clear();
