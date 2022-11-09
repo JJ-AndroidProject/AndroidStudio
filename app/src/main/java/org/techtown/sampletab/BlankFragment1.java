@@ -16,6 +16,8 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -73,19 +75,19 @@ public class BlankFragment1 extends Fragment {
         int flag = 0;
         int monthtmp = month;
         int yeartmp = year;
-        int startday = PreferenceManager.getInt(getContext(), "startDayKey") - 1;
+        int startday = PreferenceManager.getInt(getContext(), "startDayKey");
         int i = startday;
         while(true){
-            if(i >= lastday){
-                i = 0;  monthtmp++;
+            if(i > lastday){
+                i = 1;  monthtmp++;
             }
             if(i == startday) flag++;
             if(flag > 1) break;
             if(monthtmp > 11){
                 monthtmp = 0;   yeartmp++;
             }
-            String str =yeartmp + "." + (monthtmp + 1) + "." + (i + 1);
-            list.add(new MainRecyclerItem(yeartmp, (monthtmp+ 1), (i+1), str));
+            String str =yeartmp + "." + (monthtmp + 1) + "." + i;
+            list.add(new MainRecyclerItem(yeartmp, (monthtmp+ 1), i, str));
             i++;
         }
 
@@ -127,19 +129,19 @@ public class BlankFragment1 extends Fragment {
                 int flag = 0;
                 int monthtmp = month;
                 int yeartmp = year;
-                int startday = PreferenceManager.getInt(getContext(), "startDayKey") - 1;
+                int startday = PreferenceManager.getInt(getContext(), "startDayKey");
                 int i = startday;
                 while(true){
-                    if(i >= lastday){
-                        i = 0;  monthtmp++;
+                    if(i > lastday){
+                        i = 1;  monthtmp++;
                     }
                     if(i == startday) flag++;
                     if(flag > 1) break;
                     if(monthtmp > 11){
                         monthtmp = 0;   yeartmp++;
                     }
-                    String str =yeartmp + "." + (monthtmp + 1) + "." + (i + 1);
-                    list.add(new MainRecyclerItem(yeartmp, (monthtmp+ 1), (i+1), str));
+                    String str =yeartmp + "." + (monthtmp + 1) + "." + i;
+                    list.add(new MainRecyclerItem(yeartmp, (monthtmp+ 1), i, str));
                     i++;
                 }
 
@@ -171,19 +173,19 @@ public class BlankFragment1 extends Fragment {
                 int flag = 0;
                 int monthtmp = month;
                 int yeartmp = year;
-                int startday = PreferenceManager.getInt(getContext(), "startDayKey") - 1;
+                int startday = PreferenceManager.getInt(getContext(), "startDayKey");
                 int i = startday;
                 while(true){
-                    if(i >= lastday){
-                        i = 0;  monthtmp++;
+                    if(i > lastday){
+                        i = 1;  monthtmp++;
                     }
                     if(i == startday) flag++;
                     if(flag > 1) break;
                     if(monthtmp > 11){
                         monthtmp = 0;   yeartmp++;
                     }
-                    String str =yeartmp + "." + (monthtmp + 1) + "." + (i + 1);
-                    list.add(new MainRecyclerItem(yeartmp, (monthtmp+ 1), (i+1), str));
+                    String str =yeartmp + "." + (monthtmp + 1) + "." + i;
+                    list.add(new MainRecyclerItem(yeartmp, (monthtmp+ 1), i, str));
                     i++;
                 }
                 /* 해당하는 달에 대한 item_sub의 리사이클러뷰에 들어갈 아이템을 불러와야한다.
@@ -196,6 +198,15 @@ public class BlankFragment1 extends Fragment {
                 adapter = new Adapter(getActivity(), list, items);
                 recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
                 recyclerView.setAdapter(adapter);
+            }
+        });
+
+        //직접 추가 버튼&리스너
+        FloatingActionButton btn_direct_add = viewGroup.findViewById(R.id.btnDirectAdd);
+        btn_direct_add.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //여기에 입력 다이얼로그 생성
             }
         });
         return viewGroup;
