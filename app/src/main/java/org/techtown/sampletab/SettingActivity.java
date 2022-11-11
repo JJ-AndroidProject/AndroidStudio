@@ -73,18 +73,30 @@ public class SettingActivity extends AppCompatActivity {
                     //입력받은 시작일이 1~28이라면 Preference에 저장해줌
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        int day;
-                        String str = receiveStartDay.getText().toString();
-                        day = Integer.parseInt(str);
-                        if(day < 1 || day > 28){
-                            Toast.makeText(SettingActivity.this, "잘못된 입력입니다.", LENGTH_LONG).show();
+                        try {
+                            int day;
+                            String str = receiveStartDay.getText().toString();
+                            day = Integer.parseInt(str);
+                            if(day < 1 || day > 28){
+                                Toast.makeText(SettingActivity.this, "잘못된 입력입니다.", LENGTH_LONG).show();
+                            }
+                            else {
+                                str = ("월 시작일이 " + day + "일로 저장되었습니다.");
+                                PreferenceManager.setInt(SettingActivity.this, "startDayKey", day);
+                                Toast.makeText(SettingActivity.this, str, LENGTH_SHORT).show();
+                            }
                         }
-                        else {
-                            str = ("월 시작일이 " + day + "일로 저장되었습니다.");
-                            PreferenceManager.setInt(SettingActivity.this, "startDayKey", day);
-                            Toast.makeText(SettingActivity.this, str, LENGTH_SHORT).show();
+                        catch (Exception e){
+                            Toast.makeText(SettingActivity.this, "취소됨", LENGTH_SHORT).show();
                         }
 
+
+                    }
+                });
+                msDialog.setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        Toast.makeText(SettingActivity.this, "취소", LENGTH_SHORT).show();
                     }
                 });
                 msDialog.show();

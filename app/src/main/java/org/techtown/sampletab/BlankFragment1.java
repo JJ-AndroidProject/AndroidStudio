@@ -1,9 +1,14 @@
 package org.techtown.sampletab;
 
+import static android.widget.Toast.LENGTH_LONG;
+import static android.widget.Toast.LENGTH_SHORT;
+
+import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -13,6 +18,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -207,7 +213,50 @@ public class BlankFragment1 extends Fragment {
             @Override
             public void onClick(View view) {
                 //여기에 입력 다이얼로그 생성
-                Toast.makeText(getContext(), "지출 직접 입력", Toast.LENGTH_SHORT).show();
+
+                View dlgView = View.inflate(getContext(), R.layout.direct_add_dialog, null);
+
+                EditText posttime = dlgView.findViewById(R.id.ex_add1);
+                EditText bankname = dlgView.findViewById(R.id.ex_add2);
+                EditText money = dlgView.findViewById(R.id.ex_add3);
+                EditText detail = dlgView.findViewById(R.id.ex_add4);
+
+                AlertDialog.Builder daDialog = new AlertDialog.Builder(getContext());
+                daDialog.setTitle("지출 내역 추가");
+                daDialog.setView(dlgView);
+
+                //확인버튼 클릭 시
+                daDialog.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        //null값 허용은 accountnomber, detail.
+                        //title, type을 ""로 받을 것. 이 둘은 notnull
+                        try {
+                            int intmoney;
+                            //입력한 값 받아오기
+                            String strposttime = posttime.getText().toString();
+                            String strbankname = bankname.getText().toString();
+                            String strmoney = money.getText().toString();
+                            String strdetail = detail.getText().toString();
+
+                            intmoney = Integer.parseInt(strmoney);  //입력받은 금액 INT형으로 변환
+                            Toast.makeText(getContext(), strposttime + strbankname + intmoney + strdetail, LENGTH_SHORT).show();
+                        }
+                        catch (Exception e){
+                            Toast.makeText(getContext(), "취소됨", LENGTH_SHORT).show();
+                        }
+
+                    }
+                });
+
+                //취소버튼 클릭 시
+                daDialog.setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        Toast.makeText(getContext(), "취소", LENGTH_SHORT).show();
+                    }
+                });
+                daDialog.show();
             }
         });
         return viewGroup;

@@ -10,16 +10,16 @@
         android:orientation="horizontal">
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/ms_layout">
+            android:id="@+id/ms_layout"
+            android:layout_width="318dp"
+            android:layout_height="match_parent">
 
             <EditText
                 android:id="@+id/receive_start_day"
                 android:layout_width="300dp"
                 android:layout_height="match_parent"
-                android:inputType="number"
-                android:digits="0123456789"/>
+                android:digits="0123456789"
+                android:inputType="number" />
         </LinearLayout>
 
         <LinearLayout
@@ -27,8 +27,9 @@
             android:layout_height="match_parent">
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:textSize="20dp"
                 android:text="일" />
         </LinearLayout>
 
