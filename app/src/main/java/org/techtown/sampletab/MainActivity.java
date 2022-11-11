@@ -7,6 +7,7 @@ import static java.security.AccessController.getContext;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -20,11 +21,16 @@ import androidx.viewpager.widget.ViewPager;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -50,9 +56,6 @@ import java.util.Set;
 import javax.security.auth.login.LoginException;
 
 public class MainActivity extends AppCompatActivity {
-
-    static final int PERMISSIONS_REQUEST = 0x00000001;
-    static final int REQUEST_CODE = 0x00000001;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -80,14 +83,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        /*          NotificationListener start                 */
-
-        //textList.setText(fileRead()); // 처음 어플을 실행했을 때 data.txt 파일을 읽고 화면에 출력해줌
-        //new BlankFragment4().textSetting(fileRead());
-
-        /*            NotificationListener end                 */
-
-
+        new MoveAccount(this);
         permissionGrantred(); // Notification 관련 권한 설정 함수
         // 뷰페이저를 이용해서 화면을 좌우로 볼 수 있음
         ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
@@ -96,7 +92,10 @@ public class MainActivity extends AppCompatActivity {
         // 상단에 제목이 있는 부분
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabLayout);
         tabLayout.setupWithViewPager(viewPager);
+
     }
+
+
 
     /*          NotificationListener start                 */
     // 새로운 인텐트가 오는 경우

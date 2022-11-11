@@ -1,15 +1,22 @@
 package org.techtown.sampletab;
 
 import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.nfc.Tag;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
 import android.util.Log;
 import android.widget.Toast;
+
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -22,12 +29,14 @@ import java.util.Date;
 
 public class MyNotificationListener extends NotificationListenerService {
     public final static String TAG = "MyNotificationListener";
+    Context context;
 
 
     // 상단에 표시되어 있는 알림을 지울때 작동이 됩니다.
     @Override
     public void onNotificationRemoved(StatusBarNotification sbn) {
         super.onNotificationRemoved(sbn);
+        context = this;
     }
 
     // 상단의 알림이 오면 작업을 시작
@@ -35,44 +44,17 @@ public class MyNotificationListener extends NotificationListenerService {
     public void onNotificationPosted(StatusBarNotification sbn) {
         super.onNotificationPosted(sbn);
         if(findText(sbn) == true){
+            dbInsert(sbn, this);
             fileSave(sbn);
             fileRead();
-            dbInsert(sbn);
+            Thread th = new Thread(new MoveAccountThread());
+            th.start();
         }
-
-        /*
-        if(findText(sbn)){ // targetList에 있는 단어가 title, text, subText에 있다면 내용을 저장한다.
-
-        };
-        */
-        /*
-        String tag = "onNotificationPosted";
-        Notification notification = sbn.getNotification();
-        Bundle extras = sbn.getNotification().extras;
-        Log.d(tag, "onNotificationPosted가 작동됨");
-        Log.d(tag, "packageName : "+sbn.getPackageName());
-        Log.d(tag, "id : "+sbn.getId());
-        Log.d(tag, "postTime : "+sbn.getPostTime());
-        Log.d(tag, "title : "+extras.getString(Notification.EXTRA_TITLE));
-        Log.d(tag, "text : "+extras.getCharSequence(Notification.EXTRA_TEXT));
-        Log.d(tag, "subText : "+extras.getCharSequence(Notification.EXTRA_SUB_TEXT));
-        Toast.makeText(this, "onNotificationPosted call("+sbn.getPackageName()+")", Toast.LENGTH_SHORT).show();
-        String line = sbn.getPackageName()+"\n"+sbn.getId()+"\n"+sbn.getPostTime()+"\n"+extras.getString(Notification.EXTRA_TITLE)+"\n"+extras.getCharSequence(Notification.EXTRA_TEXT);
-        */
     }
 
-
-
-    void dbInsert(StatusBarNotification sbn){
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        Bundle extras = sbn.getNotification().extras;
-        String packageName = sbn.getPackageName();
-        String postTime = format.format(new Date().getTime());
-        String title = extras.getString(Notification.EXTRA_TITLE);
-        String text = extras.getCharSequence(Notification.EXTRA_TEXT)+"";
-        String subText = extras.getCharSequence(Notification.EXTRA_SUB_TEXT)+"";
-        DBcommand command = new DBcommand(this);
-        command.insertData(postTime, packageName, "xxx-xxxx-xxxx-xx", title, "미정", "0", text);
+    // 테스트용 데이터베이스 insert
+    void dbInsert(StatusBarNotification sbn, Context context){
+        new BankSelectInsert(sbn, context);
     }
 
     // targetList에 있는 단어가 title, text, subText에 있다면 내용을 저장한다.
@@ -81,7 +63,7 @@ public class MyNotificationListener extends NotificationListenerService {
     /*
     이름           어플 패키지명
     일반 메시지      android.messaging
-    KB국민은행       kbstar.kbbank
+    KB국민은행      kbstar.kbbank
     농협(NH)        nh.mobilenoti
     IBK기업은행      ibk.android.ionebank
     카카오뱅크       kakaobank.channel
@@ -90,13 +72,13 @@ public class MyNotificationListener extends NotificationListenerService {
     우리은행
     토스
     */
+    // 메시지를 거르는 역활
     private boolean findText(StatusBarNotification sbn){
         ArrayList<String> targetList
                 = new ArrayList<>(Arrays.asList("출금", "입금"));
         ArrayList<String> bank = new ArrayList<>(Arrays.asList(
                 "kbstar.kbbank", "nh.mobilenoti", "android.messaging", "kbankwith.smartbank", "ibk.android.ionebank", "kakaobank.channel"));
         try{
-            Notification notification = sbn.getNotification();
             Bundle extras = sbn.getNotification().extras;
             for(String t : bank){
                 if(sbn.getPackageName().contains(t)){
@@ -117,7 +99,7 @@ public class MyNotificationListener extends NotificationListenerService {
         }
         return false;
     }
-    
+
     // 파일 저장
     private void fileSave(StatusBarNotification sbn){
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); // date 변수의 형식
@@ -176,4 +158,37 @@ public class MyNotificationListener extends NotificationListenerService {
         context.startActivity(intent); // Intent에 데이터를 담은 뒤 Activity에 보낸다.
         //Toast.makeText(context, "SendToActivity", Toast.LENGTH_SHORT).show();
     }
+
+    class MoveAccountThread implements Runnable{
+        public MoveAccountThread(){
+
+        }
+
+        @Override
+        public void run() {
+            try{
+                Thread.sleep(4000);
+            }catch(InterruptedException e){
+
+            }
+            ArrayList<String> output = new DBcommand(context).OutputLast();
+            ArrayList<String> input = new DBcommand(context).InputLast();
+            for(int i=1;i<output.size();i++){
+                if(!output.get(i).equals(input.get(i))){
+                    break;
+                }
+            }
+        }
+    }
 }
+
+
+
+
+
+
+
+
+/*
+
+*/

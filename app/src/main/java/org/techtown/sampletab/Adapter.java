@@ -62,9 +62,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
         total = 0; // 일별 소비한 금액의 총액을 0으로 초기화
         for(int i=0;i<items.size();i++){
             // item_list의 리사이클러뷰에 들어가는 아이템을 해당하는 날짜에 배치되도록 함
-            if(items.get(i).getYear() == list.get(position).getYear() 
-                    && items.get(i).getMonth() == list.get(position).getMonth()
-                    && items.get(i).getDay() == list.get(position).getDay()){
+            if(items.get(i).getDay().compareTo(list.get(position).getDay()) == 0){
                 item.add(items.get(i));
                 column++; // 아이템의 개수를 1 증가
                 total += items.get(i).money; // 사용한 금액을 total에 추가
