@@ -76,7 +76,7 @@ public class BankSelectInsert {
             DBcommand command = new DBcommand(context);
             //PostTime, BankName, AccountNumber, Title, Type, Money, Detail
             command.insertDataOutput(postTime, bank, account, title, "미정", money, subText);
-        }else if(line[0].split(" ")[0].contains("입금금")){
+        }else if(line[0].split(" ")[0].contains("입금")){
             DBcommand command = new DBcommand(context);
             //PostTime, BankName, AccountNumber, Title, Type, Money, Detail
             command.insertDataInput(postTime, bank, account, title, "미정", money, subText);
@@ -93,18 +93,31 @@ public class BankSelectInsert {
 
         String bank = "카카오뱅크";
         String[] line = text.split(" ");
-        String title = line[3];
+        String title = line[4];
         String account = line[1].replace("입출금통장(", "").replace(")", "");
         int money = Integer.parseInt(titleNoti.split(" ")[1].replace("원", ""));
+        // 스페이스바
+        // 계좌 간 이동
+        // 해결 방법을 찾아야됨
+        // 멈추게 하려면 Thread.sleep();
+
+        // 지출 알림 수입 알림
+        // 수입 알림 지출 알림
+
+
+
+
 
         if(titleNoti.contains("출금")){ // output 테이블에 추가
             DBcommand command = new DBcommand(context);
             //PostTime, BankName, AccountNumber, Title, Type, Money, Detail
             command.insertDataOutput(postTime, bank, account, title, "미정", money, subText);
+
         }else if(titleNoti.contains("입금")){ // input 테이블에 추가
             DBcommand command = new DBcommand(context);
             //PostTime, BankName, AccountNumber, Title, Type, Money, Detail
             command.insertDataInput(postTime, bank, account, title, "미정", money, subText);
+
         }
     }
 
@@ -152,10 +165,12 @@ public class BankSelectInsert {
             DBcommand command = new DBcommand(context);
             //PostTime, BankName, AccountNumber, Title, Type, Money, Detail
             command.insertDataOutput(postTime, bank, account, title, "미정", money, subText);
+
         }else if(line[5].contains("입금")){ // input 테이블에 추가
             DBcommand command = new DBcommand(context);
             //PostTime, BankName, AccountNumber, Title, Type, Money, Detail
             command.insertDataInput(postTime, bank, account, title, "미정", money, subText);
+
         }
     }
 

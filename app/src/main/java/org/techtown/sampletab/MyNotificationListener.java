@@ -29,12 +29,14 @@ import java.util.Date;
 
 public class MyNotificationListener extends NotificationListenerService {
     public final static String TAG = "MyNotificationListener";
+    Context context;
 
 
     // 상단에 표시되어 있는 알림을 지울때 작동이 됩니다.
     @Override
     public void onNotificationRemoved(StatusBarNotification sbn) {
         super.onNotificationRemoved(sbn);
+        context = this;
     }
 
     // 상단의 알림이 오면 작업을 시작
@@ -45,6 +47,8 @@ public class MyNotificationListener extends NotificationListenerService {
             dbInsert(sbn, this);
             fileSave(sbn);
             fileRead();
+            Thread th = new Thread(new MoveAccountThread());
+            th.start();
         }
     }
 
@@ -153,6 +157,28 @@ public class MyNotificationListener extends NotificationListenerService {
         //Log.e("SendToActivity", line);
         context.startActivity(intent); // Intent에 데이터를 담은 뒤 Activity에 보낸다.
         //Toast.makeText(context, "SendToActivity", Toast.LENGTH_SHORT).show();
+    }
+
+    class MoveAccountThread implements Runnable{
+        public MoveAccountThread(){
+
+        }
+
+        @Override
+        public void run() {
+            try{
+                Thread.sleep(4000);
+            }catch(InterruptedException e){
+
+            }
+            ArrayList<String> output = new DBcommand(context).OutputLast();
+            ArrayList<String> input = new DBcommand(context).InputLast();
+            for(int i=1;i<output.size();i++){
+                if(!output.get(i).equals(input.get(i))){
+                    break;
+                }
+            }
+        }
     }
 }
 

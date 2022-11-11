@@ -10,14 +10,18 @@ import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+
 public class DBOpenHelper {
 
-    private static final String DATABASE_OUTPUT = "output.db";
-    private static final String DATABASE_INPUT = "input.db";
+    private static final String DATABASE_NAME = "accountBook.db";
     private static final int DATABASE_VERSION = 1;
+
     public static SQLiteDatabase db;
     private DatabaseHelper databaseHelper;
-    //private DatabaseHelper databaseHelperInput;
     private Context context;
 
     private class DatabaseHelper extends SQLiteOpenHelper {
@@ -32,6 +36,7 @@ public class DBOpenHelper {
             String outputTable = "create table if not exists output(" +
                     "posttime text not null PRIMARY KEY," +
                     "bankname text not null ," +
+                    "move text default null ," +
                     "accountnumber text , " +
                     "title text not null ," +
                     "type text not null ," +
@@ -40,10 +45,10 @@ public class DBOpenHelper {
             db.execSQL(outputTable);
             // 수입 테이블
             //db.execSQL("DROP TABLE IF EXISTS input");
-
             String inputTable = "create table if not exists input(" +
                     "posttime text not null PRIMARY KEY," +
                     "bankname text not null ," +
+                    "move text default null ," +
                     "accountnumber text , " +
                     "title text not null ," +
                     "type text not null ," +
@@ -65,7 +70,7 @@ public class DBOpenHelper {
     }
 
     public DBOpenHelper open() throws SQLException {
-        databaseHelper = new DatabaseHelper(context, DATABASE_OUTPUT, null, DATABASE_VERSION);
+        databaseHelper = new DatabaseHelper(context, DATABASE_NAME, null, DATABASE_VERSION);
         db = databaseHelper.getWritableDatabase();
         return this;
     }
@@ -138,6 +143,96 @@ class DBcommand{
             Log.e("DBinsert", "데이터 추가 성공");
         }else{
             Log.e("DBinsert", "posttime이 중복된 데이터");
+        }
+    }
+
+    void selectCount(){ // 계좌 간 이동 확인
+        DBOpenHelper dbOpenHelper = new DBOpenHelper(this.context);
+        dbOpenHelper.open();
+        dbOpenHelper.create();
+        Cursor cursorOutput = dbOpenHelper.selectColumnsOutput();
+        Cursor cursorInput = dbOpenHelper.selectColumnsInput();
+
+        cursorOutput.moveToLast();
+
+        int postTimeIntOutput = cursorOutput.getColumnIndex("posttime");
+        int moneyIntOutput = cursorOutput.getColumnIndex("money");
+        String postTimeOutput = cursorOutput.getString(postTimeIntOutput);
+        int moneyOutput = cursorOutput.getInt(moneyIntOutput);
+
+        Log.e("SelectCountOutput", postTimeOutput+" "+moneyOutput+"원");
+
+        cursorInput.moveToLast();
+
+        int postTimeIntInput = cursorInput.getColumnIndex("posttime");
+        int moneyIntInput = cursorInput.getColumnIndex("money");
+        String postTimeInput = cursorInput.getString(postTimeIntInput);
+        int moneyInput = cursorInput.getInt(moneyIntInput);
+
+        Log.e("SelectCountInput", postTimeInput+" "+moneyInput+"원");
+        try{
+            Date format1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(postTimeOutput);
+            Date format2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(postTimeInput);
+            long out = (format2.getTime() - format1.getTime())/1000;
+            Log.e("SelectCount", "비교 : "+Math.abs(out));
+        }catch(ParseException e){
+
+        }
+
+
+    }
+
+    ArrayList<String> OutputLast(){
+        ArrayList<String> list = new ArrayList<String>();
+        DBOpenHelper dbOpenHelper = new DBOpenHelper(this.context);
+        dbOpenHelper.open();
+        dbOpenHelper.create();
+        Cursor cursor = dbOpenHelper.selectColumnsOutput();
+        if(cursor.moveToLast()){
+            int postTimeInt = cursor.getColumnIndex("posttime");
+            int titleInt = cursor.getColumnIndex("title");
+            int typeInt = cursor.getColumnIndex("type");
+            int moneyInt = cursor.getColumnIndex("money");
+
+            String postTime = cursor.getString(postTimeInt);
+            String title = cursor.getString(titleInt);
+            String type = cursor.getString(typeInt);
+            String money = Integer.toString(cursor.getInt(moneyInt));
+            list.add(postTime);
+            list.add(title);
+            list.add(type);
+            list.add(money);
+
+            return list;
+        }else{
+            return null;
+        }
+    }
+
+    ArrayList<String> InputLast(){
+        ArrayList<String> list = new ArrayList<String>();
+        DBOpenHelper dbOpenHelper = new DBOpenHelper(this.context);
+        dbOpenHelper.open();
+        dbOpenHelper.create();
+        Cursor cursor = dbOpenHelper.selectColumnsInput();
+        if(cursor.moveToLast()){
+            int postTimeInt = cursor.getColumnIndex("posttime");
+            int titleInt = cursor.getColumnIndex("title");
+            int typeInt = cursor.getColumnIndex("type");
+            int moneyInt = cursor.getColumnIndex("money");
+
+            String postTime = cursor.getString(postTimeInt);
+            String title = cursor.getString(titleInt);
+            String type = cursor.getString(typeInt);
+            String money = Integer.toString(cursor.getInt(moneyInt));
+            list.add(postTime);
+            list.add(title);
+            list.add(type);
+            list.add(money);
+
+            return list;
+        }else{
+            return null;
         }
     }
 
