@@ -1,6 +1,5 @@
 package org.techtown.sampletab;
 
-import static android.widget.Toast.LENGTH_LONG;
 import static android.widget.Toast.LENGTH_SHORT;
 import android.content.DialogInterface;
 import android.database.Cursor;
@@ -20,6 +19,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -254,6 +255,13 @@ public class BlankFragment1 extends Fragment {
                             String strbankname = bankname.getText().toString();
                             String strmoney = money.getText().toString();
                             String strdetail = detail.getText().toString();
+                            
+                            /*
+                            
+                            데이터베이스에 지출 추가
+                            
+                            */
+                            
 
                             intmoney = Integer.parseInt(strmoney);  //입력받은 금액 INT형으로 변환
                             Toast.makeText(getContext(), strposttime + strbankname + intmoney + strdetail, LENGTH_SHORT).show();
@@ -334,7 +342,7 @@ public class BlankFragment1 extends Fragment {
         dbOpenHelper.open();
         dbOpenHelper.create();
         Cursor cursor = dbOpenHelper.selectColumnsInput();
-        Log.e("Cursor", "Cursor : "+cursor.getCount()+"개");
+        //Log.e("Cursor", "Cursor : "+cursor.getCount()+"개");
         int count = 1;
         //items.clear();
         while(cursor.moveToNext()) {
@@ -342,7 +350,7 @@ public class BlankFragment1 extends Fragment {
             String postTime = cursor.getString(postTimeInt);
             String date = format.format(format.parse(postTime));
             if(start.compareTo(date) <= 0 && last.compareTo(date) >= 0) {
-                Log.e("TEST", "postTime : "+postTime+" PostTime이 start보다 크다");
+                //Log.e("TEST", "postTime : "+postTime+" PostTime이 start보다 크다");
                 int titleInt = cursor.getColumnIndex("title");
                 int moneyInt = cursor.getColumnIndex("money");
                 String title = cursor.getString(titleInt);
