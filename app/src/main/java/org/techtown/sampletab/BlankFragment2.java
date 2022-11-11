@@ -21,6 +21,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -71,9 +72,6 @@ public class BlankFragment2 extends Fragment {
         btn_after = (Button) viewGroup.findViewById(R.id.btnafter);
         datetext.setText(date);
         recyclerView = (RecyclerView) viewGroup.findViewById(R.id.recyclerView);
-
-
-
 
         //before, after버튼에 리스너 달기
         btn_before.setOnClickListener(new View.OnClickListener() {
@@ -157,7 +155,7 @@ public class BlankFragment2 extends Fragment {
 
                 TextView addDate = dlgView.findViewById(R.id.add_date);    //날짜
                 TextView addTime = dlgView.findViewById(R.id.add_time);    //시간
-                EditText bankname = dlgView.findViewById(R.id.add_bankname);     //은행
+                TextView bankname = dlgView.findViewById(R.id.add_bankname);     //은행
                 EditText money = dlgView.findViewById(R.id.add_money);        //금액
                 EditText detail = dlgView.findViewById(R.id.add_detail);       //메모
 
@@ -219,12 +217,79 @@ public class BlankFragment2 extends Fragment {
                     }
                 });
 
+                bankname.setText("현금");     //디폴트 값
+
+                //결제수단 클릭해서 이미지를 고르면 해당 결제수단으로 입력받음
+                bankname.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        // 결제수단 다이얼로그 생성
+                        View bsdlgView = View.inflate(getContext(), R.layout.bank_select_dialog, null);
+                        AlertDialog.Builder bsDialog = new AlertDialog.Builder(getContext());
+                        bsDialog.setTitle("결제수단");
+                        bsDialog.setView(bsdlgView);
+
+                        AlertDialog ad = bsDialog.create();     //이미지 클릭 시 다이얼로그를 종료시키기 위해 (ad.dismiss) 생성
+                        ImageButton btn_cash = (ImageButton) bsdlgView.findViewById(R.id.cash);     //현금
+                        ImageButton btn_kb = (ImageButton) bsdlgView.findViewById(R.id.kbbank);     //kb국민은행
+                        ImageButton btn_nh = (ImageButton) bsdlgView.findViewById(R.id.nhbank);     //농협
+                        ImageButton btn_ibk = (ImageButton) bsdlgView.findViewById(R.id.ibkbank);   //ibk기업은행
+                        ImageButton btn_kakao = (ImageButton) bsdlgView.findViewById(R.id.kakaobank);//카카오뱅크
+                        ImageButton btn_k = (ImageButton) bsdlgView.findViewById(R.id.kbank);       //케이뱅크
+
+                        btn_cash.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                bankname.setText("현금");
+                                ad.dismiss();
+                            }
+                        });
+                        btn_kb.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                bankname.setText("KB국민은행");
+                                ad.dismiss();
+                            }
+                        });
+                        btn_nh.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                bankname.setText("농협(NH)");
+                                ad.dismiss();
+                            }
+                        });
+                        btn_ibk.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                bankname.setText("IBK기업은행");
+                                ad.dismiss();
+                            }
+                        });
+                        btn_kakao.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                bankname.setText("카카오뱅크");
+                                ad.dismiss();
+                            }
+                        });
+                        btn_k.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                bankname.setText("케이뱅크");
+                                ad.dismiss();
+                            }
+                        });
+                        ad.show();
+                    }
+
+                });
+
                 //다이얼로그 생성
                 AlertDialog.Builder daDialog = new AlertDialog.Builder(getContext());
                 daDialog.setTitle("수입 내역 추가");
                 daDialog.setView(dlgView);
 
-                //확인버튼 클릭 시
+                //확인버튼 클릭 시. 이 부분을 나중에 xml버튼으로 만들어야 함
                 daDialog.setPositiveButton("확인", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
@@ -253,13 +318,16 @@ public class BlankFragment2 extends Fragment {
                     }
                 });
 
-                //취소버튼 클릭 시
+                //취소버튼 클릭 시. 마찬가지로 xml버튼으로 만들어야 함
                 daDialog.setNegativeButton("취소", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         Toast.makeText(getContext(), "취소", LENGTH_SHORT).show();
                     }
                 });
+
+                //이 자리에 삭제 버튼 xml로 추가해야 함
+
                 daDialog.show();
             }
         });

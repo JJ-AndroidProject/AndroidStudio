@@ -99,6 +99,8 @@ public class SettingActivity extends AppCompatActivity {
                         Toast.makeText(SettingActivity.this, "취소", LENGTH_SHORT).show();
                     }
                 });
+
+
                 msDialog.show();
             }
         });
