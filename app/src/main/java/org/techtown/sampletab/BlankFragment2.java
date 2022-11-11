@@ -16,6 +16,8 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -59,6 +61,7 @@ public class BlankFragment2 extends Fragment {
         btn_after = (Button) viewGroup.findViewById(R.id.btnafter);
         datetext.setText(date);
         recyclerView = (RecyclerView) viewGroup.findViewById(R.id.recyclerView);
+
 
 
 
@@ -130,6 +133,17 @@ public class BlankFragment2 extends Fragment {
                 recyclerView.setAdapter(adapter);
                 */
 
+            }
+
+        });
+
+        //직접 추가 버튼&리스너
+        FloatingActionButton btn_direct_add = viewGroup.findViewById(R.id.btnDirectAdd);
+        btn_direct_add.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //여기에 입력 다이얼로그 생성
+                Toast.makeText(getContext(), "수입 직접 입력", Toast.LENGTH_SHORT).show();
             }
         });
         return viewGroup;
