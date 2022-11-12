@@ -43,17 +43,15 @@ public class MyNotificationListener extends NotificationListenerService {
     @Override
     public void onNotificationPosted(StatusBarNotification sbn) {
         super.onNotificationPosted(sbn);
-        if(findText(sbn) == true){
-            dbInsert(sbn, this);
-            fileSave(sbn);
-            fileRead();
+        try{
+            new BankSelectInsert(sbn, this);
+            //fileSave(sbn);
+            //fileRead();
+        }catch(NullPointerException e){
+            Log.e(TAG, "NullPointerException Catch"); // 값이 null 일 때 발생하는 오류를 catch 한다.
         }
     }
 
-    // 테스트용 데이터베이스 insert
-    void dbInsert(StatusBarNotification sbn, Context context){
-        new BankSelectInsert(sbn, context);
-    }
 
     // targetList에 있는 단어가 title, text, subText에 있다면 내용을 저장한다.
     // messaging은 TITLE(전화번호로 분류)
@@ -77,6 +75,8 @@ public class MyNotificationListener extends NotificationListenerService {
         ArrayList<String> bank = new ArrayList<>(Arrays.asList(
                 "kbstar.kbbank", "nh.mobilenoti", "android.messaging", "kbankwith.smartbank", "ibk.android.ionebank", "kakaobank.channel"));
         try{
+
+            /*
             Bundle extras = sbn.getNotification().extras;
             for(String t : bank){
                 if(sbn.getPackageName().contains(t)){
@@ -91,11 +91,12 @@ public class MyNotificationListener extends NotificationListenerService {
                     }
                 }
             }
+            */
         }catch(NullPointerException e){
-            Log.e(TAG, "NullPointerException Catch"); // 값이 null 일 때 발생하는 오류를 catch 한다.
+
             return false;
         }
-        return false;
+        return true;
     }
 
     // 파일 저장
@@ -155,28 +156,6 @@ public class MyNotificationListener extends NotificationListenerService {
         //Log.e("SendToActivity", line);
         context.startActivity(intent); // Intent에 데이터를 담은 뒤 Activity에 보낸다.
         //Toast.makeText(context, "SendToActivity", Toast.LENGTH_SHORT).show();
-    }
-
-    class MoveAccountThread implements Runnable{
-        public MoveAccountThread(){
-
-        }
-
-        @Override
-        public void run() {
-            try{
-                Thread.sleep(4000);
-            }catch(InterruptedException e){
-
-            }
-            ArrayList<String> output = new DBcommand(context).OutputLast();
-            ArrayList<String> input = new DBcommand(context).InputLast();
-            for(int i=1;i<output.size();i++){
-                if(!output.get(i).equals(input.get(i))){
-                    break;
-                }
-            }
-        }
     }
 }
 

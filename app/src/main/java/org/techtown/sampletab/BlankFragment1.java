@@ -241,6 +241,7 @@ public class BlankFragment1 extends Fragment {
         btn_direct_add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //여기에 입력 다이얼로그 생성
 
                 View dlgView = View.inflate(getContext(), R.layout.direct_add_dialog, null);
 
@@ -432,13 +433,13 @@ public class BlankFragment1 extends Fragment {
         String lastLine = yeartmp+"-"+(monthtmp+2)+"-"+(startday+1);
         String start = format.format(format.parse(startLine));
         String last = format.format(format.parse(lastLine));
-        //Log.e("TEST", "start : "+start+" last : "+last);
+        Log.e("TEST", "start : "+start+" last : "+last);
 
         DBOpenHelper dbOpenHelper = new DBOpenHelper(this.getContext());
         dbOpenHelper.open();
         dbOpenHelper.create();
         Cursor cursor = dbOpenHelper.selectColumnsOutput();
-        //Log.e("Cursor", "Cursor : "+cursor.getCount()+"개");
+        Log.e("Cursor", "Cursor : "+cursor.getCount()+"개");
         int count = 1;
         //items.clear();
         while(cursor.moveToNext()) {
