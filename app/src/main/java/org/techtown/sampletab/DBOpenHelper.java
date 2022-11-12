@@ -3,6 +3,7 @@ package org.techtown.sampletab;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.CursorIndexOutOfBoundsException;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
@@ -162,7 +163,7 @@ class DBcommand{
 
     // 계좌 간 이동 확인
     void selectCount() {
-        try{
+        try {
             DBOpenHelper dbOpenHelper = new DBOpenHelper(this.context);
             dbOpenHelper.open();
             dbOpenHelper.create();
@@ -180,7 +181,7 @@ class DBcommand{
             int out_id = cursorOutput.getInt(idOutput); // cursor를 통해 id 속성의 값을 가져온다.
             String move_output = cursorOutput.getString(moveOutput); // cursor를 통해 move 속성의 값을 가져온다.
 
-            Log.e("SelectCountOutput", postTimeOutput+" "+moneyOutput+"원");
+            Log.e("SelectCountOutput", postTimeOutput + " " + moneyOutput + "원");
 
             cursorInput.moveToLast(); // cursor를 input 테이블의 마지막을 가르키게 한다.
 
@@ -193,26 +194,28 @@ class DBcommand{
             int in_id = cursorInput.getInt(idInput); // cursor를 통해 id 속성의 값을 가져온다.
             String move_input = cursorInput.getString(moveInput); // cursor를 통해 move 속성의 값을 가져온다.
 
-            Log.e("SelectCountInput", postTimeInput+" "+moneyInput+"원");
-            try{
+            Log.e("SelectCountInput", postTimeInput + " " + moneyInput + "원");
+            try {
                 Date format1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(postTimeOutput);
                 Date format2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(postTimeInput);
-                long out = (format2.getTime() - format1.getTime())/1000; // 두 입력된 값의 시간 차를 확인한다. (초 단위)
-                Log.e("SelectCount", "비교 : "+Math.abs(out));
-                if(out <= 5){ // 시간의 차가 5 이하인 경우 (5초)
-                    if(moneyOutput == moneyInput){ // output의 money와 input의 money 값이 같은 지 확인
-                        if(move_output == null && move_input == null) { // output과 input의 move 값이 null 일때 작동
+                long out = (format2.getTime() - format1.getTime()) / 1000; // 두 입력된 값의 시간 차를 확인한다. (초 단위)
+                Log.e("SelectCount", "비교 : " + Math.abs(out));
+                if (out <= 5) { // 시간의 차가 5 이하인 경우 (5초)
+                    if (moneyOutput == moneyInput) { // output의 money와 input의 money 값이 같은 지 확인
+                        if (move_output == null && move_input == null) { // output과 input의 move 값이 null 일때 작동
                             Log.e("SelectCount", "계좌간 이동 설정");
                             dbOpenHelper.updateColumn(out_id, "output", "계좌이동"); // output 테이블의 id 값을 가진 튜플에 move를 계좌이동으로 변경
                             dbOpenHelper.updateColumn(in_id, "input", "계좌이동"); // input 테이블의 id 값을 가진 튜플에 move를 계좌이동으로 변경
                         }
                     }
                 }
-            }catch(ParseException e){
+            } catch (ParseException e) {
                 Log.e("SelectCount", "ParseException 오류");
             }
-        }catch(CursorIndexOutOfBoundsException e){
+        } catch (CursorIndexOutOfBoundsException e) {
             Log.e("SelectCount", "CursorIndexOutOfBoundsException 오류");
+        }
+    }
 
     /*
     // BlankFragment3에서 테스트 용도로 사용중인 output 테이블의 함수 (나중에는 지울 예정)
