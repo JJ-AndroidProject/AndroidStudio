@@ -3,7 +3,6 @@ package org.techtown.sampletab;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.CursorIndexOutOfBoundsException;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
@@ -46,6 +45,7 @@ public class DBOpenHelper {
                     "detail text);";
             db.execSQL(outputTable);
             // 수입 테이블
+            //db.execSQL("DROP TABLE IF EXISTS input");
             String inputTable = "create table if not exists input(" +
                     "id integer primary key autoincrement," +
                     "posttime text not null ," +
@@ -213,9 +213,8 @@ class DBcommand{
             }
         }catch(CursorIndexOutOfBoundsException e){
             Log.e("SelectCount", "CursorIndexOutOfBoundsException 오류");
-        }
-    }
 
+    /*
     // BlankFragment3에서 테스트 용도로 사용중인 output 테이블의 함수 (나중에는 지울 예정)
     String selectAllOutput(){
         String line = "";
@@ -282,6 +281,7 @@ class DBcommand{
         }
         return line;
     }
+    */
 }
 
 
