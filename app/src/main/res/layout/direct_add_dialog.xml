@@ -74,6 +74,24 @@
             android:layout_height="40dp"
             android:textSize="20dp"
             android:layout_marginLeft="10dp"
+            android:text="결제내역" />
+        <EditText
+            android:id="@+id/add_title"
+            android:layout_width="230dp"
+            android:layout_height="40dp"
+            android:gravity="center"
+            android:textAlignment="center"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="20dp">
+        <TextView
+            android:layout_width="80dp"
+            android:layout_height="40dp"
+            android:textSize="20dp"
+            android:layout_marginLeft="10dp"
             android:text="금액" />
         <EditText
             android:id="@+id/add_money"
@@ -107,5 +125,28 @@
             android:gravity="center"
             android:textAlignment="center"/>
     </LinearLayout>
+    <GridLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:columnCount="3">
+        <Button
+            android:id="@+id/btn_dlg_extra"
+            android:layout_width="100dp"
+            android:layout_height="50dp"
+            android:layout_marginLeft="13dp"
+            android:text="삭제" />
+        <Button
+            android:id="@+id/btn_dlg_neg"
+            android:layout_width="100dp"
+            android:layout_height="50dp"
+            android:layout_marginLeft="13dp"
+            android:text="취소" />
+        <Button
+            android:id="@+id/btn_dlg_pos"
+            android:layout_width="100dp"
+            android:layout_height="50dp"
+            android:layout_marginLeft="13dp"
+            android:text="확인" />
+    </GridLayout>
 
 </LinearLayout>
