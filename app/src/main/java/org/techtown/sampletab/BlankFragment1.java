@@ -54,7 +54,6 @@ public class BlankFragment1 extends Fragment {
     RecyclerView recyclerView;
     Adapter adapter;
 
-
     /*            test 중(김종원)             */
     // ArrayList에 String 정보를 담아 Adapter로 보낸다.
     private List<MainRecyclerItem> list = new ArrayList<MainRecyclerItem>();

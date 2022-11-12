@@ -32,7 +32,6 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-
 // 수입 부분에 대한 어댑터 생성 필요
 
 public class BlankFragment2 extends Fragment {

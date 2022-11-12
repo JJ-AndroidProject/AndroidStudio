@@ -147,6 +147,7 @@
             android:layout_height="50dp"
             android:layout_marginLeft="13dp"
             android:text="확인" />
+
     </GridLayout>
 
 </LinearLayout>
