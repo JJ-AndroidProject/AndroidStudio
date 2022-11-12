@@ -32,6 +32,8 @@ import android.widget.Toast;
 
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalTime;
@@ -40,10 +42,10 @@ import java.util.Calendar;
 import java.util.List;
 import java.time.LocalTime;
 
-
 public class BlankFragment1 extends Fragment {
-    //현재 연도, 달, 그 달의 마지막 날짜를 받는다.
-    Calendar cal = Calendar.getInstance();
+    DecimalFormat decFormat = new DecimalFormat("###,###");
+    private int moneyTotal = 0;
+    Calendar cal = Calendar.getInstance(); //현재 연도, 달, 그 달의 마지막 날짜를 받는다.
     int year = cal.get(Calendar.YEAR);
     int month = cal.get(Calendar.MONTH);
     int lastday = cal.getActualMaximum(Calendar.DATE);
@@ -51,25 +53,19 @@ public class BlankFragment1 extends Fragment {
     String date = year + "." + (month+1);
     Button btn_before, btn_after;
     TextView datetext;
+    TextView textTotal;
+    TextView textMonth;
     RecyclerView recyclerView;
     Adapter adapter;
-
-
-    /*            test 중(김종원)             */
-    // ArrayList에 String 정보를 담아 Adapter로 보낸다.
     private List<MainRecyclerItem> list = new ArrayList<MainRecyclerItem>();
-    //ArrayList<String> list = new ArrayList<>();
-    RecyclerView recyclerViewSub;
-    SubAdapter subAdapter;
     private List<SubRecyclerItem> items = new ArrayList<SubRecyclerItem>();
-    /*            test 중(김종원)             */
 
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //Toast.makeText(getContext(), "프래그먼트 1 생성", Toast.LENGTH_SHORT).show();
-        Log.e("BlankFragment1-onCreate", "BlankFragment1-onCreate 작동");
+        //Log.e("BlankFragment1-onCreate", "BlankFragment1-onCreate 작동");
 
     }
 
@@ -77,13 +73,15 @@ public class BlankFragment1 extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
         // Inflate the layout for this fragment
         ViewGroup viewGroup = (ViewGroup) inflater.inflate(R.layout.fragment_blank1, container, false);
         //before, after버튼과 날짜 표기
         btn_before = (Button) viewGroup.findViewById(R.id.btnbefore);
         datetext = (TextView) viewGroup.findViewById(R.id.monthtext);
+        textTotal = (TextView) viewGroup.findViewById(R.id.textOutputTotal);
+        textMonth = (TextView) viewGroup.findViewById(R.id.textOutputMonth);
         btn_after = (Button) viewGroup.findViewById(R.id.btnafter);
+        textTotal.setText("총 "+decFormat.format(moneyTotal)+"원");
         datetext.setText(date);
         recyclerView = (RecyclerView) viewGroup.findViewById(R.id.recyclerView);
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
@@ -113,15 +111,7 @@ public class BlankFragment1 extends Fragment {
             }
             i++;
         }
-        items.clear();
-        try{
-            dbSelectOutput();
-            adapter = new Adapter(getActivity(), list, items);
-            recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-            recyclerView.setAdapter(adapter);
-        }catch(Exception e){
-            e.printStackTrace();
-        }
+        showDataBase(); // Adapter에 아이템을 넣어주는 함수
 
         //before, after버튼에 리스너 달기
         btn_before.setOnClickListener(new View.OnClickListener() {
@@ -161,23 +151,7 @@ public class BlankFragment1 extends Fragment {
                     }
                     i++;
                 }
-
-                /* 해당하는 달에 대한 item_sub의 리사이클러뷰에 들어갈 아이템을 불러와야한다.
-                items.clear(); // items 리스트를 초기화 한다.
-
-                데이터베이스에서 해당하는 월에 대한 데이터를 가져온다.
-                */
-
-                //Toast.makeText(getContext(), "before가 눌렸습니다", Toast.LENGTH_SHORT).show();
-                items.clear();
-                try{
-                    dbSelectOutput();
-                    adapter = new Adapter(getActivity(), list, items);
-                    recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-                    recyclerView.setAdapter(adapter);
-                }catch(Exception e){
-                    e.printStackTrace();
-                }
+                showDataBase(); // Adapter에 아이템을 넣어주는 함수
             }
         });
         btn_after.setOnClickListener(new View.OnClickListener() {
@@ -217,22 +191,7 @@ public class BlankFragment1 extends Fragment {
                     }
                     i++;
                 }
-                /* 해당하는 달에 대한 item_sub의 리사이클러뷰에 들어갈 아이템을 불러와야한다.
-                items.clear(); // items 리스트를 초기화 한다.
-
-                데이터베이스에서 해당하는 월에 대한 데이터를 가져온다.
-                */
-
-                //Toast.makeText(getContext(), "after가 눌렸습니다", Toast.LENGTH_SHORT).show();
-                items.clear();
-                try{
-                    dbSelectOutput();
-                    adapter = new Adapter(getActivity(), list, items);
-                    recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-                    recyclerView.setAdapter(adapter);
-                }catch(Exception e){
-                    e.printStackTrace();
-                }
+                showDataBase(); // Adapter에 아이템을 넣어주는 함수
             }
         });
 
@@ -241,10 +200,7 @@ public class BlankFragment1 extends Fragment {
         btn_direct_add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                //여기부터
-
-                //다이얼로그 생성
+                //여기부터 다이얼로그 생성
                 View dlgView = View.inflate(getContext(), R.layout.direct_add_dialog, null);
 
                 TextView addDate = dlgView.findViewById(R.id.add_date);    //날짜
@@ -280,7 +236,6 @@ public class BlankFragment1 extends Fragment {
                                 addDate.setText(String.format("%d-%d-%d", yy, mm+1, dd)); // xxxx-xx-xx 형태로 표기&저장
                             }
                         };
-
                         //날짜 표기된 텍스트뷰를 클릭하면 날짜 선택 다이얼로그를 띄워줌
                         new DatePickerDialog(getContext(), myDateSetListener, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), today).show();
                     }
@@ -309,9 +264,7 @@ public class BlankFragment1 extends Fragment {
                             TimePickerDialog picker = new TimePickerDialog(getContext(), android.R.style.Theme_Holo_Light_NoActionBar,
                                     myTimeSetListener, hour, minute, true);
                             picker.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-
                             picker.show();
-
                         }
                     }
                 });
@@ -426,6 +379,7 @@ public class BlankFragment1 extends Fragment {
 
                             DBcommand command = new DBcommand(getContext());
                             command.insertDataOutput(postTime, strbankname, null, title, "미정", intmoney, strdetail);
+                            showDataBase(); // Adapter에 아이템을 넣어주는 함수
                             da.dismiss();   //다이얼로그 종료
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -433,10 +387,8 @@ public class BlankFragment1 extends Fragment {
                         }
                     }
                 });
-
                 //다이얼로그 보여주기
                 da.show();
-
                 //여기까지
             }
         });
@@ -448,34 +400,45 @@ public class BlankFragment1 extends Fragment {
         int monthtmp = month;
         int yeartmp = year;
         int startday = PreferenceManager.getInt(getContext(), "startDayKey")-1;
-        int i = startday;
         String startLine = yeartmp+"-"+(monthtmp+1)+"-"+(startday+1);
         String lastLine = yeartmp+"-"+(monthtmp+2)+"-"+(startday+1);
         String start = format.format(format.parse(startLine));
         String last = format.format(format.parse(lastLine));
-        Log.e("TEST", "start : "+start+" last : "+last);
-
+        String lastLine2 = yeartmp+"-"+(monthtmp+2)+"-"+(startday);
+        String last2 = format.format(format.parse(lastLine2));
+        textMonth.setText(start+"~"+last2);
         DBOpenHelper dbOpenHelper = new DBOpenHelper(this.getContext());
         dbOpenHelper.open();
         dbOpenHelper.create();
         Cursor cursor = dbOpenHelper.selectColumnsOutput();
-        Log.e("Cursor", "Cursor : "+cursor.getCount()+"개");
-        int count = 1;
-        //items.clear();
+        items.clear();
+        moneyTotal = 0;
         while(cursor.moveToNext()) {
             int postTimeInt = cursor.getColumnIndex("posttime");
             String postTime = cursor.getString(postTimeInt);
             String date = format.format(format.parse(postTime));
             if(start.compareTo(date) <= 0 && last.compareTo(date) >= 0) {
-                //Log.e("TEST", "postTime : "+postTime+" PostTime이 start보다 크다");
                 int titleInt = cursor.getColumnIndex("title");
                 int moneyInt = cursor.getColumnIndex("money");
                 String title = cursor.getString(titleInt);
                 int money = cursor.getInt(moneyInt);
+                moneyTotal += money;
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                     items.add(new SubRecyclerItem(date, LocalTime.parse(postTime.split(" ")[1]), title, money));
                 }
             }
+        }
+    }
+
+    void showDataBase(){
+        try{
+            dbSelectOutput();
+            textTotal.setText("총 "+decFormat.format(moneyTotal)+"원");
+            adapter = new Adapter(getActivity(), list, items);
+            recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+            recyclerView.setAdapter(adapter);
+        }catch (ParseException e) {
+            e.printStackTrace();
         }
     }
 

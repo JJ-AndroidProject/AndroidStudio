@@ -29,6 +29,7 @@ import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
@@ -42,7 +43,9 @@ import java.util.List;
 // 수입 부분에 대한 어댑터 생성 필요
 
 public class BlankFragment2 extends Fragment {
+    DecimalFormat decFormat = new DecimalFormat("###,###");
     //현재 연도, 달, 그 달의 마지막 날짜를 받는다.
+    private int moneyTotal = 0;
     Calendar cal = Calendar.getInstance();
     int year = cal.get(Calendar.YEAR);
     int month = cal.get(Calendar.MONTH);
@@ -51,6 +54,8 @@ public class BlankFragment2 extends Fragment {
     String date = year + "." + (month+1);
     Button btn_before, btn_after;
     TextView datetext;
+    TextView textTotal;
+    TextView textMonth;
     RecyclerView recyclerView;
     Fragment2Adapter adapter;
     DBcommand command;
@@ -73,17 +78,13 @@ public class BlankFragment2 extends Fragment {
         //before, after버튼과 날짜 표기
         btn_before = (Button) viewGroup.findViewById(R.id.btnbefore);
         datetext = (TextView) viewGroup.findViewById(R.id.monthtext);
+        textTotal = (TextView) viewGroup.findViewById(R.id.textInputTotal);
+        textMonth = (TextView) viewGroup.findViewById(R.id.textInputMonth);
         btn_after = (Button) viewGroup.findViewById(R.id.btnafter);
+        textTotal.setText("총 "+decFormat.format(moneyTotal)+"원");
         datetext.setText(date);
         recyclerView = (RecyclerView) viewGroup.findViewById(R.id.recyclerView2);
-        try{
-            dbSelectInput();
-        }catch (ParseException e) {
-            e.printStackTrace();
-        }
-        adapter = new Fragment2Adapter(items);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        recyclerView.setAdapter(adapter);
+        showDataBase(); // Adapter에 아이템을 넣어주는 함수
 
         //before, after버튼에 리스너 달기
         btn_before.setOnClickListener(new View.OnClickListener() {
@@ -96,14 +97,7 @@ public class BlankFragment2 extends Fragment {
                 lastday = cal.getActualMaximum(Calendar.DATE);
                 date = year + "." + (month+1);
                 datetext.setText(date);
-                try{
-                    dbSelectInput();
-                    adapter = new Fragment2Adapter(items);
-                    recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-                    recyclerView.setAdapter(adapter);
-                }catch (ParseException e) {
-                    e.printStackTrace();
-                }
+                showDataBase(); // Adapter에 아이템을 넣어주는 함수
                 Log.d("BlankFragment2", "before가 눌렸습니다");
             }
         });
@@ -118,14 +112,7 @@ public class BlankFragment2 extends Fragment {
                 date = year + "." + (month+1);
 
                 datetext.setText(date);
-                try{
-                    dbSelectInput();
-                    adapter = new Fragment2Adapter(items);
-                    recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-                    recyclerView.setAdapter(adapter);
-                }catch (ParseException e) {
-                    e.printStackTrace();
-                }
+                showDataBase(); // Adapter에 아이템을 넣어주는 함수
                 Log.d("BlankFragment2", "after가 눌렸습니다");
             }
 
@@ -136,9 +123,7 @@ public class BlankFragment2 extends Fragment {
         btn_direct_add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //여기부터
-
-                //다이얼로그 생성
+                //여기부터 다이얼로그 생성
                 View dlgView = View.inflate(getContext(), R.layout.direct_add_dialog, null);
 
                 TextView addDate = dlgView.findViewById(R.id.add_date);    //날짜
@@ -310,20 +295,17 @@ public class BlankFragment2 extends Fragment {
                             //입력한 값 받아오기
                             String strDate = addDate.getText().toString();      //날짜
                             String strTime = addTime.getText().toString();      //시간
-                            String strposttime = (" " + strDate + ":" + strTime + ":00");// xxxx-xx-xx xx:xx:00 형태. 데이터베이스 저장용
+                            String strposttime = (strDate + " " + strTime + ":00");// xxxx-xx-xx xx:xx:00 형태. 데이터베이스 저장용
                             String strbankname = bankname.getText().toString(); //결제내역
                             String strtitle = title.getText().toString();       //결제내역
                             String strmoney = money.getText().toString();       //금액
                             intmoney = Integer.parseInt(strmoney);  //입력받은 금액 INT형으로 변환
                             String strdetail = detail.getText().toString();     //메모
-
-                            String title = "BlankFragment2";
                             String postTime = format.format(format.parse(strposttime));
 
                             command = new DBcommand(getContext());
-                            command.insertDataInput(postTime, strbankname, null, title, "미정", intmoney, strdetail);
-
-
+                            command.insertDataInput(postTime, strbankname, null, strtitle, "미정", intmoney, strdetail);
+                            showDataBase(); // Adapter에 아이템을 넣어주는 함수
                             da.dismiss();
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -334,7 +316,6 @@ public class BlankFragment2 extends Fragment {
 
                 //다이얼로그 보여주기
                 da.show();
-
                 //여기까지
             }
         });
@@ -343,38 +324,49 @@ public class BlankFragment2 extends Fragment {
 
     void dbSelectInput() throws ParseException {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-        int flag = 0;
         int monthtmp = month;
         int yeartmp = year;
         int startday = PreferenceManager.getInt(getContext(), "startDayKey")-1;
-        int i = startday;
         String startLine = yeartmp+"-"+(monthtmp+1)+"-"+(startday+1);
         String lastLine = yeartmp+"-"+(monthtmp+2)+"-"+(startday+1);
         String start = format.format(format.parse(startLine));
         String last = format.format(format.parse(lastLine));
-        //Log.e("TEST", "start : "+start+" last : "+last);
-
+        String lastLine2 = yeartmp+"-"+(monthtmp+2)+"-"+(startday);
+        String last2 = format.format(format.parse(lastLine2));
+        textMonth.setText(start+"~"+last2);
         DBOpenHelper dbOpenHelper = new DBOpenHelper(this.getContext());
         dbOpenHelper.open();
         dbOpenHelper.create();
         Cursor cursor = dbOpenHelper.selectColumnsInput();
-        //Log.e("Cursor", "Cursor : "+cursor.getCount()+"개");
-        int count = 1;
         items.clear();
+        moneyTotal = 0;
         while(cursor.moveToNext()) {
             int postTimeInt = cursor.getColumnIndex("posttime");
             String postTime = cursor.getString(postTimeInt);
             String date = format.format(format.parse(postTime));
             if(start.compareTo(date) <= 0 && last.compareTo(date) >= 0) {
-                //Log.e("TEST", "postTime : "+postTime+" PostTime이 start보다 크다");
                 int titleInt = cursor.getColumnIndex("title");
                 int moneyInt = cursor.getColumnIndex("money");
                 String title = cursor.getString(titleInt);
                 int money = cursor.getInt(moneyInt);
+                moneyTotal += money;
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                     items.add(new SubRecyclerItem(date, LocalTime.parse(postTime.split(" ")[1]), title, money));
                 }
             }
+        }
+    }
+
+    // Adapter에 아이템을 넣어주는 함수
+    void showDataBase(){
+        try{
+            dbSelectInput();
+            textTotal.setText(decFormat.format(moneyTotal)+"원");
+            adapter = new Fragment2Adapter(items);
+            recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+            recyclerView.setAdapter(adapter);
+        }catch (ParseException e) {
+            e.printStackTrace();
         }
     }
 

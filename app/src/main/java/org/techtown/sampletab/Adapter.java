@@ -131,13 +131,14 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
             this.position = position;
             changeVisibility(selectedItems.get(position));
         }
+
         // 애니메이션의 크기가 일정하지 않은 것 같음
         private void changeVisibility(final boolean isExpanded) {
             // height 값을 dp로 지정해서 넣고싶으면 아래 소스를 이용
             int dpValue = 75;
             float d = context.getResources().getDisplayMetrics().density;
-            //Log.e("changeVisibility", "d : "+d+", column : "+column);
-            int height = (int) ((dpValue+d) * column);
+            Log.e("changeVisibility", "d : "+d+", column : "+column);
+            int height = (int) ((dpValue + (dpValue * d/45)) * column);
 
             // ValueAnimator.ofInt(int... values)는 View가 변할 값을 지정, 인자는 int 배열
             ValueAnimator va = isExpanded ? ValueAnimator.ofInt(0, height) : ValueAnimator.ofInt(height, 0);
