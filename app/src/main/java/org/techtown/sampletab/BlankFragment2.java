@@ -293,17 +293,11 @@ public class BlankFragment2 extends Fragment {
                             intmoney = Integer.parseInt(strmoney);  //입력받은 금액 INT형으로 변환
                             String strdetail = detail.getText().toString();     //메모
 
-                            
-                            /*
-                            
-                            수정
-                            
-                             */
                             String title = "BlankFragment2";
                             String postTime = format.format(format.parse(strposttime));
 
                             command = new DBcommand(getContext());
-                            command.insertDataInput("", strbankname, null, title, "미정", intmoney, strdetail);
+                            command.insertDataInput(postTime, strbankname, null, title, "미정", intmoney, strdetail);
 
 
                         } catch (Exception e) {

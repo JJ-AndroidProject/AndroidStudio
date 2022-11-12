@@ -422,9 +422,7 @@ public class BlankFragment1 extends Fragment {
     }
 
     void dbSelectOutput() throws ParseException {
-
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-        int flag = 0;
         int monthtmp = month;
         int yeartmp = year;
         int startday = PreferenceManager.getInt(getContext(), "startDayKey")-1;
