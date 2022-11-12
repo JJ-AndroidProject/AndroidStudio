@@ -31,8 +31,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SubAdapter extends RecyclerView.Adapter<SubAdapter.ViewHolder> {
+    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     Context context;
     private List<BlankFragment1.SubRecyclerItem> items;
+    private ArrayList<String> list = new ArrayList<String>();
+
 
     public SubAdapter(List<BlankFragment1.SubRecyclerItem> items){
         this.items = items;
@@ -47,7 +50,8 @@ public class SubAdapter extends RecyclerView.Adapter<SubAdapter.ViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, int p) {
+        int position = p;
         DecimalFormat decFormat = new DecimalFormat("###,###"); // 3자리마다 콤마를 찍어주는 포맷
         String time = "";
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
@@ -77,6 +81,9 @@ public class SubAdapter extends RecyclerView.Adapter<SubAdapter.ViewHolder> {
                 daDialog.setView(dlgView);
                 AlertDialog da = daDialog.create();    // 확인, 취소 클릭 시 다이얼로그를 종료(da.dismiss)시키기 위해 생성
 
+                DBcommand command = new DBcommand(context);
+                String postTime = items.get(position).day+" "+items.get(position).getTime()+":00";
+                list = command.selectData(postTime, items.get(position).title, (int)items.get(position).money, "output");
                 addDate.setText(items.get(position).day);    //날짜 디폴트 값을 당일로 설정
 
                 //날짜 선택 시 달력에서 날짜 선택할 수 있게 함
@@ -99,7 +106,7 @@ public class SubAdapter extends RecyclerView.Adapter<SubAdapter.ViewHolder> {
                     }
                 });
 
-                String strTime = ("12:10:20");      //시간 넣어주세용
+                String strTime = items.get(position).getTime()+":00";      //시간 넣어주세용
                 addTime.setText(strTime);
 
                 String[] divtime = strTime.split(":");
@@ -125,7 +132,7 @@ public class SubAdapter extends RecyclerView.Adapter<SubAdapter.ViewHolder> {
                     }
                 });
 
-                String bankName = ("현금");       //결제수단 넣어주세용
+                String bankName = list.get(2);       //결제수단 넣어주세용
                 bankname.setText(bankName);
 
                 //결제수단 클릭해서 이미지를 고르면 해당 결제수단으로 입력받음
@@ -192,11 +199,13 @@ public class SubAdapter extends RecyclerView.Adapter<SubAdapter.ViewHolder> {
 
                 });
 
-
                 title.setText(items.get(position).title);    //결제내역
-                money.setText(decFormat.format((int)items.get(position).money));
+                money.setText((int)items.get(position).money+"");
 
-                String strdetail = ("");       //메모 넣어주세용
+                String strdetail = "";       //메모 넣어주세용
+                if(list.get(8) != null){
+                    strdetail = list.get(8);
+                }
                 detail.setText(strdetail);
 
                 Button btndlgdelete = (Button) dlgView.findViewById(R.id.btn_dlg_extra);
@@ -207,9 +216,11 @@ public class SubAdapter extends RecyclerView.Adapter<SubAdapter.ViewHolder> {
                 btndlgdelete.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                            /*
-                                여기에 데이터 삭제 기능 넣어주시면 됩니다
-                            */
+                        DBOpenHelper dbOpenHelper = new DBOpenHelper(context);
+                        dbOpenHelper.open();
+                        dbOpenHelper.create();
+                        dbOpenHelper.deleteColumn(Long.parseLong(list.get(0)), "output");
+                        Toast.makeText(context, "삭제", LENGTH_SHORT).show();
                         da.dismiss();   //다이얼로그 종료
                     }
                 });
@@ -222,7 +233,6 @@ public class SubAdapter extends RecyclerView.Adapter<SubAdapter.ViewHolder> {
                         da.dismiss();   //다이얼로그 종료
                     }
                 });
-
 
                 //확인 버튼 리스너
                 btndlgpos.setOnClickListener(new View.OnClickListener() {
@@ -240,14 +250,22 @@ public class SubAdapter extends RecyclerView.Adapter<SubAdapter.ViewHolder> {
                             String strbankname = bankname.getText().toString(); //결제수단
                             String strtitle = title.getText().toString();
                             String strmoney = money.getText().toString();       //금액
-                            intmoney = Integer.parseInt(strmoney);  //입력받은 금액 INT형으로 변환
+                            intmoney = Integer.parseInt(strmoney.replace(",", ""));  //입력받은 금액 INT형으로 변환
                             String strdetail = detail.getText().toString();     //메모
 
                             String postTime = format.format(format.parse(strposttime));
 
                             //이부분을 입력이 아니라 수정으로 바꿔주시면 되겠습니다
                             DBcommand command = new DBcommand(context);
-                            command.insertDataOutput(postTime, strbankname, null, strtitle, "미정", intmoney, strdetail);
+                            list.set(1, postTime);
+                            list.set(2, strbankname);
+                            list.set(5, strtitle);
+                            list.set(7, Integer.toString(intmoney));
+                            list.set(8, strdetail);
+                            DBOpenHelper dbOpenHelper = new DBOpenHelper(context);
+                            dbOpenHelper.open();
+                            dbOpenHelper.create();
+                            dbOpenHelper.updateColumnArrayList(list, "output");
 
                             da.dismiss();   //다이얼로그 종료
                         } catch (Exception e) {

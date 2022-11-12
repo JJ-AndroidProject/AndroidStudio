@@ -37,6 +37,8 @@ import java.util.Date;
 import java.util.List;
 
 public class Fragment2Adapter extends RecyclerView.Adapter<Fragment2Adapter.ViewHolder> {
+    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    private ArrayList<String> list = new ArrayList<String>();
     Context context;
     private List<BlankFragment2.SubRecyclerItem> items;
 
@@ -53,7 +55,8 @@ public class Fragment2Adapter extends RecyclerView.Adapter<Fragment2Adapter.View
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, int p) {
+        int position = p;
         DecimalFormat decFormat = new DecimalFormat("###,###"); // 3자리마다 콤마를 찍어주는 포맷
         SimpleDateFormat reset = new SimpleDateFormat("yyyy-MM-dd");
         SimpleDateFormat format = new SimpleDateFormat("MM-dd");
@@ -85,6 +88,11 @@ public class Fragment2Adapter extends RecyclerView.Adapter<Fragment2Adapter.View
                     //현재 날짜, 시간을 디폴트 값으로 설정.
                     addDate.setText(items.get(position).day);    //날짜 디폴트 값을 당일로 설정
 
+                    DBcommand command = new DBcommand(context);
+                    String postTime = items.get(position).day+" "+items.get(position).getTime()+":00";
+                    list = command.selectData(postTime, items.get(position).title, (int)items.get(position).money, "input");
+                    addDate.setText(items.get(position).day);    //날짜 디폴트 값을 당일로 설정
+
                     //날짜 선택 시 달력에서 날짜 선택할 수 있게 함
                     addDate.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -105,7 +113,7 @@ public class Fragment2Adapter extends RecyclerView.Adapter<Fragment2Adapter.View
                         }
                     });
 
-                    String strTime = ("12:10:20");      //시간 넣어주세용
+                    String strTime = items.get(position).getTime()+":00";      //시간 넣어주세용
                     addTime.setText(strTime);
 
                     String[] divtime = strTime.split(":");
@@ -131,7 +139,7 @@ public class Fragment2Adapter extends RecyclerView.Adapter<Fragment2Adapter.View
                         }
                     });
 
-                    String bankName = ("현금");       //결제수단 넣어주세용
+                    String bankName = list.get(2);       //결제수단 넣어주세용
                     bankname.setText(bankName);
 
                     //결제수단 클릭해서 이미지를 고르면 해당 결제수단으로 입력받음
@@ -200,9 +208,12 @@ public class Fragment2Adapter extends RecyclerView.Adapter<Fragment2Adapter.View
 
 
                     title.setText(items.get(position).title);    //결제내역
-                    money.setText(decFormat.format((int)items.get(position).money));
+                    money.setText((int)items.get(position).money+"");
 
-                    String strdetail = ("");       //메모 넣어주세용
+                    String strdetail = "";       //메모 넣어주세용
+                    if(list.get(8) != null){
+                        strdetail = list.get(8);
+                    }
                     detail.setText(strdetail);
 
                     Button btndlgdelete = (Button) dlgView.findViewById(R.id.btn_dlg_extra);
@@ -213,9 +224,11 @@ public class Fragment2Adapter extends RecyclerView.Adapter<Fragment2Adapter.View
                     btndlgdelete.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            /*
-                                여기에 데이터 삭제 기능 넣어주시면 됩니다
-                            */
+                            DBOpenHelper dbOpenHelper = new DBOpenHelper(context);
+                            dbOpenHelper.open();
+                            dbOpenHelper.create();
+                            dbOpenHelper.deleteColumn(Long.parseLong(list.get(0)), "input");
+                            Toast.makeText(context, "삭제", LENGTH_SHORT).show();
                             da.dismiss();   //다이얼로그 종료
                         }
                     });
@@ -253,9 +266,15 @@ public class Fragment2Adapter extends RecyclerView.Adapter<Fragment2Adapter.View
 
                                 //이부분을 입력이 아니라 수정으로 바꿔주시면 되겠습니다
                                 DBcommand command = new DBcommand(context);
-                                command.insertDataOutput(postTime, strbankname, null, strtitle, "미정", intmoney, strdetail);
-
-                                //지출 리스트 갱신해줌
+                                list.set(1, postTime);
+                                list.set(2, strbankname);
+                                list.set(5, strtitle);
+                                list.set(7, Integer.toString(intmoney));
+                                list.set(8, strdetail);
+                                DBOpenHelper dbOpenHelper = new DBOpenHelper(context);
+                                dbOpenHelper.open();
+                                dbOpenHelper.create();
+                                dbOpenHelper.updateColumnArrayList(list, "input");
 
                                 da.dismiss();   //다이얼로그 종료
                             } catch (Exception e) {
