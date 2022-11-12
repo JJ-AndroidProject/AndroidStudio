@@ -102,7 +102,7 @@ public class SubAdapter extends RecyclerView.Adapter<SubAdapter.ViewHolder> {
 
                         //날짜 표기된 텍스트뷰를 클릭하면 날짜 선택 다이얼로그를 띄워줌
                         new DatePickerDialog(context, myDateSetListener,
-                                Integer.parseInt(divdate[0]), Integer.parseInt(divdate[1]), Integer.parseInt(divdate[2])).show();
+                                Integer.parseInt(divdate[0]), Integer.parseInt(divdate[1])-1, Integer.parseInt(divdate[2])).show();
                     }
                 });
 
