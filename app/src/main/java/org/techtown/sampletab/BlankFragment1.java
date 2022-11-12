@@ -406,7 +406,7 @@ public class BlankFragment1 extends Fragment {
                 //확인 버튼 리스너
                 btndlgpos.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
+                    public void onClick(View view) {
                         //null값 허용은 accountnomber, detail.
                         //title, type을 ""로 받을 것. 이 둘은 notnull
                         try {

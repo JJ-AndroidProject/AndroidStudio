@@ -300,7 +300,7 @@ public class BlankFragment2 extends Fragment {
                 //확인 버튼 리스너
                 btndlgpos.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
+                    public void onClick(View view) {
                         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
                         //null값 허용은 accountnomber, detail.
