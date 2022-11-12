@@ -47,8 +47,6 @@ public class MyNotificationListener extends NotificationListenerService {
             dbInsert(sbn, this);
             fileSave(sbn);
             fileRead();
-            Thread th = new Thread(new MoveAccountThread());
-            th.start();
         }
     }
 
