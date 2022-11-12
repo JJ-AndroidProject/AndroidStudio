@@ -14,11 +14,16 @@
             android:layout_width="80dp"
             android:layout_height="40dp"
             android:textSize="20dp"
-            android:text="지출일" />
-        <EditText
-            android:id="@+id/ex_add1"
-            android:layout_width="250dp"
-            android:layout_height="40dp" />
+            android:layout_marginLeft="10dp"
+            android:text="날짜" />
+        <TextView
+            android:id="@+id/add_date"
+            android:layout_width="230dp"
+            android:layout_height="40dp"
+            android:textSize="20dp"
+            android:background="@drawable/edge"
+            android:gravity="center"
+            android:textAlignment="center"/>
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
@@ -29,11 +34,16 @@
             android:layout_width="80dp"
             android:layout_height="40dp"
             android:textSize="20dp"
-            android:text="결제은행" />
-        <EditText
-            android:id="@+id/ex_add2"
-            android:layout_width="250dp"
-            android:layout_height="40dp" />
+            android:layout_marginLeft="10dp"
+            android:text="시간" />
+        <TextView
+            android:id="@+id/add_time"
+            android:layout_width="230dp"
+            android:layout_height="40dp"
+            android:textSize="20dp"
+            android:gravity="center"
+            android:textAlignment="center"
+            android:background="@drawable/edge"/>
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
@@ -44,13 +54,35 @@
             android:layout_width="80dp"
             android:layout_height="40dp"
             android:textSize="20dp"
-            android:text="지출금액" />
+            android:layout_marginLeft="10dp"
+            android:text="결제수단" />
+        <TextView
+            android:id="@+id/add_bankname"
+            android:layout_width="230dp"
+            android:layout_height="40dp"
+            android:gravity="center"
+            android:textAlignment="center"
+            android:background="@drawable/edge"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="20dp">
+        <TextView
+            android:layout_width="80dp"
+            android:layout_height="40dp"
+            android:textSize="20dp"
+            android:layout_marginLeft="10dp"
+            android:text="금액" />
         <EditText
-            android:id="@+id/ex_add3"
-            android:layout_width="250dp"
+            android:id="@+id/add_money"
+            android:layout_width="230dp"
             android:layout_height="40dp"
             android:digits="0123456789"
-            android:inputType="number" />
+            android:inputType="number"
+            android:gravity="center"
+            android:textAlignment="center"/>
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -66,11 +98,14 @@
             android:layout_width="80dp"
             android:layout_height="40dp"
             android:textSize="20dp"
-            android:text="지출내역" />
+            android:layout_marginLeft="10dp"
+            android:text="메모" />
         <EditText
-            android:id="@+id/ex_add4"
-            android:layout_width="250dp"
-            android:layout_height="40dp" />
+            android:id="@+id/add_detail"
+            android:layout_width="230dp"
+            android:layout_height="40dp"
+            android:gravity="center"
+            android:textAlignment="center"/>
     </LinearLayout>
 
 </LinearLayout>
