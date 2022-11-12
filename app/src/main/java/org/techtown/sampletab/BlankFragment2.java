@@ -304,8 +304,6 @@ public class BlankFragment2 extends Fragment {
                             e.printStackTrace();
                             Toast.makeText(getContext(), "취소됨", LENGTH_SHORT).show();   //오류 발생 시
                         }
-
-
                     }
                 });
 
