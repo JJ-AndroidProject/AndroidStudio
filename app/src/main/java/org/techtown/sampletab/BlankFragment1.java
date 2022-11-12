@@ -407,6 +407,7 @@ public class BlankFragment1 extends Fragment {
                 btndlgpos.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                         //null값 허용은 accountnomber, detail.
                         //title, type을 ""로 받을 것. 이 둘은 notnull
                         try {
@@ -414,18 +415,20 @@ public class BlankFragment1 extends Fragment {
                             //입력한 값 받아오기
                             String strDate = addDate.getText().toString();      //날짜
                             String strTime = addTime.getText().toString();      //시간
-                            String strposttime = (" " + strDate + ":" + strTime + ":00");// xxxx-xx-xx xx:xx:00 형태. 데이터베이스 저장용
-                            String strbankname = bankname.getText().toString(); //결제수단
-                            String strtitle = title.getText().toString();       //결제내역
+                            String strposttime = (strDate+" "+strTime + ":00");// xxxx-xx-xx xx:xx:00 형태. 데이터베이스 저장용
+                            String strbankname = bankname.getText().toString(); //은행
                             String strmoney = money.getText().toString();       //금액
+                            intmoney = Integer.parseInt(strmoney);  //입력받은 금액 INT형으로 변환
                             String strdetail = detail.getText().toString();     //메모
 
-                            intmoney = Integer.parseInt(strmoney);  //입력받은 금액 INT형으로 변환
-                            /*
-                                여기에서 데이터베이스에 값 입력
-                             */
+                            String title = "BlankFragment1";
+                            String postTime = format.format(format.parse(strposttime));
+
+                            DBcommand command = new DBcommand(getContext());
+                            command.insertDataOutput(postTime, strbankname, null, title, "미정", intmoney, strdetail);
                             da.dismiss();   //다이얼로그 종료
                         } catch (Exception e) {
+                            e.printStackTrace();
                             Toast.makeText(getContext(), "취소됨", LENGTH_SHORT).show();   //오류 발생 시
                         }
                     }
@@ -441,9 +444,7 @@ public class BlankFragment1 extends Fragment {
     }
 
     void dbSelectOutput() throws ParseException {
-
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-        int flag = 0;
         int monthtmp = month;
         int yeartmp = year;
         int startday = PreferenceManager.getInt(getContext(), "startDayKey")-1;
