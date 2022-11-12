@@ -54,6 +54,7 @@ public class BlankFragment1 extends Fragment {
     RecyclerView recyclerView;
     Adapter adapter;
 
+
     /*            test 중(김종원)             */
     // ArrayList에 String 정보를 담아 Adapter로 보낸다.
     private List<MainRecyclerItem> list = new ArrayList<MainRecyclerItem>();
@@ -405,7 +406,9 @@ public class BlankFragment1 extends Fragment {
                 //확인 버튼 리스너
                 btndlgpos.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onClick(View view) {
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        //null값 허용은 accountnomber, detail.
+                        //title, type을 ""로 받을 것. 이 둘은 notnull
                         try {
                             int intmoney;
                             //입력한 값 받아오기
@@ -433,7 +436,7 @@ public class BlankFragment1 extends Fragment {
 
                 //여기까지
             }
-       });
+        });
         return viewGroup;
     }
 
@@ -463,45 +466,7 @@ public class BlankFragment1 extends Fragment {
             String postTime = cursor.getString(postTimeInt);
             String date = format.format(format.parse(postTime));
             if(start.compareTo(date) <= 0 && last.compareTo(date) >= 0) {
-                Log.e("TEST", "postTime : "+postTime+" PostTime이 start보다 크다");
-                int titleInt = cursor.getColumnIndex("title");
-                int moneyInt = cursor.getColumnIndex("money");
-                String title = cursor.getString(titleInt);
-                int money = cursor.getInt(moneyInt);
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    items.add(new SubRecyclerItem(date, LocalTime.parse(postTime.split(" ")[1]), title, money));
-                }
-            }
-        }
-    }
-
-    void dbSelectInput() throws ParseException {
-
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-        int flag = 0;
-        int monthtmp = month;
-        int yeartmp = year;
-        int startday = PreferenceManager.getInt(getContext(), "startDayKey")-1;
-        int i = startday;
-        String startLine = yeartmp+"-"+(monthtmp+1)+"-"+(startday+1);
-        String lastLine = yeartmp+"-"+(monthtmp+2)+"-"+(startday+1);
-        String start = format.format(format.parse(startLine));
-        String last = format.format(format.parse(lastLine));
-        Log.e("TEST", "start : "+start+" last : "+last);
-
-        DBOpenHelper dbOpenHelper = new DBOpenHelper(this.getContext());
-        dbOpenHelper.open();
-        dbOpenHelper.create();
-        Cursor cursor = dbOpenHelper.selectColumnsInput();
-        Log.e("Cursor", "Cursor : "+cursor.getCount()+"개");
-        int count = 1;
-        //items.clear();
-        while(cursor.moveToNext()) {
-            int postTimeInt = cursor.getColumnIndex("posttime");
-            String postTime = cursor.getString(postTimeInt);
-            String date = format.format(format.parse(postTime));
-            if(start.compareTo(date) <= 0 && last.compareTo(date) >= 0) {
-                Log.e("TEST", "postTime : "+postTime+" PostTime이 start보다 크다");
+                //Log.e("TEST", "postTime : "+postTime+" PostTime이 start보다 크다");
                 int titleInt = cursor.getColumnIndex("title");
                 int moneyInt = cursor.getColumnIndex("money");
                 String title = cursor.getString(titleInt);

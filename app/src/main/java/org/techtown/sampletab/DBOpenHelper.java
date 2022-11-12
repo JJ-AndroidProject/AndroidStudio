@@ -3,6 +3,7 @@ package org.techtown.sampletab;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.CursorIndexOutOfBoundsException;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
@@ -17,8 +18,8 @@ import java.util.Date;
 
 public class DBOpenHelper {
 
-    private static final String DATABASE_NAME = "accountBook.db";
-    private static final int DATABASE_VERSION = 1;
+    private static final String DATABASE_NAME = "accountBook.db"; // 데이터베이스 파일의 이름
+    private static final int DATABASE_VERSION = 1; // 데이터베이스의 현재 버전
 
     public static SQLiteDatabase db;
     private DatabaseHelper databaseHelper;
@@ -34,7 +35,8 @@ public class DBOpenHelper {
         public void onCreate(SQLiteDatabase db){
             // 지출 테이블
             String outputTable = "create table if not exists output(" +
-                    "posttime text not null PRIMARY KEY," +
+                    "id integer primary key autoincrement," +
+                    "posttime text not null ," +
                     "bankname text not null ," +
                     "move text default null ," +
                     "accountnumber text , " +
@@ -46,7 +48,8 @@ public class DBOpenHelper {
             // 수입 테이블
             //db.execSQL("DROP TABLE IF EXISTS input");
             String inputTable = "create table if not exists input(" +
-                    "posttime text not null PRIMARY KEY," +
+                    "id integer primary key autoincrement," +
+                    "posttime text not null ," +
                     "bankname text not null ," +
                     "move text default null ," +
                     "accountnumber text , " +
@@ -55,7 +58,6 @@ public class DBOpenHelper {
                     "money integer not null , " +
                     "detail text);";
             db.execSQL(inputTable);
-
         }
 
         @Override
@@ -77,44 +79,55 @@ public class DBOpenHelper {
 
     public void create(){
         databaseHelper.onCreate(db);
-    }
+    } // 데이터베이스 생성
 
     public void close(){
         db.close();
-    }
+    } // 데이터베이스 종료
 
+    // output 테이블에 insert 하는 함수
     public long insertColumnOutput(String posttime, String bankname, String accountnumber, String title, String type, int money, String detail){
         ContentValues values = new ContentValues();
-        values.put("posttime", posttime);
-        values.put("bankname", bankname);
-        values.put("accountnumber", accountnumber);
-        values.put("title", title);
-        values.put("type", type);
-        values.put("money", money);
-        values.put("detail", detail);
+        values.put("posttime", posttime); // 시간
+        values.put("bankname", bankname); // 은행
+        values.put("accountnumber", accountnumber); // 계좌번호
+        values.put("title", title); // 제목
+        values.put("type", type); // 분류
+        values.put("money", money); // 금액
+        values.put("detail", detail); // 세부사항
         return db.insert("output", null, values);
     }
 
+    // input 테이블에 insert 하는 함수
     public long insertColumnInput(String posttime, String bankname, String accountnumber, String title, String type, int money, String detail){
         ContentValues values = new ContentValues();
-        values.put("posttime", posttime);
-        values.put("bankname", bankname);
-        values.put("accountnumber", accountnumber);
-        values.put("title", title);
-        values.put("type", type);
-        values.put("money", money);
-        values.put("detail", detail);
+        values.put("posttime", posttime); // 시간
+        values.put("bankname", bankname); // 은행
+        values.put("accountnumber", accountnumber); // 계좌번호
+        values.put("title", title); // 제목
+        values.put("type", type); // 분류
+        values.put("money", money); // 금액
+        values.put("detail", detail); // 세부사항
         return db.insert("input", null, values);
     }
 
-    public Cursor selectColumnsOutput(){
-        return db.rawQuery("SELECT * FROM output", null);
+    // 계좌 간 이동을 할 때 move의 값을 업데이트 해주는 함수
+    public boolean updateColumn(long id, String table, String move){ //데이터 갱신
+        ContentValues values = new ContentValues();
+        values.put("move", move);
+        return db.update(table, values, "id=" + id, null) > 0;
     }
+
+    // output 테이블의 튜플을 가져오는 함수
+    public Cursor selectColumnsOutput(){ return db.rawQuery("SELECT * FROM output", null); }
+
+    // input 테이블의 튜플을 가져오는 함수
     public Cursor selectColumnsInput(){
         return db.rawQuery("SELECT * FROM input", null);
     }
 }
 
+// 데이터베이스를 조작하는 명령어 모음
 class DBcommand{
     Context context;
     public DBcommand(Context context){
@@ -124,6 +137,7 @@ class DBcommand{
         dbOpenHelper.create();
     }
 
+    // output 테이블에 데이터를 추가하는 부분(데이터가 제대로 들어 갔는지 로그로 확인)
     void insertDataOutput(String posttime, String bankname, String accountnumber, String title, String type, int money, String detail){
         DBOpenHelper dbOpenHelper = new DBOpenHelper(this.context);
         dbOpenHelper.open();
@@ -135,6 +149,7 @@ class DBcommand{
         }
     }
 
+    // input 테이블에 데이터를 추가하는 부분(데이터가 제대로 들어 갔는지 로그로 확인)
     void insertDataInput(String posttime, String bankname, String accountnumber, String title, String type, int money, String detail){
         DBOpenHelper dbOpenHelper = new DBOpenHelper(this.context);
         dbOpenHelper.open();
@@ -146,96 +161,64 @@ class DBcommand{
         }
     }
 
-    void selectCount(){ // 계좌 간 이동 확인
-        DBOpenHelper dbOpenHelper = new DBOpenHelper(this.context);
-        dbOpenHelper.open();
-        dbOpenHelper.create();
-        Cursor cursorOutput = dbOpenHelper.selectColumnsOutput();
-        Cursor cursorInput = dbOpenHelper.selectColumnsInput();
+    // 계좌 간 이동 확인
+    void selectCount() {
+        try {
+            DBOpenHelper dbOpenHelper = new DBOpenHelper(this.context);
+            dbOpenHelper.open();
+            dbOpenHelper.create();
+            Cursor cursorOutput = dbOpenHelper.selectColumnsOutput();
+            Cursor cursorInput = dbOpenHelper.selectColumnsInput();
 
-        cursorOutput.moveToLast();
+            cursorOutput.moveToLast(); // cursor를 output 테이블의 마지막을 가르키게 한다.
 
-        int postTimeIntOutput = cursorOutput.getColumnIndex("posttime");
-        int moneyIntOutput = cursorOutput.getColumnIndex("money");
-        String postTimeOutput = cursorOutput.getString(postTimeIntOutput);
-        int moneyOutput = cursorOutput.getInt(moneyIntOutput);
+            int postTimeIntOutput = cursorOutput.getColumnIndex("posttime");
+            int moneyIntOutput = cursorOutput.getColumnIndex("money");
+            int idOutput = cursorOutput.getColumnIndex("id");
+            int moveOutput = cursorOutput.getColumnIndex("move");
+            String postTimeOutput = cursorOutput.getString(postTimeIntOutput); // cursor를 통해 posttime 속성의 값을 가져온다.
+            int moneyOutput = cursorOutput.getInt(moneyIntOutput); // cursor를 통해 money 속성의 값을 가져온다.
+            int out_id = cursorOutput.getInt(idOutput); // cursor를 통해 id 속성의 값을 가져온다.
+            String move_output = cursorOutput.getString(moveOutput); // cursor를 통해 move 속성의 값을 가져온다.
 
-        Log.e("SelectCountOutput", postTimeOutput+" "+moneyOutput+"원");
+            Log.e("SelectCountOutput", postTimeOutput + " " + moneyOutput + "원");
 
-        cursorInput.moveToLast();
+            cursorInput.moveToLast(); // cursor를 input 테이블의 마지막을 가르키게 한다.
 
-        int postTimeIntInput = cursorInput.getColumnIndex("posttime");
-        int moneyIntInput = cursorInput.getColumnIndex("money");
-        String postTimeInput = cursorInput.getString(postTimeIntInput);
-        int moneyInput = cursorInput.getInt(moneyIntInput);
+            int postTimeIntInput = cursorInput.getColumnIndex("posttime");
+            int moneyIntInput = cursorInput.getColumnIndex("money");
+            int idInput = cursorInput.getColumnIndex("id");
+            int moveInput = cursorInput.getColumnIndex("move");
+            String postTimeInput = cursorInput.getString(postTimeIntInput); // cursor를 통해 posttime 속성의 값을 가져온다.
+            int moneyInput = cursorInput.getInt(moneyIntInput); // cursor를 통해 money 속성의 값을 가져온다.
+            int in_id = cursorInput.getInt(idInput); // cursor를 통해 id 속성의 값을 가져온다.
+            String move_input = cursorInput.getString(moveInput); // cursor를 통해 move 속성의 값을 가져온다.
 
-        Log.e("SelectCountInput", postTimeInput+" "+moneyInput+"원");
-        try{
-            Date format1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(postTimeOutput);
-            Date format2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(postTimeInput);
-            long out = (format2.getTime() - format1.getTime())/1000;
-            Log.e("SelectCount", "비교 : "+Math.abs(out));
-        }catch(ParseException e){
-
-        }
-
-
-    }
-
-    ArrayList<String> OutputLast(){
-        ArrayList<String> list = new ArrayList<String>();
-        DBOpenHelper dbOpenHelper = new DBOpenHelper(this.context);
-        dbOpenHelper.open();
-        dbOpenHelper.create();
-        Cursor cursor = dbOpenHelper.selectColumnsOutput();
-        if(cursor.moveToLast()){
-            int postTimeInt = cursor.getColumnIndex("posttime");
-            int titleInt = cursor.getColumnIndex("title");
-            int typeInt = cursor.getColumnIndex("type");
-            int moneyInt = cursor.getColumnIndex("money");
-
-            String postTime = cursor.getString(postTimeInt);
-            String title = cursor.getString(titleInt);
-            String type = cursor.getString(typeInt);
-            String money = Integer.toString(cursor.getInt(moneyInt));
-            list.add(postTime);
-            list.add(title);
-            list.add(type);
-            list.add(money);
-
-            return list;
-        }else{
-            return null;
+            Log.e("SelectCountInput", postTimeInput + " " + moneyInput + "원");
+            try {
+                Date format1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(postTimeOutput);
+                Date format2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(postTimeInput);
+                long out = (format2.getTime() - format1.getTime()) / 1000; // 두 입력된 값의 시간 차를 확인한다. (초 단위)
+                Log.e("SelectCount", "비교 : " + Math.abs(out));
+                if (out <= 5) { // 시간의 차가 5 이하인 경우 (5초)
+                    if (moneyOutput == moneyInput) { // output의 money와 input의 money 값이 같은 지 확인
+                        if (move_output == null && move_input == null) { // output과 input의 move 값이 null 일때 작동
+                            Log.e("SelectCount", "계좌간 이동 설정");
+                            dbOpenHelper.updateColumn(out_id, "output", "계좌이동"); // output 테이블의 id 값을 가진 튜플에 move를 계좌이동으로 변경
+                            dbOpenHelper.updateColumn(in_id, "input", "계좌이동"); // input 테이블의 id 값을 가진 튜플에 move를 계좌이동으로 변경
+                        }
+                    }
+                }
+            } catch (ParseException e) {
+                Log.e("SelectCount", "ParseException 오류");
+            }
+        } catch (CursorIndexOutOfBoundsException e) {
+            Log.e("SelectCount", "CursorIndexOutOfBoundsException 오류");
         }
     }
 
-    ArrayList<String> InputLast(){
-        ArrayList<String> list = new ArrayList<String>();
-        DBOpenHelper dbOpenHelper = new DBOpenHelper(this.context);
-        dbOpenHelper.open();
-        dbOpenHelper.create();
-        Cursor cursor = dbOpenHelper.selectColumnsInput();
-        if(cursor.moveToLast()){
-            int postTimeInt = cursor.getColumnIndex("posttime");
-            int titleInt = cursor.getColumnIndex("title");
-            int typeInt = cursor.getColumnIndex("type");
-            int moneyInt = cursor.getColumnIndex("money");
-
-            String postTime = cursor.getString(postTimeInt);
-            String title = cursor.getString(titleInt);
-            String type = cursor.getString(typeInt);
-            String money = Integer.toString(cursor.getInt(moneyInt));
-            list.add(postTime);
-            list.add(title);
-            list.add(type);
-            list.add(money);
-
-            return list;
-        }else{
-            return null;
-        }
-    }
-
+    /*
+    // BlankFragment3에서 테스트 용도로 사용중인 output 테이블의 함수 (나중에는 지울 예정)
     String selectAllOutput(){
         String line = "";
         DBOpenHelper dbOpenHelper = new DBOpenHelper(this.context);
@@ -268,6 +251,7 @@ class DBcommand{
         }
         return line;
     }
+    // BlankFragment3에서 테스트 용도로 사용중인 input 테이블의 함수 (나중에는 지울 예정)
     String selectAllInput(){
         String line = "";
         DBOpenHelper dbOpenHelper = new DBOpenHelper(this.context);
@@ -300,6 +284,7 @@ class DBcommand{
         }
         return line;
     }
+    */
 }
 
 
