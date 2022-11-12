@@ -235,14 +235,14 @@ class DBcommand{
             return null;
         }
     }
-
+    /*
     String selectAllOutput(){
         String line = "";
         DBOpenHelper dbOpenHelper = new DBOpenHelper(this.context);
         dbOpenHelper.open();
         dbOpenHelper.create();
         Cursor cursor = dbOpenHelper.selectColumnsOutput();
-        Log.e("DB", cursor.getCount()+"개");
+        //Log.e("DB", cursor.getCount()+"개");
         int count = 1;
         while(cursor.moveToNext()){
             int postTimeInt = cursor.getColumnIndex("posttime");
@@ -263,7 +263,7 @@ class DBcommand{
 
             String result = postTime+"||"+bankName+"||"+accountNumber+"||"+title+"||"+type+"||"+money+"||"+detail;
             line += count+"번 : "+result+"\n";
-            Log.e("DB : ", result);
+            //Log.e("DB : ", result);
             count++;
         }
         return line;
@@ -274,7 +274,7 @@ class DBcommand{
         dbOpenHelper.open();
         dbOpenHelper.create();
         Cursor cursor = dbOpenHelper.selectColumnsInput();
-        Log.e("DB", cursor.getCount()+"개");
+        //Log.e("DB", cursor.getCount()+"개");
         int count = 1;
         while(cursor.moveToNext()){
             int postTimeInt = cursor.getColumnIndex("posttime");
@@ -295,11 +295,12 @@ class DBcommand{
 
             String result = postTime+"||"+bankName+"||"+accountNumber+"||"+title+"||"+type+"||"+money+"||"+detail;
             line += count+"번 : "+result+"\n";
-            Log.e("DB : ", result);
+            //Log.e("DB : ", result);
             count++;
         }
         return line;
     }
+    */
 }
 
 

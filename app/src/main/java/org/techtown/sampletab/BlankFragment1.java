@@ -384,8 +384,6 @@ public class BlankFragment1 extends Fragment {
                     public void onClick(DialogInterface dialogInterface, int i) {
                         //null값 허용은 accountnomber, detail.
                         //title, type을 ""로 받을 것. 이 둘은 notnull
-
-
                         try {
                             int intmoney;
                             //입력한 값 받아오기
@@ -395,7 +393,6 @@ public class BlankFragment1 extends Fragment {
                             String strbankname = bankname.getText().toString(); //은행
                             String strmoney = money.getText().toString();       //금액
                             String strdetail = detail.getText().toString();     //메모
-
                             intmoney = Integer.parseInt(strmoney);  //입력받은 금액 INT형으로 변환
                             /*
                                 여기에서 데이터베이스에 값 입력
@@ -404,7 +401,6 @@ public class BlankFragment1 extends Fragment {
                         } catch (Exception e) {
                             Toast.makeText(getContext(), "취소됨", LENGTH_SHORT).show();   //오류 발생 시
                         }
-
                     }
                 });
 
@@ -436,13 +432,13 @@ public class BlankFragment1 extends Fragment {
         String lastLine = yeartmp+"-"+(monthtmp+2)+"-"+(startday+1);
         String start = format.format(format.parse(startLine));
         String last = format.format(format.parse(lastLine));
-        Log.e("TEST", "start : "+start+" last : "+last);
+        //Log.e("TEST", "start : "+start+" last : "+last);
 
         DBOpenHelper dbOpenHelper = new DBOpenHelper(this.getContext());
         dbOpenHelper.open();
         dbOpenHelper.create();
         Cursor cursor = dbOpenHelper.selectColumnsOutput();
-        Log.e("Cursor", "Cursor : "+cursor.getCount()+"개");
+        //Log.e("Cursor", "Cursor : "+cursor.getCount()+"개");
         int count = 1;
         //items.clear();
         while(cursor.moveToNext()) {
@@ -450,45 +446,7 @@ public class BlankFragment1 extends Fragment {
             String postTime = cursor.getString(postTimeInt);
             String date = format.format(format.parse(postTime));
             if(start.compareTo(date) <= 0 && last.compareTo(date) >= 0) {
-                Log.e("TEST", "postTime : "+postTime+" PostTime이 start보다 크다");
-                int titleInt = cursor.getColumnIndex("title");
-                int moneyInt = cursor.getColumnIndex("money");
-                String title = cursor.getString(titleInt);
-                int money = cursor.getInt(moneyInt);
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    items.add(new SubRecyclerItem(date, LocalTime.parse(postTime.split(" ")[1]), title, money));
-                }
-            }
-        }
-    }
-
-    void dbSelectInput() throws ParseException {
-
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-        int flag = 0;
-        int monthtmp = month;
-        int yeartmp = year;
-        int startday = PreferenceManager.getInt(getContext(), "startDayKey")-1;
-        int i = startday;
-        String startLine = yeartmp+"-"+(monthtmp+1)+"-"+(startday+1);
-        String lastLine = yeartmp+"-"+(monthtmp+2)+"-"+(startday+1);
-        String start = format.format(format.parse(startLine));
-        String last = format.format(format.parse(lastLine));
-        Log.e("TEST", "start : "+start+" last : "+last);
-
-        DBOpenHelper dbOpenHelper = new DBOpenHelper(this.getContext());
-        dbOpenHelper.open();
-        dbOpenHelper.create();
-        Cursor cursor = dbOpenHelper.selectColumnsInput();
-        Log.e("Cursor", "Cursor : "+cursor.getCount()+"개");
-        int count = 1;
-        //items.clear();
-        while(cursor.moveToNext()) {
-            int postTimeInt = cursor.getColumnIndex("posttime");
-            String postTime = cursor.getString(postTimeInt);
-            String date = format.format(format.parse(postTime));
-            if(start.compareTo(date) <= 0 && last.compareTo(date) >= 0) {
-                Log.e("TEST", "postTime : "+postTime+" PostTime이 start보다 크다");
+                //Log.e("TEST", "postTime : "+postTime+" PostTime이 start보다 크다");
                 int titleInt = cursor.getColumnIndex("title");
                 int moneyInt = cursor.getColumnIndex("money");
                 String title = cursor.getString(titleInt);
