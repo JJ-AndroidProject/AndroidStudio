@@ -241,16 +241,23 @@ public class BlankFragment1 extends Fragment {
         btn_direct_add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //여기에 입력 다이얼로그 생성
 
+                //여기부터
+
+                //다이얼로그 생성
                 View dlgView = View.inflate(getContext(), R.layout.direct_add_dialog, null);
 
                 TextView addDate = dlgView.findViewById(R.id.add_date);    //날짜
                 TextView addTime = dlgView.findViewById(R.id.add_time);    //시간
-                TextView bankname = dlgView.findViewById(R.id.add_bankname);     //은행
+                TextView bankname = dlgView.findViewById(R.id.add_bankname);     //결제수단
+                EditText title = dlgView.findViewById(R.id.add_title);       //결제내역
                 EditText money = dlgView.findViewById(R.id.add_money);        //금액
                 EditText detail = dlgView.findViewById(R.id.add_detail);       //메모
 
+                AlertDialog.Builder daDialog = new AlertDialog.Builder(getContext());
+                daDialog.setTitle("지출 내역 추가");
+                daDialog.setView(dlgView);
+                AlertDialog da = daDialog.create();    // 확인, 취소 클릭 시 다이얼로그를 종료(da.dismiss)시키기 위해 생성
                 //현재 날짜, 시간을 디폴트 값으로 설정.
                 addDate.setText(cal.get(Calendar.YEAR) + "-" + (cal.get(Calendar.MONTH) + 1) + "-" + today);    //날짜 디폴트 값을 당일로 설정
 
@@ -320,7 +327,7 @@ public class BlankFragment1 extends Fragment {
                         AlertDialog.Builder bsDialog = new AlertDialog.Builder(getContext());
                         bsDialog.setView(bsdlgView);
 
-                        AlertDialog ad = bsDialog.create();     //이미지 클릭 시 다이얼로그를 종료시키기 위해 (ad.dismiss) 생성
+                        AlertDialog ad = bsDialog.create();     //이미지 클릭 시 다이얼로그를 종료(ad.dismiss)시키기 위해 생성
                         ImageButton btn_cash = (ImageButton) bsdlgView.findViewById(R.id.cash);     //현금
                         ImageButton btn_kb = (ImageButton) bsdlgView.findViewById(R.id.kbbank);     //kb국민은행
                         ImageButton btn_nh = (ImageButton) bsdlgView.findViewById(R.id.nhbank);     //농협
@@ -374,17 +381,33 @@ public class BlankFragment1 extends Fragment {
                     }
 
                 });
-                //다이얼로그 생성
-                AlertDialog.Builder daDialog = new AlertDialog.Builder(getContext());
-                daDialog.setTitle("지출 내역 추가");
-                daDialog.setView(dlgView);
 
-                //확인버튼 클릭 시. 이 부분을 나중에 xml 버튼으로 만들어야 함
-                daDialog.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                Button btndlgextra = (Button) dlgView.findViewById(R.id.btn_dlg_extra);
+                Button btndlgneg = (Button) dlgView.findViewById(R.id.btn_dlg_neg);
+                Button btndlgpos = (Button) dlgView.findViewById(R.id.btn_dlg_pos);
+
+                //추가 기능 버튼 리스너.
+                btndlgextra.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                    public void onClick(View view) {
 
+                    }
+                });
+
+                //취소 버튼 리스너
+                btndlgneg.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Toast.makeText(getContext(), "취소", LENGTH_SHORT).show();
+                        da.dismiss();   //다이얼로그 종료
+                    }
+                });
+
+                //확인 버튼 리스너
+                btndlgpos.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                         //null값 허용은 accountnomber, detail.
                         //title, type을 ""로 받을 것. 이 둘은 notnull
                         try {
@@ -403,8 +426,7 @@ public class BlankFragment1 extends Fragment {
 
                             DBcommand command = new DBcommand(getContext());
                             command.insertDataOutput(postTime, strbankname, null, title, "미정", intmoney, strdetail);
-
-
+                            da.dismiss();   //다이얼로그 종료
                         } catch (Exception e) {
                             e.printStackTrace();
                             Toast.makeText(getContext(), "취소됨", LENGTH_SHORT).show();   //오류 발생 시
@@ -412,17 +434,10 @@ public class BlankFragment1 extends Fragment {
                     }
                 });
 
-                //취소버튼 클릭 시. 마찬가지로 xml버튼으로 만들어야 함.
-                daDialog.setNegativeButton("취소", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        Toast.makeText(getContext(), "취소", LENGTH_SHORT).show();
-                    }
-                });
+                //다이얼로그 보여주기
+                da.show();
 
-                //이 자리에 삭제 버튼 xml로 추가해야 함
-
-                daDialog.show();
+                //여기까지
             }
         });
         return viewGroup;

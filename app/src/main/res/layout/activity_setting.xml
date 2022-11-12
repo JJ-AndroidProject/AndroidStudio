@@ -34,7 +34,6 @@
                         android:id="@+id/month_start"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/black"
                         android:layout_weight="1"
                         android:padding="10dp"
                         android:textSize="20dp"
@@ -67,7 +66,6 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:padding="10dp"
-                        android:textColor="@color/black"
                         android:text="데이터 백업"
                         android:textSize="20dp" />
                     <TextView
@@ -76,7 +74,6 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:padding="10dp"
-                        android:textColor="@color/black"
                         android:text="데이터 복구"
                         android:textSize="20dp" />
                 </LinearLayout>
@@ -115,7 +112,6 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:padding="10dp"
-                        android:textColor="@color/black"
                         android:textSize="20dp"
                         android:text="지출 상한선" />
                 </LinearLayout>
@@ -146,7 +142,6 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:padding="10dp"
-                        android:textColor="@color/black"
                         android:text="계좌 관리"
                         android:textSize="20dp" />
                 </LinearLayout>
@@ -185,7 +180,6 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:padding="10dp"
-                        android:textColor="@color/black"
                         android:textSize="20dp"
                         android:text="비밀번호 입력" />
                 </LinearLayout>
@@ -216,7 +210,6 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:padding="10dp"
-                        android:textColor="@color/black"
                         android:text="폰트 크기 변경"
                         android:textSize="20dp" />
                 </LinearLayout>
