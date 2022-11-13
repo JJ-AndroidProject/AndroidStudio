@@ -369,16 +369,16 @@ public class BlankFragment1 extends Fragment {
                             String strDate = addDate.getText().toString();      //날짜
                             String strTime = addTime.getText().toString();      //시간
                             String strposttime = (strDate+" "+strTime + ":00");// xxxx-xx-xx xx:xx:00 형태. 데이터베이스 저장용
-                            String strbankname = bankname.getText().toString(); //은행
+                            String strbankname = bankname.getText().toString(); //결제수단
+                            String strtitle = title.getText().toString();
                             String strmoney = money.getText().toString();       //금액
                             intmoney = Integer.parseInt(strmoney);  //입력받은 금액 INT형으로 변환
                             String strdetail = detail.getText().toString();     //메모
 
-                            String title = "BlankFragment1";
                             String postTime = format.format(format.parse(strposttime));
 
                             DBcommand command = new DBcommand(getContext());
-                            command.insertDataOutput(postTime, strbankname, null, title, "미정", intmoney, strdetail);
+                            command.insertDataOutput(postTime, strbankname, null, strtitle, "미정", intmoney, strdetail);
                             showDataBase(); // Adapter에 아이템을 넣어주는 함수
                             da.dismiss();   //다이얼로그 종료
                         } catch (Exception e) {

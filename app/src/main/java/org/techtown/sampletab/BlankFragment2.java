@@ -134,7 +134,7 @@ public class BlankFragment2 extends Fragment {
                 EditText detail = dlgView.findViewById(R.id.add_detail);       //메모
 
                 AlertDialog.Builder daDialog = new AlertDialog.Builder(getContext());
-                daDialog.setTitle("지출 내역 추가");
+                daDialog.setTitle("수입 내역 추가");
                 daDialog.setView(dlgView);
                 AlertDialog da = daDialog.create();    // 확인, 취소 클릭 시 다이얼로그를 종료(da.dismiss)시키기 위해 생성
                 //현재 날짜, 시간을 디폴트 값으로 설정.
@@ -305,6 +305,7 @@ public class BlankFragment2 extends Fragment {
 
                             command = new DBcommand(getContext());
                             command.insertDataInput(postTime, strbankname, null, strtitle, "미정", intmoney, strdetail);
+                            //수입 리스트 갱신해줌
                             showDataBase(); // Adapter에 아이템을 넣어주는 함수
                             da.dismiss();
                         } catch (Exception e) {
