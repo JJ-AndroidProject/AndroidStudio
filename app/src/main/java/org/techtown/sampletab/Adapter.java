@@ -94,6 +94,9 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
                 prePosition = position;
             }
         });
+
+
+
     }
 
     @Override

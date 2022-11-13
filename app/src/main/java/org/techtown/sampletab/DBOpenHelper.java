@@ -118,6 +118,26 @@ public class DBOpenHelper {
         return db.update(table, values, "id=" + id, null) > 0;
     }
 
+    // 수정한 값을 업데이트 해주는 함수
+    public boolean updateColumnArrayList(ArrayList<String> list, String table){ //데이터 갱신
+        long id = Long.parseLong(list.get(0));
+        ContentValues values = new ContentValues();
+        values.put("posttime", list.get(1)); // 시간
+        values.put("bankname", list.get(2)); // 은행
+        values.put("move", list.get(3));
+        values.put("accountnumber", list.get(4)); // 계좌번호
+        values.put("title", list.get(5)); // 제목
+        values.put("type", list.get(6)); // 분류
+        values.put("money", Integer.parseInt(list.get(7))); // 금액
+        values.put("detail", list.get(8)); // 세부사항
+        return db.update(table, values, "id=" + id, null) > 0;
+    }
+
+    // 부분 삭제 (특정 행 삭제)
+    public boolean deleteColumn(long id, String table){
+        return db.delete(table, "id = "+id, null) > 0;
+    }
+
     // output 테이블의 튜플을 가져오는 함수
     public Cursor selectColumnsOutput(){ return db.rawQuery("SELECT * FROM output", null); }
 
@@ -215,6 +235,63 @@ class DBcommand{
         } catch (CursorIndexOutOfBoundsException e) {
             Log.e("SelectCount", "CursorIndexOutOfBoundsException 오류");
         }
+    }
+
+    ArrayList<String> selectData(String select_postTime, String select_title, int select_money, String select_table){
+        ArrayList<String> list = new ArrayList<String>();
+        DBOpenHelper dbOpenHelper = new DBOpenHelper(this.context);
+        dbOpenHelper.open();
+        dbOpenHelper.create();
+        Cursor cursor = null;
+        try{
+            if(select_table.equals("output")){
+                cursor = dbOpenHelper.selectColumnsOutput();
+                Log.e("selectData", "output");
+            }
+            else if(select_table.equals("input")){
+                cursor = dbOpenHelper.selectColumnsInput();
+                Log.e("selectData", "input");
+            }
+            while(cursor.moveToNext()){
+                int cursor_id = cursor.getColumnIndex("id");
+                int cursor_postTime = cursor.getColumnIndex("posttime");
+                int cursor_bankName = cursor.getColumnIndex("bankname");
+                int cursor_move = cursor.getColumnIndex("move");
+                int cursor_accountNumber = cursor.getColumnIndex("accountnumber");
+                int cursor_title = cursor.getColumnIndex("title");
+                int cursor_type = cursor.getColumnIndex("type");
+                int cursor_money = cursor.getColumnIndex("money");
+                int cursor_detail = cursor.getColumnIndex("detail");
+
+                int id = cursor.getInt(cursor_id);
+                String postTime = cursor.getString(cursor_postTime);
+                String bankName = cursor.getString(cursor_bankName);
+                String move = cursor.getString(cursor_move);
+                String accountNumber = cursor.getString(cursor_accountNumber);
+                String title = cursor.getString(cursor_title);
+                String type = cursor.getString(cursor_type);
+                int money = cursor.getInt(cursor_money);
+                String detail = cursor.getString(cursor_detail);
+                if(postTime.equals(select_postTime) && title.equals(select_title) && money == select_money){
+                    list.add(Integer.toString(id)); // 0
+                    list.add(postTime); // 1
+                    list.add(bankName); // 2
+                    list.add(move); // 3
+                    list.add(accountNumber); // 4
+                    list.add(title); // 5
+                    list.add(type); // 6
+                    list.add(Integer.toString(money)); // 7
+                    list.add(detail); // 8
+                    String result = id+"||"+postTime+"||"+bankName+"||"+accountNumber+"||"+title+"||"+type+"||"+money+"||"+detail;
+                    Log.e("DB", result);
+                    break;
+                }
+            }
+            return list;
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return null;
     }
 
     /*

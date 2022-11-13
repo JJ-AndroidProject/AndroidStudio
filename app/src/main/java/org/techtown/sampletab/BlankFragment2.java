@@ -149,7 +149,7 @@ public class BlankFragment2 extends Fragment {
                 EditText detail = dlgView.findViewById(R.id.add_detail);       //메모
 
                 AlertDialog.Builder daDialog = new AlertDialog.Builder(getContext());
-                daDialog.setTitle("지출 내역 추가");
+                daDialog.setTitle("수입 내역 추가");
                 daDialog.setView(dlgView);
                 AlertDialog da = daDialog.create();    // 확인, 취소 클릭 시 다이얼로그를 종료(da.dismiss)시키기 위해 생성
                 //현재 날짜, 시간을 디폴트 값으로 설정.
@@ -310,20 +310,27 @@ public class BlankFragment2 extends Fragment {
                             //입력한 값 받아오기
                             String strDate = addDate.getText().toString();      //날짜
                             String strTime = addTime.getText().toString();      //시간
-                            String strposttime = (" " + strDate + ":" + strTime + ":00");// xxxx-xx-xx xx:xx:00 형태. 데이터베이스 저장용
+                            String strposttime = (strDate + " " + strTime + ":00");// xxxx-xx-xx xx:xx:00 형태. 데이터베이스 저장용
                             String strbankname = bankname.getText().toString(); //결제내역
                             String strtitle = title.getText().toString();       //결제내역
                             String strmoney = money.getText().toString();       //금액
                             intmoney = Integer.parseInt(strmoney);  //입력받은 금액 INT형으로 변환
                             String strdetail = detail.getText().toString();     //메모
 
-                            String title = "BlankFragment2";
                             String postTime = format.format(format.parse(strposttime));
 
                             command = new DBcommand(getContext());
-                            command.insertDataInput(postTime, strbankname, null, title, "미정", intmoney, strdetail);
+                            command.insertDataInput(postTime, strbankname, null, strtitle, "미정", intmoney, strdetail);
 
-
+                            //수입 리스트 갱신해줌
+                            try{
+                                dbSelectInput();
+                                adapter = new Fragment2Adapter(items);
+                                recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+                                recyclerView.setAdapter(adapter);
+                            }catch (ParseException e) {
+                                e.printStackTrace();
+                            }
                             da.dismiss();
                         } catch (Exception e) {
                             e.printStackTrace();
