@@ -11,8 +11,8 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.nio.channels.FileChannel;
 
-public class Acbackup {
-    private void backup1(View v) { //백업
+public class Accountbackup {
+    private void Acbackup(View v) { //백업
         try {
             File sd1 = Environment.getExternalStorageDirectory();
             File data1 = Environment.getDataDirectory();
@@ -38,7 +38,7 @@ public class Acbackup {
         }
     }
 
-    private void restore1(View v) { //복원, 백업과 이하동문
+    private void Acrestore(View v) { //복원, 백업과 이하동문
         try {
             File sd = Environment.getExternalStorageDirectory();
             File data = Environment.getDataDirectory();

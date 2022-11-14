@@ -13,7 +13,7 @@ import java.nio.channels.FileChannel;
 
 public class Outputbackup {
 
-    private void backup2(View v) { //백업
+    private void outbackup(View v) { //백업
         try {
             File sd2 = Environment.getExternalStorageDirectory();
             File data2 = Environment.getDataDirectory();
@@ -39,7 +39,7 @@ public class Outputbackup {
         }
     }
 
-    private void restore2(View v) { //복원, 백업과 이하동문
+    private void outrestore(View v) { //복원, 백업과 이하동문
         try {
             File sd2 = Environment.getExternalStorageDirectory();
             File data2 = Environment.getDataDirectory();

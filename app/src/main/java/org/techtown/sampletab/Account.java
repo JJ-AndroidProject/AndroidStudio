@@ -62,7 +62,7 @@ public class Account {
             return this;
         }
 
-        public long insertColumn1(String name, int account, String bank, String memo) { //데이터 삽입(Insert)
+        public long AcinsertColumn1(String name, int account, String bank, String memo) { //데이터 삽입(Insert)
             SQLiteDatabase ADB = ADBHelper.getWritableDatabase();
             ContentValues values1 = new ContentValues();
             values1.put(CreateDB.NAME, name);
@@ -73,7 +73,7 @@ public class Account {
             return ADB.insert(CreateDB._TABLENAME2, null, values1);
         }
 
-        public boolean updateColumn1(long id, String name, int account, String bank, String memo){ //데이터 갱신
+        public boolean AcupdateColumn1(long id, String name, int account, String bank, String memo){ //데이터 갱신
             SQLiteDatabase ADB = ADBHelper.getWritableDatabase();
             ContentValues values1 = new ContentValues();
             values1.put(CreateDB.NAME, name);
@@ -86,28 +86,28 @@ public class Account {
 
 
         // 전체 삭제
-        public void deleteAllColumns1() {ADB.delete(CreateDB._TABLENAME2, null, null);
+        public void AcdeleteAllColumns() {ADB.delete(CreateDB._TABLENAME2, null, null);
             Log.e("데이터 전체 삭제", "완료 ");
         }
 
         // 부분 삭제 (특정 행 삭제)
-        public boolean deleteColumn1(long id){
+        public boolean AcdeleteColumn(long id){
             return ADB.delete(CreateDB._TABLENAME2, "_id="+id, null) > 0;
         }
 
         //데이터 읽어오기
-        public Cursor accountgetAllData() {
+        public Cursor AcgetAllData() {
             SQLiteDatabase IDB = ADBHelper.getWritableDatabase();
             Cursor Ares =  IDB.rawQuery("select * from "+ "accounttable", null);
             return Ares;
         }
 
 
-        public void create(){
+        public void Acreate(){
             ADBHelper.onCreate(ADB);
         }
 
-        public void close(){
+        public void Acclose(){
             ADB.close();
         }
 
@@ -117,7 +117,7 @@ public class Account {
 
 //파일 암호화 예제
 //파일이 암호화 되는지 확인해 볼 필요가 있음.
-//다른 작업이 우선시 되므로  삭제나 수정 예정
+//다른 작업이 우선시 되므로 삭제나 수정 예정
 //public class AES256Chiper {
 //public static byte[] ivBytes = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
 //public static String secretKey = "비밀키"; //비밀 번호 설정할 것

@@ -94,34 +94,29 @@ public class Output {
             return ODB.update(CreateDB._TABLENAME1, values, "_id=" + id, null) > 0;
         }
 
-        // 데이터 보여주기(읽어오기)
-        public Cursor getAllData() {
+        // 데이터 읽어오기
+        public Cursor outputgetAllData() {
             SQLiteDatabase ODB = ODBHelper.getWritableDatabase();
             Cursor Ores = ODB.rawQuery("select * from "+ "outtable", null);
             return Ores;
         }
 
         // 전체 삭제
-        public void outputdeleteAllColumns() {
+        public void outdeleteAllColumns() {
             ODB.delete(CreateDB._TABLENAME1, null, null);
             Log.e("데이터 전체 삭제", "완료 ");
         }
 
         // 부분 삭제 (특정 행 삭제)
-        public boolean outputdeleteColumn(long id){
+        public boolean outdeleteColumn(long id){
             return ODB.delete(CreateDB._TABLENAME1, "_id="+id, null) > 0;
         }
 
-        private View getView() { // 이 부분을 이벤트 리스너와 조합해서 변경 할 예정
-            return null;
-        }
-
-
-        public void create(){
+        public void outcreate(){
             ODBHelper.onCreate(ODB);
         }
 
-        public void close(){
+        public void outclose(){
             ODB.close();
         }
     }

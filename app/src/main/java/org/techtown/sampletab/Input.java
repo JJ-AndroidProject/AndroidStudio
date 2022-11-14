@@ -65,7 +65,7 @@ public class Input {
             return this;
         }
 
-        public long inputinsertColumn(int day, int time, int input , String bank, String memo) { // 수입 데이터 삽입(Insert)
+        public long ininsertColumn(int day, int time, int input , String bank, String memo) { // 수입 데이터 삽입(Insert)
             SQLiteDatabase IDB = IDBHelper.getWritableDatabase();
             ContentValues values = new ContentValues();
             values.put(CreateDB.DAY, day);
@@ -77,12 +77,12 @@ public class Input {
             return IDB.insert(CreateDB._TABLENAME0, null, values);
         }
 
-        public Cursor selectColumns(){ //데이터 선택(SELECT)
+        public Cursor inselectColumns(){ //데이터 선택(SELECT)
             return IDB.query(CreateDB._TABLENAME0, null, null, null, null, null, null);
         }
 
 
-        public boolean inputupdateColumn(long id, int day, int time, int input , String bank, String memo){ //삽입 데이터 갱신
+        public boolean inupdateColumn(long id, int day, int time, int input , String bank, String memo){ //삽입 데이터 갱신
             SQLiteDatabase IDB = IDBHelper.getWritableDatabase();
             ContentValues values = new ContentValues();
             values.put(CreateDB.DAY, day);
@@ -94,34 +94,29 @@ public class Input {
             return IDB.update(CreateDB._TABLENAME0, values, "_id=" + id, null) > 0;
         }
 
-        public Cursor inputgetAllData() {
+        // 데이터 읽어오기
+        public Cursor ingetAllData() {
             SQLiteDatabase IDB = IDBHelper.getWritableDatabase();
             Cursor Ires =  IDB.rawQuery("select * from "+ "inputtable", null);
             return Ires;
         }
 
         // 전체 삭제
-        public void inputdeleteAllColumns() {
+        public void indeleteAllColumns() {
             IDB.delete(CreateDB._TABLENAME0, null, null);
             Log.e("데이터 전체 삭제", "완료 ");
         }
 
         // 부분 삭제 (특정 행 삭제)
-        public boolean inputdeleteColumn(long id){
+        public boolean indeleteColumn(long id){
             return IDB.delete(CreateDB._TABLENAME0, "_id="+id, null) > 0;
         }
 
-
-        private View getView() { // 이 부분을 이벤트 리스너와 조합해서 변경 할 예정
-            return null;
-        }
-
-
-        public void create(){
+        public void increate(){
             IDBHelper.onCreate(IDB);
         }
 
-        public void close(){
+        public void inclose(){
             IDB.close();
         }
     }
