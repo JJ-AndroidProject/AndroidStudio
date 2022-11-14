@@ -12,11 +12,17 @@ import android.util.Log;
 public class Account {
 
     public static final class CreateDB implements BaseColumns {
-        public static final String ACCOUNT = "account"; //지출
+        public static final String NAME = "name"; //이름
+        public static final String ACCOUNT = "account"; //계좌 정보
+        public static final String BACK = "bank"; //은행
+        public static final String MEMO = "memo"; //메모
         public static final String _TABLENAME2 = "accounttable";
         public static final String _CREATE2 = "create table if not exists "+_TABLENAME2+"(" // 데이터베이스가 없을 경우 생성.
                 +_ID+" integer primary key autoincrement, " //중복되지 않는 값 생성하지 않도록 1씩 추가.)
-                +ACCOUNT + " ); ";
+                +NAME
+                +ACCOUNT
+                +BACK
+                +MEMO + " ); ";
     }
 
     public static class AcData {
@@ -56,18 +62,24 @@ public class Account {
             return this;
         }
 
-        public long insertColumn1(int account){ //데이터 삽입(Insert)
+        public long insertColumn1(String name, int account, String bank, String memo) { //데이터 삽입(Insert)
             SQLiteDatabase ADB = ADBHelper.getWritableDatabase();
             ContentValues values1 = new ContentValues();
+            values1.put(CreateDB.NAME, name);
             values1.put(CreateDB.ACCOUNT, account);
+            values1.put(CreateDB.BACK, bank);
+            values1.put(CreateDB.MEMO, memo);
             Log.e("삽입","완료");
             return ADB.insert(CreateDB._TABLENAME2, null, values1);
         }
 
-        public boolean updateColumn1(long id,  int account){ //데이터 갱신
+        public boolean updateColumn1(long id, String name, int account, String bank, String memo){ //데이터 갱신
             SQLiteDatabase ADB = ADBHelper.getWritableDatabase();
             ContentValues values1 = new ContentValues();
+            values1.put(CreateDB.NAME, name);
             values1.put(CreateDB.ACCOUNT, account);
+            values1.put(CreateDB.BACK, bank);
+            values1.put(CreateDB.MEMO, memo);
             Log.e("업데이트", "완료");
             return ADB.update(CreateDB._TABLENAME2, values1, "_id=" + id, null) > 0;
         }
@@ -105,7 +117,7 @@ public class Account {
 
 //파일 암호화 예제
 //파일이 암호화 되는지 확인해 볼 필요가 있음.
-//다른 작업이 우선시 되므로   삭제나 수정 예정
+//다른 작업이 우선시 되므로  삭제나 수정 예정
 //public class AES256Chiper {
 //public static byte[] ivBytes = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
 //public static String secretKey = "비밀키"; //비밀 번호 설정할 것
