@@ -85,7 +85,7 @@ public class Account {
         }
 
         public Cursor AcinselectColumns(){ //데이터 선택(SELECT)
-            return ADB.query(Input.CreateDB._TABLENAME0, null, null, null, null, null, null);
+            return ADB.query(CreateDB._TABLENAME2, null, null, null, null, null, null);
         }
 
 

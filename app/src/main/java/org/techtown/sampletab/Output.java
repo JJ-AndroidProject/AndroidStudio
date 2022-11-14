@@ -95,7 +95,7 @@ public class Output {
         }
 
         public Cursor outinselectColumns(){ //데이터 선택(SELECT)
-            return ODB.query(Input.CreateDB._TABLENAME0, null, null, null, null, null, null);
+            return ODB.query(CreateDB._TABLENAME1, null, null, null, null, null, null);
         }
 
         // 데이터 읽어오기
