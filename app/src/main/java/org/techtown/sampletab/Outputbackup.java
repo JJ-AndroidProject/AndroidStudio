@@ -28,7 +28,7 @@ public class Outputbackup {
                     FileChannel src2 = new FileInputStream(currentDB2).getChannel();
                     FileChannel dst2 = new FileOutputStream(backupDB2).getChannel();
                     dst2.transferFrom(src2, 0, src2.size());
-                    Log.e("확인 검사", "여기까지 완료");
+                    Log.e("outbackupok", "여기까지 완료");
                     src2.close();
                     dst2.close();
                     Snackbar.make(v, "백업이 완료되었습니다.", Snackbar.LENGTH_SHORT).show(); //수정할 필요가 있음
@@ -54,7 +54,7 @@ public class Outputbackup {
                     FileChannel src2 = new FileInputStream(backupDB2).getChannel();
                     FileChannel dst2 = new FileOutputStream(currentDB2).getChannel();
                     dst2.transferFrom(src2, 0, src2.size());
-                    Log.i("확인 검사", "여기까지 완료");
+                    Log.e("outrestoreok", "여기까지 완료");
                     src2.close();
                     dst2.close();
                     Snackbar.make(v, "복구가 완료되었습니다.", Snackbar.LENGTH_SHORT).show();

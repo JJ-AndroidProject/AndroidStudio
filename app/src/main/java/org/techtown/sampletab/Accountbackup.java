@@ -20,14 +20,14 @@ public class Accountbackup {
             if (sd1.canWrite()) {
                 String currentDBPath1 ="//data//package name//databases//database_name";  // 경로 수정 필요
                 String backupDBPath1 = "database_name";
-                File currentDB = new File(data1, currentDBPath1);
-                File backupDB = new File(sd1, backupDBPath1);
+                File currentDB1 = new File(data1, currentDBPath1);
+                File backupDB1 = new File(sd1, backupDBPath1);
 
-                if (currentDB.exists()) {
-                    FileChannel src1 = new FileInputStream(currentDB).getChannel();
-                    FileChannel dst1 = new FileOutputStream(backupDB).getChannel();
+                if (currentDB1.exists()) {
+                    FileChannel src1 = new FileInputStream(currentDB1).getChannel();
+                    FileChannel dst1 = new FileOutputStream(backupDB1).getChannel();
                     dst1.transferFrom(src1, 0, src1.size());
-                    Log.i("확인 검사", "여기까지 완료");
+                    Log.e("AcBackupOk", "여기까지 완료");
                     src1.close();
                     dst1.close();
                     Snackbar.make(v, "백업이 완료되었습니다.", Snackbar.LENGTH_SHORT).show(); //수정할 필요가 있음
@@ -53,7 +53,7 @@ public class Accountbackup {
                     FileChannel src1 = new FileInputStream(backupDB1).getChannel();
                     FileChannel dst1 = new FileOutputStream(currentDB1).getChannel();
                     dst1.transferFrom(src1, 0, src1.size());
-                    Log.i("확인 검사", "여기까지 완료");
+                    Log.e("AcrestoreOk", "여기까지 완료");
                     src1.close();
                     dst1.close();
                     Snackbar.make(v, "복구가 완료되었습니다.", Snackbar.LENGTH_SHORT).show();

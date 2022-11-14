@@ -28,11 +28,11 @@ public class Output {
                 +MEMO + ");";
     }
 
-    public static class OutHelper {
+    public  class OutHelper {
 
         private static final String DATABASE_NAME = "output.db";
         private static final int DATABASE_VERSION = 1;
-        public static SQLiteDatabase ODB;
+        public  SQLiteDatabase ODB;
         private DatabaseHelper ODBHelper;
         private Context OCtx;
 
@@ -73,7 +73,7 @@ public class Output {
             values.put(CreateDB.OUTPUT, output);
             values.put(CreateDB.BANK, bank);
             values.put(CreateDB.MEMO, memo);
-            Log.e("삽입","완료");
+            Log.e("outputinsertColumn","완료");
             return ODB.insert(CreateDB._TABLENAME1, null, values);
         }
 
@@ -90,7 +90,7 @@ public class Output {
             values.put(CreateDB.OUTPUT, output);
             values.put(CreateDB.BANK, bank);
             values.put(CreateDB.MEMO, memo);
-            Log.e("업데이트", "완료");
+            Log.e("outputupdateColumn", "완료");
             return ODB.update(CreateDB._TABLENAME1, values, "_id=" + id, null) > 0;
         }
 
@@ -108,7 +108,7 @@ public class Output {
         // 전체 삭제
         public void outdeleteAllColumns() {
             ODB.delete(CreateDB._TABLENAME1, null, null);
-            Log.e("데이터 전체 삭제", "완료 ");
+            Log.e("outdeleteAllColumns", "완료 ");
         }
 
         // 부분 삭제 (특정 행 삭제)

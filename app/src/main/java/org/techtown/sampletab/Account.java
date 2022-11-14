@@ -69,7 +69,7 @@ public class Account {
             values1.put(CreateDB.ACCOUNT, account);
             values1.put(CreateDB.BACK, bank);
             values1.put(CreateDB.MEMO, memo);
-            Log.e("삽입","완료");
+            Log.e("AcinsertColumn1","완료");
             return ADB.insert(CreateDB._TABLENAME2, null, values1);
         }
 
@@ -80,7 +80,7 @@ public class Account {
             values1.put(CreateDB.ACCOUNT, account);
             values1.put(CreateDB.BACK, bank);
             values1.put(CreateDB.MEMO, memo);
-            Log.e("업데이트", "완료");
+            Log.e("AcupdateColumn1", "완료");
             return ADB.update(CreateDB._TABLENAME2, values1, "_id=" + id, null) > 0;
         }
 
@@ -91,7 +91,7 @@ public class Account {
 
         // 전체 삭제
         public void AcdeleteAllColumns() {ADB.delete(CreateDB._TABLENAME2, null, null);
-            Log.e("데이터 전체 삭제", "완료 ");
+            Log.e("AcdeleteAllColumns", "완료 ");
         }
 
         // 부분 삭제 (특정 행 삭제)

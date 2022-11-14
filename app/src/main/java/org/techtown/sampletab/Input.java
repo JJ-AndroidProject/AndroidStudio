@@ -73,7 +73,7 @@ public class Input {
             values.put(CreateDB.INPUT, input);
             values.put(CreateDB.BANK, bank);
             values.put(CreateDB.MEMO, memo);
-            Log.e("삽입","완료");
+            Log.e("ininsertColumnok","완료");
             return IDB.insert(CreateDB._TABLENAME0, null, values);
         }
 
@@ -90,7 +90,7 @@ public class Input {
             values.put(CreateDB.INPUT, input);
             values.put(CreateDB.BANK, bank);
             values.put(CreateDB.MEMO, memo);
-            Log.e("업데이트", "완료");
+            Log.e("inupdateColumnok", "완료");
             return IDB.update(CreateDB._TABLENAME0, values, "_id=" + id, null) > 0;
         }
 
@@ -104,7 +104,7 @@ public class Input {
         // 전체 삭제
         public void indeleteAllColumns() {
             IDB.delete(CreateDB._TABLENAME0, null, null);
-            Log.e("데이터 전체 삭제", "완료 ");
+            Log.e("indeleteAllColumns", "완료 ");
         }
 
         // 부분 삭제 (특정 행 삭제)
