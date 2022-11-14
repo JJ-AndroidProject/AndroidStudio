@@ -84,6 +84,10 @@ public class Account {
             return ADB.update(CreateDB._TABLENAME2, values1, "_id=" + id, null) > 0;
         }
 
+        public Cursor AcinselectColumns(){ //데이터 선택(SELECT)
+            return ADB.query(Input.CreateDB._TABLENAME0, null, null, null, null, null, null);
+        }
+
 
         // 전체 삭제
         public void AcdeleteAllColumns() {ADB.delete(CreateDB._TABLENAME2, null, null);

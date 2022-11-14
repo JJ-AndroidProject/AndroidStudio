@@ -94,6 +94,10 @@ public class Output {
             return ODB.update(CreateDB._TABLENAME1, values, "_id=" + id, null) > 0;
         }
 
+        public Cursor outinselectColumns(){ //데이터 선택(SELECT)
+            return ODB.query(Input.CreateDB._TABLENAME0, null, null, null, null, null, null);
+        }
+
         // 데이터 읽어오기
         public Cursor outputgetAllData() {
             SQLiteDatabase ODB = ODBHelper.getWritableDatabase();

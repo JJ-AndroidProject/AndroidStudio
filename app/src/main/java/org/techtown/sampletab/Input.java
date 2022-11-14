@@ -77,7 +77,7 @@ public class Input {
             return IDB.insert(CreateDB._TABLENAME0, null, values);
         }
 
-        public Cursor inselectColumns(){ //데이터 선택(SELECT)
+        public Cursor ininselectColumns(){ //데이터 선택(SELECT)
             return IDB.query(CreateDB._TABLENAME0, null, null, null, null, null, null);
         }
 
