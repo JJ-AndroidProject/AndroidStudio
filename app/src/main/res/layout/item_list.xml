@@ -16,8 +16,9 @@
             android:id="@+id/textView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="center_vertical"
             android:layout_alignParentLeft="true"
+            android:layout_marginLeft="-1dp"
+            android:gravity="center_vertical"
             android:text="테스트 아이템"
             android:textSize="20dp" />
 

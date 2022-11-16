@@ -262,6 +262,7 @@ public class BlankFragment2 extends Fragment {
                 });
 
                 Button btndlgextra = (Button) dlgView.findViewById(R.id.btn_dlg_extra);
+                btndlgextra.setText("계속");
                 Button btndlgneg = (Button) dlgView.findViewById(R.id.btn_dlg_neg);
                 Button btndlgpos = (Button) dlgView.findViewById(R.id.btn_dlg_pos);
 
@@ -269,7 +270,36 @@ public class BlankFragment2 extends Fragment {
                 btndlgextra.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
+                        //null값 허용은 accountnomber, detail.
+                        //title, type을 ""로 받을 것. 이 둘은 notnull
+                        try {
+                            int intmoney;
+                            //입력한 값 받아오기
+                            String strDate = addDate.getText().toString();      //날짜
+                            String strTime = addTime.getText().toString();      //시간
+                            String strposttime = (strDate + " " + strTime + ":00");// xxxx-xx-xx xx:xx:00 형태. 데이터베이스 저장용
+                            String strbankname = bankname.getText().toString(); //결제수단
+                            String strtitle = title.getText().toString();       //결제내역
+                            String strmoney = money.getText().toString();       //금액
+                            intmoney = Integer.parseInt(strmoney);  //입력받은 금액 INT형으로 변환
+                            String strdetail = detail.getText().toString();     //메모
+                            String postTime = format.format(format.parse(strposttime));
+
+                            command = new DBcommand(getContext());
+                            command.insertDataInput(postTime, strbankname, null, strtitle, "미정", intmoney, strdetail);
+                            //수입 리스트 갱신해줌
+                            showDataBase(); // Adapter에 아이템을 넣어주는 함수
+
+                            //다이얼로그에서 결제내역, 금액, 메모를 초기화해줌
+                            title.setText(null);
+                            money.setText(null);
+                            detail.setText(null);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            Toast.makeText(getContext(), "취소됨", LENGTH_SHORT).show();   //오류 발생 시
+                        }
                     }
                 });
 
@@ -296,7 +326,7 @@ public class BlankFragment2 extends Fragment {
                             String strDate = addDate.getText().toString();      //날짜
                             String strTime = addTime.getText().toString();      //시간
                             String strposttime = (strDate + " " + strTime + ":00");// xxxx-xx-xx xx:xx:00 형태. 데이터베이스 저장용
-                            String strbankname = bankname.getText().toString(); //결제내역
+                            String strbankname = bankname.getText().toString(); //결제수단
                             String strtitle = title.getText().toString();       //결제내역
                             String strmoney = money.getText().toString();       //금액
                             intmoney = Integer.parseInt(strmoney);  //입력받은 금액 INT형으로 변환
