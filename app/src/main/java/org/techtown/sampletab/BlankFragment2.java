@@ -342,7 +342,9 @@ public class BlankFragment2 extends Fragment {
         items.clear();
         moneyTotal = 0;
         while(cursor.moveToNext()) {
+            int idInt = cursor.getColumnIndex("id");
             int postTimeInt = cursor.getColumnIndex("posttime");
+            int id = cursor.getInt(idInt);
             String postTime = cursor.getString(postTimeInt);
             String date = format.format(format.parse(postTime));
             if(start.compareTo(date) <= 0 && last.compareTo(date) >= 0) {
@@ -352,7 +354,7 @@ public class BlankFragment2 extends Fragment {
                 int money = cursor.getInt(moneyInt);
                 moneyTotal += money;
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    items.add(new SubRecyclerItem(date, LocalTime.parse(postTime.split(" ")[1]), title, money));
+                    items.add(new SubRecyclerItem(id, date, LocalTime.parse(postTime.split(" ")[1]), title, money));
                 }
             }
         }
@@ -372,6 +374,7 @@ public class BlankFragment2 extends Fragment {
     }
 
     public class SubRecyclerItem{
+        int id;
         String day;
         LocalTime time;
         String title;
@@ -386,7 +389,8 @@ public class BlankFragment2 extends Fragment {
         double getMoney(){
             return this.money;
         }
-        public SubRecyclerItem(String day, LocalTime time, String title, double money){
+        public SubRecyclerItem(int id, String day, LocalTime time, String title, double money){
+            this.id = id;
             this.day = day;
             this.time = time;
             this.title = title;

@@ -90,7 +90,7 @@ public class Fragment2Adapter extends RecyclerView.Adapter<Fragment2Adapter.View
 
                     DBcommand command = new DBcommand(context);
                     String postTime = items.get(position).day+" "+items.get(position).getTime()+":00";
-                    list = command.selectData(postTime, items.get(position).title, (int)items.get(position).money, "input");
+                    list = command.selectData(items.get(position).id, "input");
                     addDate.setText(items.get(position).day);    //날짜 디폴트 값을 당일로 설정
 
                     //날짜 선택 시 달력에서 날짜 선택할 수 있게 함
