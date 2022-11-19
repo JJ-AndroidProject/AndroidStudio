@@ -1,10 +1,14 @@
 plugins {
     id 'com.android.application'
 }
+
 task wrapper(type: Wrapper) {
     gradleVersion = '7.0'
 }//오류수정용 추가
 tasks.register("prepareKotlinBuildScriptModel"){}//오류수정용 추가
+
+apply plugin: 'com.android.application' // Google API SET
+
 android {
     namespace 'org.techtown.sampletab'
     compileSdk 32
@@ -25,13 +29,19 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
 }
 
 dependencies {
+    implementation 'com.google.android.gms:play-services-auth:20.4.0' // Google API SET
+
+
+
     implementation 'androidx.appcompat:appcompat:1.5.1'
     implementation 'com.google.android.material:material:1.7.0'
     implementation 'androidx.work:work-runtime:2.7.1'
