@@ -37,6 +37,7 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -364,6 +365,7 @@ public class BlankFragment2 extends Fragment {
     void showDataBase(){
         try{
             dbSelectInput();
+            Collections.reverse(items); // 리스트를 내림차순으로 만들어준다.
             textTotal.setText(decFormat.format(moneyTotal)+"원");
             adapter = new Fragment2Adapter(items);
             recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));

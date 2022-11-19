@@ -67,24 +67,23 @@ public class SubAdapter extends RecyclerView.Adapter<SubAdapter.ViewHolder> {
         holder.titleText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //다이얼로그 생성
-                View dlgView = View.inflate(context, R.layout.direct_add_dialog, null);
-
-                TextView addDate = dlgView.findViewById(R.id.add_date);    //날짜
-                TextView addTime = dlgView.findViewById(R.id.add_time);    //시간
-                TextView bankname = dlgView.findViewById(R.id.add_bankname);     //결제수단
-                EditText title = dlgView.findViewById(R.id.add_title);       //결제내역
-                EditText money = dlgView.findViewById(R.id.add_money);        //금액
-                EditText detail = dlgView.findViewById(R.id.add_detail);       //메모
-
-                AlertDialog.Builder daDialog = new AlertDialog.Builder(context);
-                daDialog.setTitle("지출 내역 수정");
-                daDialog.setView(dlgView);
-                AlertDialog da = daDialog.create();    // 확인, 취소 클릭 시 다이얼로그를 종료(da.dismiss)시키기 위해 생성
-
-                DBcommand command = new DBcommand(context);
-                String postTime = items.get(position).day+" "+items.get(position).getTime()+":00";
                 try{
+                    //다이얼로그 생성
+                    View dlgView = View.inflate(context, R.layout.direct_add_dialog, null);
+
+                    TextView addDate = dlgView.findViewById(R.id.add_date);    //날짜
+                    TextView addTime = dlgView.findViewById(R.id.add_time);    //시간
+                    TextView bankname = dlgView.findViewById(R.id.add_bankname);     //결제수단
+                    EditText title = dlgView.findViewById(R.id.add_title);       //결제내역
+                    EditText money = dlgView.findViewById(R.id.add_money);        //금액
+                    EditText detail = dlgView.findViewById(R.id.add_detail);       //메모
+
+                    AlertDialog.Builder daDialog = new AlertDialog.Builder(context);
+                    daDialog.setTitle("지출 내역 수정");
+                    daDialog.setView(dlgView);
+                    AlertDialog da = daDialog.create();    // 확인, 취소 클릭 시 다이얼로그를 종료(da.dismiss)시키기 위해 생성
+
+                    DBcommand command = new DBcommand(context);
                     list = command.selectData(items.get(position).id, "output");
                     addDate.setText(items.get(position).day);    //날짜 디폴트 값을 당일로 설정
                     //날짜 선택 시 달력에서 날짜 선택할 수 있게 함

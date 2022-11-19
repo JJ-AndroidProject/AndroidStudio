@@ -95,6 +95,7 @@ public class DBOpenHelper {
         values.put("type", type); // 분류
         values.put("money", money); // 금액
         values.put("detail", detail); // 세부사항
+        Log.e("insertColumnOutput", posttime+" "+bankname+" "+accountnumber+" "+title+" "+type+" "+money+" "+detail);
         return db.insert("output", null, values);
     }
 
@@ -280,9 +281,11 @@ class DBcommand{
                     list.add(title); // 5
                     list.add(type); // 6
                     list.add(Integer.toString(money)); // 7
-                    list.add(detail); // 8
+
+                    if(detail.equals("null")) list.add(""); // 8
+                    else list.add(detail); // 8
                     String result = id + "||" + postTime + "||" + bankName + "||" + accountNumber + "||" + title + "||" + type + "||" + money + "||" + detail;
-                    Log.e("DB", result);
+                    Log.e("DBSelectData", result);
                     break;
                 }
             }

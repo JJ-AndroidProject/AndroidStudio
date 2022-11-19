@@ -113,7 +113,6 @@ public class BlankFragment1 extends Fragment {
             }
             i++;
         }
-        Collections.reverse(list);
         showDataBase(); // Adapter에 아이템을 넣어주는 함수
 
         //before, after버튼에 리스너 달기
@@ -438,6 +437,7 @@ public class BlankFragment1 extends Fragment {
     void showDataBase(){
         try{
             dbSelectOutput();
+            Collections.reverse(list); // 리스트를 내림차순으로 만들어준다.
             textTotal.setText("총 "+decFormat.format(moneyTotal)+"원");
             adapter = new Adapter(getActivity(), list, items);
             recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
