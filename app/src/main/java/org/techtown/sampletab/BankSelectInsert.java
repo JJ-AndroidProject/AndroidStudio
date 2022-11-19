@@ -43,7 +43,7 @@ public class BankSelectInsert {
 
         String packageName = sbn.getPackageName();
         try{
-            if(packageName.contains("android.messaging")){
+            if(packageName.contains("messaging")){
                 messaging(sbn);
             }else if(packageName.contains("kbstar.kbbank")){
                 KBInsert(sbn);
@@ -59,6 +59,11 @@ public class BankSelectInsert {
         }catch(Exception e){
             e.printStackTrace();
         }
+    }
+
+    // 안드로이드 스튜디오 메시지 테스트 용도
+    private void messaging(StatusBarNotification sbn){
+
     }
 
     // KBank에서 오는 알림 데이터베이스에 Insert 해주는 함수
@@ -177,10 +182,6 @@ public class BankSelectInsert {
             messages = new NotificationMessages(context, title, bank+"(입금) : "+decFormat.format(money));
             command.selectCount();
         }
-    }
-
-    private void messaging(StatusBarNotification sbn){
-
     }
     
     // NH(농협)에서 오는 알림 데이터베이스에 Insert 해주는 함수

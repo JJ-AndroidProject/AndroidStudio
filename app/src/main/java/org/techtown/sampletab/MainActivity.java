@@ -95,24 +95,8 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-
-
-    /*          NotificationListener start                 */
-    // 새로운 인텐트가 오는 경우
     @Override
     protected void onNewIntent(Intent intent){
-        /*
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        //textList.setText(intent.getStringExtra("line"));
-        BlankFragment4 blankFragment4 = new BlankFragment4();
-        Bundle bundle = new Bundle();
-        bundle.putString("line", intent.getStringExtra("line"));
-        blankFragment4.setArguments(bundle);
-        //transaction.replace(R.id.pager, blankFragment4);
-        transaction.commit();
-        Log.e("onNewIntent", intent.getStringExtra("line"));
-        //Toast.makeText(this, "onNewIntent", LENGTH_SHORT).show();
-        */
         super.onNewIntent(intent);
     }
 
@@ -144,7 +128,6 @@ public class MainActivity extends AppCompatActivity {
         }
         return text;
     }
-    /*            NotificationListener end                 */
 }
 
 
@@ -171,8 +154,6 @@ class PageAdapter extends FragmentPagerAdapter{
         if(position == 0) return "지출";
         else if(position == 1) return "수입";
         else if(position == 2) return "지출 패턴";
-        else if(position == 3) return "알림 확인용";
-        else if(position == 4) return "테스트";
         //Toast.makeText(context, "getPageTitle 작동", LENGTH_SHORT).show();
         Log.e("getPageTitle", "getPageTitle 작동");
         return null;
@@ -184,6 +165,11 @@ class PageAdapter extends FragmentPagerAdapter{
         //Toast.makeText(context, "getItem 작동", LENGTH_SHORT).show();
         Log.e("getItem", "  getItem 작동");
         return list.get(position);
+    }
+
+    @Override
+    public int getItemPosition(@NonNull Object object) {
+        return POSITION_NONE;
     }
 
     @Override
