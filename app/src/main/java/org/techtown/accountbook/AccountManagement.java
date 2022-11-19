@@ -1,4 +1,4 @@
-package org.techtown.sampletab;
+package org.techtown.accountbook;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -8,6 +8,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
+
+import org.techtown.sampletab.R;
 
 public class AccountManagement extends AppCompatActivity {
     Button btn_account_add, btn_account_delete;

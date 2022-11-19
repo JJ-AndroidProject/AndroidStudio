@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="org.techtown.sampletab">
+    package="org.techtown.accountbook">
 
     <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -20,14 +20,14 @@
         android:theme="@style/Theme.SampleTab"
         tools:targetApi="31">
         <activity
-            android:name=".AccountManagement"
+            android:name="org.techtown.accountbook.AccountManagement"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".SettingActivity"
+            android:name="org.techtown.accountbook.SettingActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
@@ -35,7 +35,7 @@
         </activity>
 
         <service
-            android:name=".MyNotificationListener"
+            android:name="org.techtown.accountbook.MyNotificationListener"
             android:exported="true"
             android:label="My Notification Listener"
             android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
@@ -45,7 +45,7 @@
         </service>
 
         <activity
-            android:name=".MainActivity"
+            android:name="org.techtown.accountbook.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

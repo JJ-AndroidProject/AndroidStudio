@@ -1,28 +1,23 @@
-package org.techtown.sampletab;
+package org.techtown.accountbook;
 
 import static android.widget.Toast.LENGTH_LONG;
 import static android.widget.Toast.LENGTH_SHORT;
-import static java.security.AccessController.getContext;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Switch;
 import android.widget.Toast;
 
-import org.w3c.dom.Text;
+import org.techtown.sampletab.R;
 
 public class SettingActivity extends AppCompatActivity {
     //뒤로가기 버튼 생성
