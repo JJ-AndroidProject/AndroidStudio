@@ -90,7 +90,6 @@ public class SettingActivity extends AppCompatActivity {
                             Toast.makeText(SettingActivity.this, "취소됨", LENGTH_SHORT).show();
                         }
 
-
                     }
                 });
                 msDialog.setNegativeButton("취소", new DialogInterface.OnClickListener() {
