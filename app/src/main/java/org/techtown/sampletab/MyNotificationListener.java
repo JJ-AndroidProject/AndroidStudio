@@ -45,8 +45,6 @@ public class MyNotificationListener extends NotificationListenerService {
         super.onNotificationPosted(sbn);
         try{
             new BankSelectInsert(sbn, this);
-            //fileSave(sbn);
-            //fileRead();
         }catch(NullPointerException e){
             Log.e(TAG, "NullPointerException Catch"); // 값이 null 일 때 발생하는 오류를 catch 한다.
         }
