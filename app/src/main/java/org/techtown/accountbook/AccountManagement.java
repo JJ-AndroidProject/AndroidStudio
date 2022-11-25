@@ -9,7 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import org.techtown.sampletab.R;
+import org.techtown.accountbook.R;
 
 public class AccountManagement extends AppCompatActivity {
     Button btn_account_add, btn_account_delete;
@@ -23,7 +23,7 @@ public class AccountManagement extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id. back :
+            case R.id.back :
                 finish();
                 return true;
         }

@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -19,8 +20,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
-
-import org.techtown.sampletab.R;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -61,7 +60,7 @@ public class SubAdapter extends RecyclerView.Adapter<SubAdapter.ViewHolder> {
 
 
         //다이얼로그 실험 시작
-        holder.titleText.setOnClickListener(new View.OnClickListener() {
+        holder.linearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 try{
@@ -293,11 +292,13 @@ public class SubAdapter extends RecyclerView.Adapter<SubAdapter.ViewHolder> {
         TextView timeText;
         TextView titleText;
         TextView moneyText;
+        LinearLayout linearLayout;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             timeText = itemView.findViewById(R.id.SubTimeText);
             titleText = itemView.findViewById(R.id.SubTitleText);
             moneyText = itemView.findViewById(R.id.SubMoneyText);
+            linearLayout = itemView.findViewById(R.id.linearLayout2);
         }
     }
 }

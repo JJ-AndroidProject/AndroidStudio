@@ -19,8 +19,6 @@ import android.view.MenuItem;
 
 import com.google.android.material.tabs.TabLayout;
 
-import org.techtown.sampletab.R;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
