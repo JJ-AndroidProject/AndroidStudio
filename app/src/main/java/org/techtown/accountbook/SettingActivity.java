@@ -46,10 +46,8 @@ public class SettingActivity extends AppCompatActivity {
         TextView dataRestore = (TextView) findViewById(R.id.data_restore);
         Switch warning = (Switch) findViewById(R.id.warning);
         TextView upperLine = (TextView) findViewById(R.id.upper_line);
-        TextView accountManagement = (TextView) findViewById(R.id.account_management);
         Switch passwordUse = (Switch) findViewById(R.id.password_use);
         TextView passwordInput = (TextView) findViewById(R.id.password_input);
-        TextView fontSize = (TextView) findViewById(R.id.font_size);
         //월 시작일 리스너
         monthStart.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -131,15 +129,6 @@ public class SettingActivity extends AppCompatActivity {
             }
         });
 
-        // 계좌 관리 리스너
-        accountManagement.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), AccountManagement.class);
-                startActivity(intent);
-            }
-        });
-
         //비밀번호 사용 리스너
         passwordUse.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -150,14 +139,6 @@ public class SettingActivity extends AppCompatActivity {
 
         //비밀번호 추가 리스너
         passwordInput.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-
-        //폰트 크기 변경 리스너
-        fontSize.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
