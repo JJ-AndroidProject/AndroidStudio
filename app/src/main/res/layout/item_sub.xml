@@ -13,7 +13,16 @@
         android:layout_height="27dp"
         android:layout_alignParentLeft="true"
         android:gravity="left"
-        android:text="서브 텍스트 화면"
+        android:text="00:00"
+        android:textSize="20dp" />
+
+    <TextView
+        android:id="@+id/SubBankText"
+        android:layout_width="wrap_content"
+        android:layout_height="27dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="TextView"
         android:textSize="20dp" />
 
     <TextView

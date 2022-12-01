@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -445,14 +446,24 @@ public class BlankFragment1 extends Fragment {
             int id = cursor.getInt(idInt);
             String postTime = cursor.getString(postTimeInt);
             String date = format.format(format.parse(postTime));
-            if(start.compareTo(date) <= 0 && last.compareTo(date) >= 0) {
+            if(start.compareTo(date) <= 0 && last.compareTo(date) > 0) {
                 int titleInt = cursor.getColumnIndex("title");
                 int moneyInt = cursor.getColumnIndex("money");
+                int bankInt = cursor.getColumnIndex("bankname");
+                int moveInt = cursor.getColumnIndex("move");
+                String bank = cursor.getString(bankInt);
                 String title = cursor.getString(titleInt);
                 int money = cursor.getInt(moneyInt);
-                moneyTotal += money;
+
+                if(cursor.getString(moveInt) != null) {
+                    String move = cursor.getString(moveInt);
+                    if (move.equals("계좌이동")) {
+                        Log.e("BlankFragment2", "계좌이동");
+                        bank = "계좌이동";
+                    }
+                }else moneyTotal += money;
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    items.add(new SubRecyclerItem(id, date, LocalTime.parse(postTime.split(" ")[1]), title, money));
+                    items.add(new SubRecyclerItem(id, date, LocalTime.parse(postTime.split(" ")[1]), bank, title, money));
                 }
             }
         }
@@ -480,7 +491,6 @@ public class BlankFragment1 extends Fragment {
             return this.title;
         }
         public MainRecyclerItem(String day, String title){
-
             this.day = day;
             this.title = title;
         }
@@ -490,22 +500,27 @@ public class BlankFragment1 extends Fragment {
         int id;
         String day;
         LocalTime time;
+        String bank;
         String title;
         double money;
         String getDay(){
             return this.day;
         }
         LocalTime getTime(){return this.time;}
+        String getBank(){
+            return this.bank;
+        }
         String getTitle(){
             return this.title;
         }
         double getMoney(){
             return this.money;
         }
-        public SubRecyclerItem(int id, String day, LocalTime time, String title, double money){
+        public SubRecyclerItem(int id, String day, LocalTime time, String bank, String title, double money){
             this.id = id;
             this.day = day;
             this.time = time;
+            this.bank = bank;
             this.title = title;
             this.money = money;
         }

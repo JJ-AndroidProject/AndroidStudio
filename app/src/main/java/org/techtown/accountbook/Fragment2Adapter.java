@@ -54,6 +54,7 @@ public class Fragment2Adapter extends RecyclerView.Adapter<Fragment2Adapter.View
         try {
             Date date = reset.parse(items.get(position).day);
             holder.timeText.setText(format.format(date));
+            holder.bankText.setText(items.get(position).bank);
             holder.titleText.setText(items.get(position).title);
             holder.moneyText.setText(decFormat.format((int)items.get(position).money)+"원");
 
@@ -292,11 +293,13 @@ public class Fragment2Adapter extends RecyclerView.Adapter<Fragment2Adapter.View
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView timeText;
+        TextView bankText;
         TextView titleText;
         TextView moneyText;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             timeText = itemView.findViewById(R.id.SubTimeText);
+            bankText = itemView.findViewById(R.id.SubBankText);
             titleText = itemView.findViewById(R.id.SubTitleText);
             moneyText = itemView.findViewById(R.id.SubMoneyText);
         }

@@ -62,13 +62,14 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
             if(items.get(i).getDay().compareTo(list.get(position).getDay()) == 0){
                 item.add(items.get(i));
                 column++; // 아이템의 개수를 1 증가
-                total += items.get(i).money; // 사용한 금액을 total에 추가
+                if(!items.get(i).bank.equals("계좌이동")) {
+                    total += items.get(i).money; // 사용한 금액을 total에 추가
+                }
             }
         }
         holder.recyclerView.setLayoutManager(new LinearLayoutManager(context));
         adapter = new SubAdapter(item);
         holder.recyclerView.setAdapter(adapter);
-
         holder.textView.setText(list.get(position).getTitle()); // item_list.xml에서 textView의 text를 수정
         holder.totalSpend.setText(decFormat.format(total)+" 원");  // item_list.xml에서 totalSpendTextView의 text를 수정
         holder.onBind(position);
@@ -91,9 +92,6 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
                 prePosition = position;
             }
         });
-
-
-
     }
 
     @Override
