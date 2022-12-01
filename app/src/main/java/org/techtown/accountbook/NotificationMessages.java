@@ -11,8 +11,6 @@ import android.os.Build;
 
 import androidx.core.app.NotificationManagerCompat;
 
-import org.techtown.sampletab.R;
-
 public class NotificationMessages {
     String CHANNELID = "";
     int NOTIFICATION_ID = 7;

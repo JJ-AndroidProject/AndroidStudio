@@ -25,12 +25,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
-
-
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
-import org.techtown.sampletab.R;
-
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -110,6 +105,7 @@ public class BlankFragment1 extends Fragment {
             i++;
         }
         showDataBase(); // Adapter에 아이템을 넣어주는 함수
+        Collections.reverse(list); // 리스트를 내림차순으로 만들어준다.
 
         //before, after버튼에 리스너 달기
         btn_before.setOnClickListener(new View.OnClickListener() {
@@ -150,6 +146,7 @@ public class BlankFragment1 extends Fragment {
                     i++;
                 }
                 showDataBase(); // Adapter에 아이템을 넣어주는 함수
+                Collections.reverse(list); // 리스트를 내림차순으로 만들어준다.
             }
         });
         btn_after.setOnClickListener(new View.OnClickListener() {
@@ -190,6 +187,7 @@ public class BlankFragment1 extends Fragment {
                     i++;
                 }
                 showDataBase(); // Adapter에 아이템을 넣어주는 함수
+                Collections.reverse(list); // 리스트를 내림차순으로 만들어준다.
             }
         });
 
@@ -463,7 +461,6 @@ public class BlankFragment1 extends Fragment {
     void showDataBase(){
         try{
             dbSelectOutput();
-            Collections.reverse(list); // 리스트를 내림차순으로 만들어준다.
             textTotal.setText("총 "+decFormat.format(moneyTotal)+"원");
             adapter = new Adapter(getActivity(), list, items);
             recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));

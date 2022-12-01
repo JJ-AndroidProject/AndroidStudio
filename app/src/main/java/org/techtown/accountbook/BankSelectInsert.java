@@ -4,6 +4,7 @@ import android.app.Notification;
 import android.content.Context;
 import android.os.Bundle;
 import android.service.notification.StatusBarNotification;
+import android.util.Log;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -23,6 +24,7 @@ import java.util.Date;
 */
 
 public class BankSelectInsert {
+    DBcommand command;
     SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     DecimalFormat decFormat = new DecimalFormat("###,###");
     Context context;
@@ -30,7 +32,7 @@ public class BankSelectInsert {
 
     public BankSelectInsert(StatusBarNotification sbn, Context context) throws NullPointerException{
         this.context = context;
-
+        command = new DBcommand(context);
         String packageName = sbn.getPackageName();
         try{
             if(packageName.contains("messaging")){
@@ -51,9 +53,53 @@ public class BankSelectInsert {
         }
     }
 
+    /*
+    PackageName : com.nh.mobilenoti
+    Id : 12
+    PostTime : 2022-11-03 15:14:07
+    Title : NH스마트알림
+    Text : 농협 출금50원
+    11/03 15:14 302-****-7764-41 김종원 잔액230,356원
+    SubText : null
+
+    PackageName : com.nh.mobilenoti
+    Id : 1
+    PostTime : 2022-11-11 21:49:36
+    Title : NH스마트알림
+    Text : 농협 입금30원
+    11/11 21:49 302-****-7764-41 김종원 잔액479,337원
+    SubText : null
+    */
     // 안드로이드 스튜디오 메시지 테스트 용도
     private void messaging(StatusBarNotification sbn){
+        Bundle extras = sbn.getNotification().extras;
+        String postTime = format.format(new Date().getTime());
+        String text = extras.getCharSequence(Notification.EXTRA_TEXT)+"";
+        String subText = extras.getCharSequence(Notification.EXTRA_SUB_TEXT)+"";
 
+        String[] line = text.split("\\n");
+        String[] a = line[0].split(" ");
+        String[] b = line[1].split(" ");
+        String bank = a[0];
+        int money = Integer.parseInt(a[1].replaceAll("[^0-9]", ""));
+        String account = b[2];
+        String title = "";
+        for(int i=3;i<b.length-1;i++) {
+            if (i == 3) title = title + b[i];
+            else title = title + " " + b[i];
+        }
+        messages = new NotificationMessages(context, title, bank+"(입금) : "+decFormat.format(money));
+        if(text.contains("출금")){
+            command.insertDataOutput(postTime, bank, account, title, "미정", money, subText); // output 테이블에 데이터를 저장
+            messages = new NotificationMessages(context, title, bank+"(출금) : "+decFormat.format(money)); // 상단에 알림을 보내주는 클래스
+            command.selectCount();
+            Log.e("Message", bank+"(출금) : "+title+" "+account+" "+decFormat.format(money));
+        }else if(text.contains("입금")){
+            command.insertDataInput(postTime, bank, account, title, "미정", money, subText);
+            messages = new NotificationMessages(context, title, bank+"(입금) : "+decFormat.format(money));
+            command.selectCount();
+            Log.e("Message", bank+"(입금) : "+title+" "+account+" "+decFormat.format(money));
+        }
     }
 
     // KBank에서 오는 알림 데이터베이스에 Insert 해주는 함수
@@ -70,13 +116,11 @@ public class BankSelectInsert {
         String account = line[1].split(" ")[2].replace("MY입출금통장(", "").replace(")", "");
 
         if(line[0].split(" ")[0].contains("출금")){
-            DBcommand command = new DBcommand(context);
             //PostTime, BankName, AccountNumber, Title, Type, Money, Detail
             command.insertDataOutput(postTime, bank, account, title, "미정", money, subText);
             messages = new NotificationMessages(context, title, bank+"(출금) : "+decFormat.format(money));
             command.selectCount();
         }else if(line[0].split(" ")[0].contains("입금")){
-            DBcommand command = new DBcommand(context);
             //PostTime, BankName, AccountNumber, Title, Type, Money, Detail
             command.insertDataInput(postTime, bank, account, title, "미정", money, subText);
             messages = new NotificationMessages(context, title, bank+"(입금) : "+decFormat.format(money));
@@ -97,7 +141,6 @@ public class BankSelectInsert {
             String title = line[3];
             String account = line[1].replace("입출금통장(", "").replace(")", "");
             int money = Integer.parseInt(titleNoti.split(" ")[1].replace("원", "").replace(",",""));
-            DBcommand command = new DBcommand(context);
             //PostTime, BankName, AccountNumber, Title, Type, Money, Detail
             command.insertDataOutput(postTime, bank, account, title, "미정", money, subText);
             messages = new NotificationMessages(context, title, bank+"(출금) : "+decFormat.format(money));
@@ -107,7 +150,6 @@ public class BankSelectInsert {
             String title = line[0];
             String account = line[3].replace("입출금통장(", "").replace(")", "");
             int money = Integer.parseInt(titleNoti.split(" ")[1].replace("원", "").replace(",",""));
-            DBcommand command = new DBcommand(context);
             //PostTime, BankName, AccountNumber, Title, Type, Money, Detail
             command.insertDataInput(postTime, bank, account, title, "미정", money, subText);
             messages = new NotificationMessages(context, title, bank+"(입금) : "+decFormat.format(money));
@@ -131,13 +173,11 @@ public class BankSelectInsert {
         int money = Integer.parseInt(a[1].replace("원", "").replace(",",""));
 
         if(a[0].contains("출금")){ // output 테이블에 추가
-            DBcommand command = new DBcommand(context);
             //PostTime, BankName, AccountNumber, Title, Type, Money, Detail
             command.insertDataOutput(postTime, bank, account, title, "미정", money, subText);
             messages = new NotificationMessages(context, title, bank+"(출금) : "+decFormat.format(money));
             command.selectCount();
         }else if(a[0].contains("입금")){ // input 테이블에 추가
-            DBcommand command = new DBcommand(context);
             //PostTime, BankName, AccountNumber, Title, Type, Money, Detail
             command.insertDataInput(postTime, bank, account, title, "미정", money, subText);
             messages = new NotificationMessages(context, title, bank+"(입금) : "+decFormat.format(money));
@@ -160,13 +200,11 @@ public class BankSelectInsert {
         int money = Integer.parseInt(line[6].replace(",",""));
 
         if(line[5].contains("출금")) { // output 테이블에 추가
-            DBcommand command = new DBcommand(context);
             //PostTime, BankName, AccountNumber, Title, Type, Money, Detail
             command.insertDataOutput(postTime, bank, account, title, "미정", money, subText);
             messages = new NotificationMessages(context, title, bank+"(출금) : "+decFormat.format(money));
             command.selectCount();
         }else if(line[5].contains("입금")){ // input 테이블에 추가
-            DBcommand command = new DBcommand(context);
             //PostTime, BankName, AccountNumber, Title, Type, Money, Detail
             command.insertDataInput(postTime, bank, account, title, "미정", money, subText);
             messages = new NotificationMessages(context, title, bank+"(입금) : "+decFormat.format(money));
@@ -188,16 +226,15 @@ public class BankSelectInsert {
         String bank = a[0];
         String account = b[2];
 
+
+        int money = Integer.parseInt(a[1].replaceAll("[^0-9]", ""));
+
         if(line[0].contains("출금")) {
-            int money = Integer.parseInt(a[1].replace("출금", "").replace("원", "").replace(",",""));
-            DBcommand command = new DBcommand(context);
             //PostTime, BankName, AccountNumber, Title, Type, Money, Detail
             command.insertDataOutput(postTime, bank, account, title, "미정", money, subText); // output 테이블에 데이터를 저장
             messages = new NotificationMessages(context, title, bank+"(출금) : "+decFormat.format(money)); // 상단에 알림을 보내주는 클래스
             command.selectCount();
         }else if(line[0].contains("입금")){
-            int money = Integer.parseInt(a[1].replace("입금", "").replace("원", "").replace(",",""));
-            DBcommand command = new DBcommand(context);
             //PostTime, BankName, AccountNumber, Title, Type, Money, Detail
             command.insertDataInput(postTime, bank, account, title, "미정", money, subText);
             messages = new NotificationMessages(context, title, bank+"(입금) : "+decFormat.format(money));

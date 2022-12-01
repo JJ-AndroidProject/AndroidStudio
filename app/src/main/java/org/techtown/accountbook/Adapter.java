@@ -15,7 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import org.techtown.sampletab.R;
+import org.techtown.accountbook.R;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;

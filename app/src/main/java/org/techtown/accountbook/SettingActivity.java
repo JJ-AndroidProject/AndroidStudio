@@ -17,8 +17,6 @@ import android.widget.TextView;
 import android.widget.Switch;
 import android.widget.Toast;
 
-import org.techtown.sampletab.R;
-
 public class SettingActivity extends AppCompatActivity {
     //뒤로가기 버튼 생성
     @Override

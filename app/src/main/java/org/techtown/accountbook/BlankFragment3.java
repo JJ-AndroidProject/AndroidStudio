@@ -9,8 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import org.techtown.sampletab.R;
-
 public class BlankFragment3 extends Fragment {
     TextView textView;
     @Override
