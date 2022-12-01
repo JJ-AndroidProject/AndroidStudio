@@ -39,7 +39,7 @@ import java.util.List;
 
 // 수입 부분에 대한 어댑터 생성 필요
 
-public class BlankFragment2 extends Fragment {
+public class BlankFragment2 extends Fragment implements OnAdapterRefresh{
     DecimalFormat decFormat = new DecimalFormat("###,###");
     //현재 연도, 달, 그 달의 마지막 날짜를 받는다.
     private int moneyTotal = 0;
@@ -402,12 +402,19 @@ public class BlankFragment2 extends Fragment {
             dbSelectInput();
             Collections.reverse(items); // 리스트를 내림차순으로 만들어준다.
             textTotal.setText(decFormat.format(moneyTotal)+"원");
-            adapter = new Fragment2Adapter(items);
+            adapter = new Fragment2Adapter(items, this);
             recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
             recyclerView.setAdapter(adapter);
         }catch (ParseException e) {
             e.printStackTrace();
         }
+    }
+
+    // 화면을 갱신해주는 함수
+    @Override
+    public void adaterRefresh() {
+        showDataBase();
+        Log.e("BlankFragment2", "BlankFragment2 refresh()");
     }
 
     public class SubRecyclerItem{

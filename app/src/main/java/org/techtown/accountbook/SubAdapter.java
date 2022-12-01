@@ -32,10 +32,12 @@ public class SubAdapter extends RecyclerView.Adapter<SubAdapter.ViewHolder> {
     Context context;
     private List<BlankFragment1.SubRecyclerItem> items;
     private ArrayList<String> list = new ArrayList<String>();
+    private OnAdapterRefresh mCallback;
 
 
-    public SubAdapter(List<BlankFragment1.SubRecyclerItem> items){
+    public SubAdapter(List<BlankFragment1.SubRecyclerItem> items, OnAdapterRefresh listener){
         this.items = items;
+        this.mCallback = listener;
     }
 
     @NonNull
@@ -218,6 +220,7 @@ public class SubAdapter extends RecyclerView.Adapter<SubAdapter.ViewHolder> {
                             dbOpenHelper.deleteColumn(Long.parseLong(list.get(0)), "output");
                             Toast.makeText(context, "삭제", LENGTH_SHORT).show();
                             da.dismiss();   //다이얼로그 종료
+                            mCallback.adaterRefresh();
                         }
                     });
 
@@ -227,6 +230,7 @@ public class SubAdapter extends RecyclerView.Adapter<SubAdapter.ViewHolder> {
                         public void onClick(View view) {
                             Toast.makeText(context, "취소", LENGTH_SHORT).show();
                             da.dismiss();   //다이얼로그 종료
+
                         }
                     });
 
@@ -270,7 +274,6 @@ public class SubAdapter extends RecyclerView.Adapter<SubAdapter.ViewHolder> {
                             }
                         }
                     });
-
                     //다이얼로그 보여주기
                     da.show();
                 }catch(Exception e){

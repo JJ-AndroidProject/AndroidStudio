@@ -15,28 +15,35 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import org.techtown.accountbook.R;
-
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
 
 
-public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
+public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> implements OnAdapterRefresh{
     SubAdapter adapter;
     private SparseBooleanArray selectedItems = new SparseBooleanArray(); // Item의 클릭 상태를 저장할 array 객체
     private int prePosition = -1; // 직전에 클릭됐던 Item의 position
     private List<BlankFragment1.MainRecyclerItem> list;
     private List<BlankFragment1.SubRecyclerItem> items;
+    private OnRefresh mCallback;
+    private int item_position = 0;
+
     private Context context;
     private int column; // item_list가 가지고 있는 아이템의 개수를 담고 있습니다.
     private int total; // 해당하는 날짜에 소비한 총 금액을 담고 있습니다.
 
-    public Adapter(Context context, List<BlankFragment1.MainRecyclerItem> list, List<BlankFragment1.SubRecyclerItem> items){
+    public Adapter(Context context, List<BlankFragment1.MainRecyclerItem> list, List<BlankFragment1.SubRecyclerItem> items, OnRefresh listener){
         this.context = context;
         this.list = list;
         this.items = items;
+        this.mCallback = listener;
+    }
+
+    @Override
+    public void adaterRefresh() {
+        mCallback.refresh(item_position);
     }
 
     public interface OnViewHolderItemClickListener {
@@ -53,6 +60,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull Adapter.ViewHolder holder, @SuppressLint("RecyclerView") final int position){
+        item_position = position;
         DecimalFormat decFormat = new DecimalFormat("###,###"); // 3자리마다 콤마를 찍어주는 포맷
         List<BlankFragment1.SubRecyclerItem> item = new ArrayList<BlankFragment1.SubRecyclerItem>();
         column = 0; // item_list의 리사이클러뷰가 가지고 있는 아이템의 개수를 0으로 초기화
@@ -68,7 +76,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
             }
         }
         holder.recyclerView.setLayoutManager(new LinearLayoutManager(context));
-        adapter = new SubAdapter(item);
+        adapter = new SubAdapter(item, this);
         holder.recyclerView.setAdapter(adapter);
         holder.textView.setText(list.get(position).getTitle()); // item_list.xml에서 textView의 text를 수정
         holder.totalSpend.setText(decFormat.format(total)+" 원");  // item_list.xml에서 totalSpendTextView의 text를 수정

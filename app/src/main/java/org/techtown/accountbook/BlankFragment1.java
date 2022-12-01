@@ -36,7 +36,7 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 
-public class BlankFragment1 extends Fragment {
+public class BlankFragment1 extends Fragment implements OnRefresh {
     DecimalFormat decFormat = new DecimalFormat("###,###");
     private int moneyTotal = 0;
     Calendar cal = Calendar.getInstance(); //현재 연도, 달, 그 달의 마지막 날짜를 받는다.
@@ -473,12 +473,20 @@ public class BlankFragment1 extends Fragment {
         try{
             dbSelectOutput();
             textTotal.setText("총 "+decFormat.format(moneyTotal)+"원");
-            adapter = new Adapter(getActivity(), list, items);
+            adapter = new Adapter(getActivity(), list, items, this);
             recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
             recyclerView.setAdapter(adapter);
         }catch (ParseException e) {
             e.printStackTrace();
         }
+    }
+
+    // 화면을 갱신해주는 함수
+    @Override
+    public void refresh(int position) {
+        showDataBase();
+        recyclerView.scrollToPosition(position);
+        Log.e("BlankFragment1", "BlankFragment1 refresh()");
     }
 
     public class MainRecyclerItem{

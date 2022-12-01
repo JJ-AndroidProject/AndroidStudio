@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -32,9 +33,11 @@ public class Fragment2Adapter extends RecyclerView.Adapter<Fragment2Adapter.View
     private ArrayList<String> list = new ArrayList<String>();
     Context context;
     private List<BlankFragment2.SubRecyclerItem> items;
+    private OnAdapterRefresh mCallback;
 
-    public Fragment2Adapter(List<BlankFragment2.SubRecyclerItem> items){
+    public Fragment2Adapter(List<BlankFragment2.SubRecyclerItem> items, OnAdapterRefresh onRefresh){
         this.items = items;
+        this.mCallback = onRefresh;
     }
 
     @NonNull
@@ -58,7 +61,7 @@ public class Fragment2Adapter extends RecyclerView.Adapter<Fragment2Adapter.View
             holder.titleText.setText(items.get(position).title);
             holder.moneyText.setText(decFormat.format((int)items.get(position).money)+"원");
 
-            holder.titleText.setOnClickListener(new View.OnClickListener() {
+            holder.linearLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     try{
@@ -220,6 +223,7 @@ public class Fragment2Adapter extends RecyclerView.Adapter<Fragment2Adapter.View
                                 dbOpenHelper.deleteColumn(Long.parseLong(list.get(0)), "input");
                                 Toast.makeText(context, "삭제", LENGTH_SHORT).show();
                                 da.dismiss();   //다이얼로그 종료
+                                mCallback.adaterRefresh();
                             }
                         });
 
@@ -296,17 +300,14 @@ public class Fragment2Adapter extends RecyclerView.Adapter<Fragment2Adapter.View
         TextView bankText;
         TextView titleText;
         TextView moneyText;
+        LinearLayout linearLayout;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             timeText = itemView.findViewById(R.id.SubTimeText);
             bankText = itemView.findViewById(R.id.SubBankText);
             titleText = itemView.findViewById(R.id.SubTitleText);
             moneyText = itemView.findViewById(R.id.SubMoneyText);
+            linearLayout = itemView.findViewById(R.id.linearLayout2);
         }
     }
 }
-
-
-
-
-
