@@ -16,5 +16,5 @@ dependencyResolutionManagement {
         jcenter() // Warning: this repository is going to shut down soon
     }
 }
-rootProject.name = "SampleTab"
+rootProject.name = "accountbook"
 include ':app'

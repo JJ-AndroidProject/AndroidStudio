@@ -1,4 +1,4 @@
-package org.techtown.sampletab;
+package org.techtown.accountbook;
 
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -9,8 +9,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 
-import androidx.core.app.NotificationCompat;
-import android.app.PendingIntent;
 import androidx.core.app.NotificationManagerCompat;
 
 public class NotificationMessages {

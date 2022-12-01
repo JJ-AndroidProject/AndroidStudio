@@ -1,10 +1,9 @@
-package org.techtown.sampletab;
+package org.techtown.accountbook;
 
 import static android.widget.Toast.LENGTH_SHORT;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
-import android.content.DialogInterface;
 import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
@@ -29,20 +28,21 @@ import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
+import java.util.Collections;
 import java.util.List;
 
 // 수입 부분에 대한 어댑터 생성 필요
 
 public class BlankFragment2 extends Fragment {
+    DecimalFormat decFormat = new DecimalFormat("###,###");
     //현재 연도, 달, 그 달의 마지막 날짜를 받는다.
+    private int moneyTotal = 0;
     Calendar cal = Calendar.getInstance();
     int year = cal.get(Calendar.YEAR);
     int month = cal.get(Calendar.MONTH);
@@ -51,6 +51,8 @@ public class BlankFragment2 extends Fragment {
     String date = year + "." + (month+1);
     Button btn_before, btn_after;
     TextView datetext;
+    TextView textTotal;
+    TextView textMonth;
     RecyclerView recyclerView;
     Fragment2Adapter adapter;
     DBcommand command;
@@ -73,17 +75,13 @@ public class BlankFragment2 extends Fragment {
         //before, after버튼과 날짜 표기
         btn_before = (Button) viewGroup.findViewById(R.id.btnbefore);
         datetext = (TextView) viewGroup.findViewById(R.id.monthtext);
+        textTotal = (TextView) viewGroup.findViewById(R.id.textInputTotal);
+        textMonth = (TextView) viewGroup.findViewById(R.id.textInputMonth);
         btn_after = (Button) viewGroup.findViewById(R.id.btnafter);
+        textTotal.setText("총 "+decFormat.format(moneyTotal)+"원");
         datetext.setText(date);
         recyclerView = (RecyclerView) viewGroup.findViewById(R.id.recyclerView2);
-        try{
-            dbSelectInput();
-        }catch (ParseException e) {
-            e.printStackTrace();
-        }
-        adapter = new Fragment2Adapter(items);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        recyclerView.setAdapter(adapter);
+        showDataBase(); // Adapter에 아이템을 넣어주는 함수
 
         //before, after버튼에 리스너 달기
         btn_before.setOnClickListener(new View.OnClickListener() {
@@ -96,14 +94,7 @@ public class BlankFragment2 extends Fragment {
                 lastday = cal.getActualMaximum(Calendar.DATE);
                 date = year + "." + (month+1);
                 datetext.setText(date);
-                try{
-                    dbSelectInput();
-                    adapter = new Fragment2Adapter(items);
-                    recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-                    recyclerView.setAdapter(adapter);
-                }catch (ParseException e) {
-                    e.printStackTrace();
-                }
+                showDataBase(); // Adapter에 아이템을 넣어주는 함수
                 Log.d("BlankFragment2", "before가 눌렸습니다");
             }
         });
@@ -116,15 +107,9 @@ public class BlankFragment2 extends Fragment {
                 month = cal.get(Calendar.MONTH);
                 lastday = cal.getActualMaximum(Calendar.DATE);
                 date = year + "." + (month+1);
+
                 datetext.setText(date);
-                try{
-                    dbSelectInput();
-                    adapter = new Fragment2Adapter(items);
-                    recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-                    recyclerView.setAdapter(adapter);
-                }catch (ParseException e) {
-                    e.printStackTrace();
-                }
+                showDataBase(); // Adapter에 아이템을 넣어주는 함수
                 Log.d("BlankFragment2", "after가 눌렸습니다");
             }
 
@@ -135,24 +120,29 @@ public class BlankFragment2 extends Fragment {
         btn_direct_add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //여기에 입력 다이얼로그 생성
+                //여기부터 다이얼로그 생성
                 View dlgView = View.inflate(getContext(), R.layout.direct_add_dialog, null);
 
                 TextView addDate = dlgView.findViewById(R.id.add_date);    //날짜
                 TextView addTime = dlgView.findViewById(R.id.add_time);    //시간
-                TextView bankname = dlgView.findViewById(R.id.add_bankname);     //은행
+                TextView bankname = dlgView.findViewById(R.id.add_bankname);     //결제수단
+                EditText title = dlgView.findViewById(R.id.add_title);       //결제내역
                 EditText money = dlgView.findViewById(R.id.add_money);        //금액
                 EditText detail = dlgView.findViewById(R.id.add_detail);       //메모
 
-                //현재 날짜, 시간을 기본값으로 설정.
-                addDate.setText(cal.get(Calendar.YEAR) + "-" + (cal.get(Calendar.MONTH) + 1) + "-" + today);
+                AlertDialog.Builder daDialog = new AlertDialog.Builder(getContext());
+                daDialog.setTitle("수입 내역 추가");
+                daDialog.setView(dlgView);
+                AlertDialog da = daDialog.create();    // 확인, 취소 클릭 시 다이얼로그를 종료(da.dismiss)시키기 위해 생성
+                //현재 날짜, 시간을 디폴트 값으로 설정.
+                addDate.setText(cal.get(Calendar.YEAR) + "-" + (cal.get(Calendar.MONTH) + 1) + "-" + today);    //날짜 디폴트 값을 당일로 설정
 
                 LocalTime now = null;
                 if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
                     now = LocalTime.now();
                     int hour = now.getHour();
                     int minute = now.getMinute();
-                    addTime.setText(hour + ":" + minute);
+                    addTime.setText(hour + ":" + minute);   //시간 디폴트 값을 현재 시간으로 설정
                 }
 
                 //날짜 선택 시 달력에서 날짜 선택할 수 있게 함
@@ -211,10 +201,9 @@ public class BlankFragment2 extends Fragment {
                         // 결제수단 다이얼로그 생성
                         View bsdlgView = View.inflate(getContext(), R.layout.bank_select_dialog, null);
                         AlertDialog.Builder bsDialog = new AlertDialog.Builder(getContext());
-                        bsDialog.setTitle("결제수단");
                         bsDialog.setView(bsdlgView);
 
-                        AlertDialog ad = bsDialog.create();     //이미지 클릭 시 다이얼로그를 종료시키기 위해 (ad.dismiss) 생성
+                        AlertDialog ad = bsDialog.create();     //이미지 클릭 시 다이얼로그를 종료(ad.dismiss)시키기 위해 생성
                         ImageButton btn_cash = (ImageButton) bsdlgView.findViewById(R.id.cash);     //현금
                         ImageButton btn_kb = (ImageButton) bsdlgView.findViewById(R.id.kbbank);     //kb국민은행
                         ImageButton btn_nh = (ImageButton) bsdlgView.findViewById(R.id.nhbank);     //농협
@@ -269,15 +258,15 @@ public class BlankFragment2 extends Fragment {
 
                 });
 
-                //다이얼로그 생성
-                AlertDialog.Builder daDialog = new AlertDialog.Builder(getContext());
-                daDialog.setTitle("수입 내역 추가");
-                daDialog.setView(dlgView);
+                Button btndlgextra = (Button) dlgView.findViewById(R.id.btn_dlg_extra);
+                btndlgextra.setText("계속");
+                Button btndlgneg = (Button) dlgView.findViewById(R.id.btn_dlg_neg);
+                Button btndlgpos = (Button) dlgView.findViewById(R.id.btn_dlg_pos);
 
-                //확인버튼 클릭 시. 이 부분을 나중에 xml버튼으로 만들어야 함
-                daDialog.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                //추가 기능 버튼 리스너.
+                btndlgextra.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
+                    public void onClick(View view) {
                         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
                         //null값 허용은 accountnomber, detail.
@@ -287,45 +276,75 @@ public class BlankFragment2 extends Fragment {
                             //입력한 값 받아오기
                             String strDate = addDate.getText().toString();      //날짜
                             String strTime = addTime.getText().toString();      //시간
-                            String strposttime = (strDate+" "+strTime + ":00");// xxxx-xx-xx xx:xx:00 형태. 데이터베이스 저장용
-                            String strbankname = bankname.getText().toString(); //은행
+                            String strposttime = (strDate + " " + strTime + ":00");// xxxx-xx-xx xx:xx:00 형태. 데이터베이스 저장용
+                            String strbankname = bankname.getText().toString(); //결제수단
+                            String strtitle = title.getText().toString();       //결제내역
                             String strmoney = money.getText().toString();       //금액
                             intmoney = Integer.parseInt(strmoney);  //입력받은 금액 INT형으로 변환
                             String strdetail = detail.getText().toString();     //메모
-
-                            
-                            /*
-                            
-                            수정
-                            
-                             */
-                            String title = "BlankFragment2";
                             String postTime = format.format(format.parse(strposttime));
 
                             command = new DBcommand(getContext());
-                            command.insertDataInput("", strbankname, null, title, "미정", intmoney, strdetail);
+                            command.insertDataInput(postTime, strbankname, null, strtitle, "미정", intmoney, strdetail);
+                            //수입 리스트 갱신해줌
+                            showDataBase(); // Adapter에 아이템을 넣어주는 함수
 
-
+                            //다이얼로그에서 결제내역, 금액, 메모를 초기화해줌
+                            title.setText(null);
+                            money.setText(null);
+                            detail.setText(null);
                         } catch (Exception e) {
                             e.printStackTrace();
                             Toast.makeText(getContext(), "취소됨", LENGTH_SHORT).show();   //오류 발생 시
                         }
-
-
                     }
                 });
 
-                //취소버튼 클릭 시. 마찬가지로 xml버튼으로 만들어야 함
-                daDialog.setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                //취소 버튼 리스너
+                btndlgneg.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
+                    public void onClick(View view) {
                         Toast.makeText(getContext(), "취소", LENGTH_SHORT).show();
+                        da.dismiss();   //다이얼로그 종료
                     }
                 });
 
-                //이 자리에 삭제 버튼 xml로 추가해야 함
+                //확인 버튼 리스너
+                btndlgpos.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-                daDialog.show();
+                        //null값 허용은 accountnomber, detail.
+                        //title, type을 ""로 받을 것. 이 둘은 notnull
+                        try {
+                            int intmoney;
+                            //입력한 값 받아오기
+                            String strDate = addDate.getText().toString();      //날짜
+                            String strTime = addTime.getText().toString();      //시간
+                            String strposttime = (strDate + " " + strTime + ":00");// xxxx-xx-xx xx:xx:00 형태. 데이터베이스 저장용
+                            String strbankname = bankname.getText().toString(); //결제수단
+                            String strtitle = title.getText().toString();       //결제내역
+                            String strmoney = money.getText().toString();       //금액
+                            intmoney = Integer.parseInt(strmoney);  //입력받은 금액 INT형으로 변환
+                            String strdetail = detail.getText().toString();     //메모
+                            String postTime = format.format(format.parse(strposttime));
+
+                            command = new DBcommand(getContext());
+                            command.insertDataInput(postTime, strbankname, null, strtitle, "미정", intmoney, strdetail);
+                            //수입 리스트 갱신해줌
+                            showDataBase(); // Adapter에 아이템을 넣어주는 함수
+                            da.dismiss();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            Toast.makeText(getContext(), "취소됨", LENGTH_SHORT).show();   //오류 발생 시
+                        }
+                    }
+                });
+
+                //다이얼로그 보여주기
+                da.show();
+                //여기까지
             }
         });
         return viewGroup;
@@ -333,42 +352,57 @@ public class BlankFragment2 extends Fragment {
 
     void dbSelectInput() throws ParseException {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-        int flag = 0;
         int monthtmp = month;
         int yeartmp = year;
         int startday = PreferenceManager.getInt(getContext(), "startDayKey")-1;
-        int i = startday;
         String startLine = yeartmp+"-"+(monthtmp+1)+"-"+(startday+1);
         String lastLine = yeartmp+"-"+(monthtmp+2)+"-"+(startday+1);
         String start = format.format(format.parse(startLine));
         String last = format.format(format.parse(lastLine));
-        //Log.e("TEST", "start : "+start+" last : "+last);
-
+        String lastLine2 = yeartmp+"-"+(monthtmp+2)+"-"+(startday);
+        String last2 = format.format(format.parse(lastLine2));
+        textMonth.setText(start+"~"+last2);
         DBOpenHelper dbOpenHelper = new DBOpenHelper(this.getContext());
         dbOpenHelper.open();
         dbOpenHelper.create();
         Cursor cursor = dbOpenHelper.selectColumnsInput();
-        //Log.e("Cursor", "Cursor : "+cursor.getCount()+"개");
-        int count = 1;
         items.clear();
+        moneyTotal = 0;
         while(cursor.moveToNext()) {
+            int idInt = cursor.getColumnIndex("id");
             int postTimeInt = cursor.getColumnIndex("posttime");
+            int id = cursor.getInt(idInt);
             String postTime = cursor.getString(postTimeInt);
             String date = format.format(format.parse(postTime));
             if(start.compareTo(date) <= 0 && last.compareTo(date) >= 0) {
-                //Log.e("TEST", "postTime : "+postTime+" PostTime이 start보다 크다");
                 int titleInt = cursor.getColumnIndex("title");
                 int moneyInt = cursor.getColumnIndex("money");
                 String title = cursor.getString(titleInt);
                 int money = cursor.getInt(moneyInt);
+                moneyTotal += money;
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    items.add(new SubRecyclerItem(date, LocalTime.parse(postTime.split(" ")[1]), title, money));
+                    items.add(new SubRecyclerItem(id, date, LocalTime.parse(postTime.split(" ")[1]), title, money));
                 }
             }
         }
     }
 
+    // Adapter에 아이템을 넣어주는 함수
+    void showDataBase(){
+        try{
+            dbSelectInput();
+            Collections.reverse(items); // 리스트를 내림차순으로 만들어준다.
+            textTotal.setText(decFormat.format(moneyTotal)+"원");
+            adapter = new Fragment2Adapter(items);
+            recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+            recyclerView.setAdapter(adapter);
+        }catch (ParseException e) {
+            e.printStackTrace();
+        }
+    }
+
     public class SubRecyclerItem{
+        int id;
         String day;
         LocalTime time;
         String title;
@@ -383,7 +417,8 @@ public class BlankFragment2 extends Fragment {
         double getMoney(){
             return this.money;
         }
-        public SubRecyclerItem(String day, LocalTime time, String title, double money){
+        public SubRecyclerItem(int id, String day, LocalTime time, String title, double money){
+            this.id = id;
             this.day = day;
             this.time = time;
             this.title = title;

@@ -1,28 +1,21 @@
-package org.techtown.sampletab;
+package org.techtown.accountbook;
 
 import static android.widget.Toast.LENGTH_LONG;
 import static android.widget.Toast.LENGTH_SHORT;
-import static java.security.AccessController.getContext;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Switch;
 import android.widget.Toast;
-
-import org.w3c.dom.Text;
 
 public class SettingActivity extends AppCompatActivity {
     //뒤로가기 버튼 생성
@@ -51,10 +44,8 @@ public class SettingActivity extends AppCompatActivity {
         TextView dataRestore = (TextView) findViewById(R.id.data_restore);
         Switch warning = (Switch) findViewById(R.id.warning);
         TextView upperLine = (TextView) findViewById(R.id.upper_line);
-        TextView accountManagement = (TextView) findViewById(R.id.account_management);
         Switch passwordUse = (Switch) findViewById(R.id.password_use);
         TextView passwordInput = (TextView) findViewById(R.id.password_input);
-        TextView fontSize = (TextView) findViewById(R.id.font_size);
         //월 시작일 리스너
         monthStart.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -89,7 +80,6 @@ public class SettingActivity extends AppCompatActivity {
                         catch (Exception e){
                             Toast.makeText(SettingActivity.this, "취소됨", LENGTH_SHORT).show();
                         }
-
 
                     }
                 });
@@ -137,15 +127,6 @@ public class SettingActivity extends AppCompatActivity {
             }
         });
 
-        // 계좌 관리 리스너
-        accountManagement.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), AccountManagement.class);
-                startActivity(intent);
-            }
-        });
-
         //비밀번호 사용 리스너
         passwordUse.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -156,14 +137,6 @@ public class SettingActivity extends AppCompatActivity {
 
         //비밀번호 추가 리스너
         passwordInput.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-
-        //폰트 크기 변경 리스너
-        fontSize.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 

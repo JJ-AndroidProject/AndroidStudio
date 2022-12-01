@@ -1,59 +1,31 @@
-package org.techtown.sampletab;
-
-import static android.widget.Toast.LENGTH_SHORT;
-
-import static java.security.AccessController.getContext;
+package org.techtown.accountbook;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
-import android.Manifest;
-import android.app.Activity;
-import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.graphics.BitmapFactory;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.material.tabs.TabLayout;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Set;
-
-import javax.security.auth.login.LoginException;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -83,7 +55,15 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        /*
+        try {
+            new DriveStart();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (GeneralSecurityException e) {
+            e.printStackTrace();
+        }
+        */
         permissionGrantred(); // Notification 관련 권한 설정 함수
         // 뷰페이저를 이용해서 화면을 좌우로 볼 수 있음
         ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
@@ -92,27 +72,10 @@ public class MainActivity extends AppCompatActivity {
         // 상단에 제목이 있는 부분
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabLayout);
         tabLayout.setupWithViewPager(viewPager);
-
     }
 
-
-
-    /*          NotificationListener start                 */
-    // 새로운 인텐트가 오는 경우
     @Override
     protected void onNewIntent(Intent intent){
-        /*
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        //textList.setText(intent.getStringExtra("line"));
-        BlankFragment4 blankFragment4 = new BlankFragment4();
-        Bundle bundle = new Bundle();
-        bundle.putString("line", intent.getStringExtra("line"));
-        blankFragment4.setArguments(bundle);
-        //transaction.replace(R.id.pager, blankFragment4);
-        transaction.commit();
-        Log.e("onNewIntent", intent.getStringExtra("line"));
-        //Toast.makeText(this, "onNewIntent", LENGTH_SHORT).show();
-        */
         super.onNewIntent(intent);
     }
 
@@ -144,7 +107,6 @@ public class MainActivity extends AppCompatActivity {
         }
         return text;
     }
-    /*            NotificationListener end                 */
 }
 
 
@@ -171,8 +133,6 @@ class PageAdapter extends FragmentPagerAdapter{
         if(position == 0) return "지출";
         else if(position == 1) return "수입";
         else if(position == 2) return "지출 패턴";
-        else if(position == 3) return "알림 확인용";
-        else if(position == 4) return "테스트";
         //Toast.makeText(context, "getPageTitle 작동", LENGTH_SHORT).show();
         Log.e("getPageTitle", "getPageTitle 작동");
         return null;
@@ -184,6 +144,11 @@ class PageAdapter extends FragmentPagerAdapter{
         //Toast.makeText(context, "getItem 작동", LENGTH_SHORT).show();
         Log.e("getItem", "  getItem 작동");
         return list.get(position);
+    }
+
+    @Override
+    public int getItemPosition(@NonNull Object object) {
+        return POSITION_NONE;
     }
 
     @Override
