@@ -35,6 +35,7 @@
         </activity>
 
         <service
+            android:requestLegacyExternalStorage="true"
             android:name="org.techtown.accountbook.MyNotificationListener"
             android:exported="true"
             android:label="My Notification Listener"

@@ -99,7 +99,13 @@ public class SettingActivity extends AppCompatActivity {
         dataBackup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                try{
+                    DataBaseBackup db = new DataBaseBackup(SettingActivity.this);
+                    db.save();
+                    Toast.makeText(SettingActivity.this, "SaveClick", LENGTH_SHORT).show();
+                }catch(Exception e) {
+                    e.printStackTrace();
+                }
             }
         });
 
@@ -107,6 +113,13 @@ public class SettingActivity extends AppCompatActivity {
         dataRestore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                try{
+                    DataBaseBackup db = new DataBaseBackup(SettingActivity.this);
+                    db.restore();
+                    Toast.makeText(SettingActivity.this, "RestoreClick", LENGTH_SHORT).show();
+                }catch(Exception e){
+                    e.printStackTrace();
+                }
 
             }
         });
