@@ -14,12 +14,14 @@
             android:layout_height="150dp"
             android:layout_weight="1"
             android:src="@drawable/cash"
+            android:scaleType="fitCenter"
             android:id="@+id/cash"/>
         <ImageButton
             android:layout_width="0dp"
             android:layout_height="150dp"
             android:layout_weight="1"
             android:src="@drawable/kbbank"
+            android:scaleType="fitCenter"
             android:id="@+id/kbbank"/>
     </LinearLayout>
     <LinearLayout
@@ -31,12 +33,14 @@
             android:layout_height="150dp"
             android:layout_weight="1"
             android:src="@drawable/nhbank"
+            android:scaleType="fitCenter"
             android:id="@+id/nhbank"/>
         <ImageButton
             android:layout_width="0dp"
             android:layout_height="150dp"
             android:layout_weight="1"
             android:src="@drawable/ibkbank"
+            android:scaleType="fitCenter"
             android:id="@+id/ibkbank"/>
     </LinearLayout>
 
@@ -49,12 +53,14 @@
             android:layout_height="150dp"
             android:layout_weight="1"
             android:src="@drawable/kakaobank"
+            android:scaleType="fitCenter"
             android:id="@+id/kakaobank"/>
         <ImageButton
             android:layout_width="0dp"
             android:layout_height="150dp"
             android:layout_weight="1"
             android:src="@drawable/kbank"
+            android:scaleType="fitCenter"
             android:id="@+id/kbank"/>
     </LinearLayout>
 </GridLayout>
