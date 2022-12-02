@@ -12,12 +12,15 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Switch;
 import android.widget.Toast;
 
 public class SettingActivity extends AppCompatActivity {
+    public static int isPasswordInput = 0;
     //뒤로가기 버튼 생성
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -46,6 +49,13 @@ public class SettingActivity extends AppCompatActivity {
         TextView upperLine = (TextView) findViewById(R.id.upper_line);
         Switch passwordUse = (Switch) findViewById(R.id.password_use);
         TextView passwordInput = (TextView) findViewById(R.id.password_input);
+        int usePassword = PreferenceManager.getInt(SettingActivity.this, "usePassword");
+        if(usePassword == 1) {  // 비밀번호 사용안할때
+            passwordUse.setChecked(false);
+        }
+        if(usePassword == 0) {  // 비밀번호 사용할때
+            passwordUse.setChecked(true);
+        }
         //월 시작일 리스너
         monthStart.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -123,9 +133,14 @@ public class SettingActivity extends AppCompatActivity {
         });
 
         // 지출 상한 경고 리스너
-        warning.setOnClickListener(new View.OnClickListener() {
+        warning.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onClick(View v) {
+            public void onCheckedChanged(CompoundButton buttomView, boolean isChecked) {
+                if (isChecked){
+
+                }else{
+
+                }
 
             }
         });
@@ -139,18 +154,36 @@ public class SettingActivity extends AppCompatActivity {
         });
 
         //비밀번호 사용 리스너
-        passwordUse.setOnClickListener(new View.OnClickListener() {
+        passwordUse.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onClick(View v) {
+            public void onCheckedChanged(CompoundButton buttomView, boolean isChecked) {
+                if (isChecked){     //활성화 시
+                    PreferenceManager.setInt(SettingActivity.this, "usePassword", 0);
+                    String pw = PreferenceManager.getString(SettingActivity.this,"passwordKey");
+
+                    if(pw.equals("EMPTY")){
+                        isPasswordInput = 1;
+                        Intent intent = new Intent(getApplicationContext(), PasswordActivity.class);
+                        startActivity(intent);
+                    }
+                    passwordInput.setFocusableInTouchMode(true);
+                    passwordInput.setClickable(true);
+                }else{      //비활성화 시
+                    PreferenceManager.setInt(SettingActivity.this, "usePassword", 1);
+                    passwordInput.setFocusableInTouchMode(false);
+                    passwordInput.setClickable(false);
+                }
 
             }
         });
 
-        //비밀번호 추가 리스너
+        //비밀번호 입력 리스너
         passwordInput.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                isPasswordInput = 1;
+                Intent intent = new Intent(getApplicationContext(), PasswordActivity.class);
+                startActivity(intent);
             }
         });
 
