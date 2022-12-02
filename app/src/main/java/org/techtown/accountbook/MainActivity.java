@@ -53,6 +53,15 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //비밀번호 액티비티 시작
+        int usePassword = PreferenceManager.getInt(this, "usePassword");
+
+        if (usePassword == 0){      //조건에 비밀번호 사용 기능 켜져있을 경우를 삽입. SharedPreference사용
+            Intent pwintent = new Intent(this, PasswordActivity.class);
+            startActivity(pwintent);
+        }
+
         /*
         try {
             new DriveStart();
