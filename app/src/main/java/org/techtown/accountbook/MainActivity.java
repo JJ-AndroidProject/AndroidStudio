@@ -62,8 +62,17 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        // 사용자 권한 설정
         folderPermission();
         permissionGrantred(); // Notification 관련 권한 설정 함수
+        
+        //비밀번호 액티비티 시작
+        int usePassword = PreferenceManager.getInt(this, "usePassword");
+        if (usePassword == 0){      //조건에 비밀번호 사용 기능 켜져있을 경우를 삽입. SharedPreference사용
+            Intent pwintent = new Intent(this, PasswordActivity.class);
+            startActivity(pwintent);
+        }
+        
         // 뷰페이저를 이용해서 화면을 좌우로 볼 수 있음
         ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
         PagerAdapter adapter = new PageAdapter(getSupportFragmentManager(), this.getApplicationContext());
