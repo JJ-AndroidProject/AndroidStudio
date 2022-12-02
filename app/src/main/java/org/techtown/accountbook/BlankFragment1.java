@@ -32,10 +32,14 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.DateTimeException;
+import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 public class BlankFragment1 extends Fragment implements OnRefresh {
@@ -222,29 +226,37 @@ public class BlankFragment1 extends Fragment implements OnRefresh {
                 daDialog.setView(dlgView);
                 AlertDialog da = daDialog.create();    // 확인, 취소 클릭 시 다이얼로그를 종료(da.dismiss)시키기 위해 생성
                 //현재 날짜, 시간을 디폴트 값으로 설정.
-                addDate.setText(cal.get(Calendar.YEAR) + "-" + (cal.get(Calendar.MONTH) + 1) + "-" + today);    //날짜 디폴트 값을 당일로 설정
+                LocalDate nowDate = null;
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                    nowDate = LocalDate.now();
+                    addDate.setText(nowDate.toString());    //날짜 디폴트 값을 당일로 설정
+                }
 
                 LocalTime now = null;
                 if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
                     now = LocalTime.now();
-                    int hour = now.getHour();
-                    int minute = now.getMinute();
-                    addTime.setText(hour + ":" + minute);   //시간 디폴트 값을 현재 시간으로 설정
+                    addTime.setText(now.format(formatter));   //시간 디폴트 값을 현재 시간으로 설정
                 }
 
                 //날짜 선택 시 달력에서 날짜 선택할 수 있게 함
                 addDate.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                            LocalDate now = LocalDate.now();
+
                         //데이트피커 다이얼로그 리스너
                         DatePickerDialog.OnDateSetListener myDateSetListener = new DatePickerDialog.OnDateSetListener() {
                             @Override
                             public void onDateSet(DatePicker datePicker, int yy, int mm, int dd) {
-                                addDate.setText(String.format("%d-%d-%d", yy, mm+1, dd)); // xxxx-xx-xx 형태로 표기&저장
+                                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                                addDate.setText(now.toString()); // xxxx-xx-xx 형태로 표기&저장
                             }
                         };
                         //날짜 표기된 텍스트뷰를 클릭하면 날짜 선택 다이얼로그를 띄워줌
                         new DatePickerDialog(getContext(), myDateSetListener, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), today).show();
+                        }
                     }
                 });
 
@@ -252,12 +264,15 @@ public class BlankFragment1 extends Fragment implements OnRefresh {
                 addTime.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-
                         //타임피커 다이얼로그 리스너
                         TimePickerDialog.OnTimeSetListener myTimeSetListener = new TimePickerDialog.OnTimeSetListener() {
                             @Override
                             public void onTimeSet(TimePicker timePicker, int h, int m) {
-                                addTime.setText(h + ":" + m);   // xx:xx (시간:분) 형태로 표기&저장
+                                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+                                    LocalTime time = LocalTime.of(h, m);
+                                    addTime.setText(time.format(formatter));   // xx:xx (시간:분) 형태로 표기&저장
+                                }
                             }
                         };
 
@@ -405,15 +420,13 @@ public class BlankFragment1 extends Fragment implements OnRefresh {
                             //입력한 값 받아오기
                             String strDate = addDate.getText().toString();      //날짜
                             String strTime = addTime.getText().toString();      //시간
-                            String strposttime = (strDate+" "+strTime + ":00");// xxxx-xx-xx xx:xx:00 형태. 데이터베이스 저장용
+                            String strposttime = (strDate+" "+strTime+":01");// xxxx-xx-xx xx:xx:00 형태. 데이터베이스 저장용
                             String strbankname = bankname.getText().toString(); //결제수단
                             String strtitle = title.getText().toString();
                             String strmoney = money.getText().toString();       //금액
                             intmoney = Integer.parseInt(strmoney);  //입력받은 금액 INT형으로 변환
                             String strdetail = detail.getText().toString();     //메모
-
                             String postTime = format.format(format.parse(strposttime));
-
 
                             command.insertDataOutput(postTime, strbankname, null, strtitle, "미정", intmoney, strdetail);
                             showDataBase(); // Adapter에 아이템을 넣어주는 함수
@@ -464,7 +477,6 @@ public class BlankFragment1 extends Fragment implements OnRefresh {
                 String bank = cursor.getString(bankInt);
                 String title = cursor.getString(titleInt);
                 int money = cursor.getInt(moneyInt);
-
                 if(cursor.getString(moveInt) != null) {
                     String move = cursor.getString(moveInt);
                     if (move.equals("계좌이동")) {

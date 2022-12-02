@@ -31,7 +31,9 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -143,14 +145,17 @@ public class BlankFragment2 extends Fragment implements OnAdapterRefresh{
                 daDialog.setView(dlgView);
                 AlertDialog da = daDialog.create();    // 확인, 취소 클릭 시 다이얼로그를 종료(da.dismiss)시키기 위해 생성
                 //현재 날짜, 시간을 디폴트 값으로 설정.
-                addDate.setText(cal.get(Calendar.YEAR) + "-" + (cal.get(Calendar.MONTH) + 1) + "-" + today);    //날짜 디폴트 값을 당일로 설정
+                LocalDate nowDate = null;
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                    nowDate = LocalDate.now();
+                    addDate.setText(nowDate.toString());    //날짜 디폴트 값을 당일로 설정
+                }
 
                 LocalTime now = null;
                 if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
                     now = LocalTime.now();
-                    int hour = now.getHour();
-                    int minute = now.getMinute();
-                    addTime.setText(hour + ":" + minute);   //시간 디폴트 값을 현재 시간으로 설정
+                    addTime.setText(now.format(formatter));   //시간 디폴트 값을 현재 시간으로 설정
                 }
 
                 //날짜 선택 시 달력에서 날짜 선택할 수 있게 함
@@ -179,7 +184,11 @@ public class BlankFragment2 extends Fragment implements OnAdapterRefresh{
                         TimePickerDialog.OnTimeSetListener myTimeSetListener = new TimePickerDialog.OnTimeSetListener() {
                             @Override
                             public void onTimeSet(TimePicker timePicker, int h, int m) {
-                                addTime.setText(h + ":" + m);   // xx:xx (시간:분) 형태로 표기&저장
+                                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+                                    LocalTime time = LocalTime.of(h, m);
+                                    addTime.setText(time.format(formatter));   // xx:xx (시간:분) 형태로 표기&저장
+                                }
                             }
                         };
 
