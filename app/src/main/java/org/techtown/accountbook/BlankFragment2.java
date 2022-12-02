@@ -83,6 +83,14 @@ public class BlankFragment2 extends Fragment implements OnAdapterRefresh{
         recyclerView = (RecyclerView) viewGroup.findViewById(R.id.recyclerView2);
         showDataBase(); // Adapter에 아이템을 넣어주는 함수
 
+        datetext.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showDataBase();
+                Log.e("dateText", "refresh");
+            }
+        });
+
         //before, after버튼에 리스너 달기
         btn_before.setOnClickListener(new View.OnClickListener() {
             @Override

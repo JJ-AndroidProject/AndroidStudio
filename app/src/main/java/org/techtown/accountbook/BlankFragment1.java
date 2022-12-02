@@ -82,7 +82,7 @@ public class BlankFragment1 extends Fragment implements OnRefresh {
         recyclerView = (RecyclerView) viewGroup.findViewById(R.id.recyclerView);
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         list.clear();
-
+        DBcommand command = new DBcommand(getContext());
         int flag = 0;
         int monthtmp = month;
         int yeartmp = year;
@@ -109,6 +109,14 @@ public class BlankFragment1 extends Fragment implements OnRefresh {
         }
         showDataBase(); // Adapter에 아이템을 넣어주는 함수
         Collections.reverse(list); // 리스트를 내림차순으로 만들어준다.
+
+        datetext.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showDataBase();
+                Log.e("dateText", "refresh");
+            }
+        });
 
         //before, after버튼에 리스너 달기
         btn_before.setOnClickListener(new View.OnClickListener() {
@@ -361,7 +369,6 @@ public class BlankFragment1 extends Fragment implements OnRefresh {
 
                             String postTime = format.format(format.parse(strposttime));
 
-                            DBcommand command = new DBcommand(getContext());
                             command.insertDataOutput(postTime, strbankname, null, strtitle, "미정", intmoney, strdetail);
                             showDataBase(); // Adapter에 아이템을 넣어주는 함수
 
@@ -407,7 +414,7 @@ public class BlankFragment1 extends Fragment implements OnRefresh {
 
                             String postTime = format.format(format.parse(strposttime));
 
-                            DBcommand command = new DBcommand(getContext());
+
                             command.insertDataOutput(postTime, strbankname, null, strtitle, "미정", intmoney, strdetail);
                             showDataBase(); // Adapter에 아이템을 넣어주는 함수
                             da.dismiss();   //다이얼로그 종료

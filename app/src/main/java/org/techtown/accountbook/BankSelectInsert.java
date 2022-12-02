@@ -2,9 +2,12 @@ package org.techtown.accountbook;
 
 import android.app.Notification;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.service.notification.StatusBarNotification;
 import android.util.Log;
+
+import org.w3c.dom.Text;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -53,23 +56,23 @@ public class BankSelectInsert {
         }
     }
 
-    /*
-    PackageName : com.nh.mobilenoti
-    Id : 12
-    PostTime : 2022-11-03 15:14:07
-    Title : NH스마트알림
-    Text : 농협 출금50원
-    11/03 15:14 302-****-7764-41 김종원 잔액230,356원
-    SubText : null
+    // MainActivity로 인텐트를 보내는 함수
+    private void sendToActivity(Context context, int flag){
+        Intent intent = new Intent(context, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP|Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        // intent에 담을 데이터의 키 값과 데이터
+        intent.putExtra("flag", flag);
+        //Log.e("SendToActivity", line);
+        context.startActivity(intent); // Intent에 데이터를 담은 뒤 Activity에 보낸다.
+        //Toast.makeText(context, "SendToActivity", Toast.LENGTH_SHORT).show();
+    }
+/*
+농협 출금50원
+11/03 15:14 302-****-7764-41 김종원 잔액230,356원
 
-    PackageName : com.nh.mobilenoti
-    Id : 1
-    PostTime : 2022-11-11 21:49:36
-    Title : NH스마트알림
-    Text : 농협 입금30원
-    11/11 21:49 302-****-7764-41 김종원 잔액479,337원
-    SubText : null
-    */
+농협 입금30원
+11/11 21:49 302-****-7764-41 김종원 잔액479,337원
+*/
     // 안드로이드 스튜디오 메시지 테스트 용도
     private void messaging(StatusBarNotification sbn){
         Bundle extras = sbn.getNotification().extras;
@@ -93,11 +96,13 @@ public class BankSelectInsert {
             command.insertDataOutput(postTime, bank, account, title, "미정", money, subText); // output 테이블에 데이터를 저장
             messages = new NotificationMessages(context, title, bank+"(출금) : "+decFormat.format(money)); // 상단에 알림을 보내주는 클래스
             command.selectCount();
+            sendToActivity(context, 1); // MainActivity로 신호를 보내는 함수
             Log.e("Message", bank+"(출금) : "+title+" "+account+" "+decFormat.format(money));
         }else if(text.contains("입금")){
             command.insertDataInput(postTime, bank, account, title, "미정", money, subText);
             messages = new NotificationMessages(context, title, bank+"(입금) : "+decFormat.format(money));
             command.selectCount();
+            sendToActivity(context, 1); // MainActivity로 신호를 보내는 함수
             Log.e("Message", bank+"(입금) : "+title+" "+account+" "+decFormat.format(money));
         }
     }
