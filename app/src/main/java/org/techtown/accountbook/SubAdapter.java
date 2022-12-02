@@ -32,10 +32,12 @@ public class SubAdapter extends RecyclerView.Adapter<SubAdapter.ViewHolder> {
     Context context;
     private List<BlankFragment1.SubRecyclerItem> items;
     private ArrayList<String> list = new ArrayList<String>();
+    private OnAdapterRefresh mCallback;
 
 
-    public SubAdapter(List<BlankFragment1.SubRecyclerItem> items){
+    public SubAdapter(List<BlankFragment1.SubRecyclerItem> items, OnAdapterRefresh listener){
         this.items = items;
+        this.mCallback = listener;
     }
 
     @NonNull
@@ -55,6 +57,7 @@ public class SubAdapter extends RecyclerView.Adapter<SubAdapter.ViewHolder> {
             time = items.get(position).time.format(DateTimeFormatter.ofPattern("HH:mm"));
         }
         holder.timeText.setText(time);
+        holder.bankText.setText(items.get(position).bank);
         holder.titleText.setText(items.get(position).title);
         holder.moneyText.setText(decFormat.format((int)items.get(position).money)+"원");
 
@@ -124,7 +127,6 @@ public class SubAdapter extends RecyclerView.Adapter<SubAdapter.ViewHolder> {
                                     Integer.parseInt(divtime[0]), Integer.parseInt(divtime[1]), true);
                             picker.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
                             picker.show();
-
                         }
                     });
 
@@ -218,6 +220,7 @@ public class SubAdapter extends RecyclerView.Adapter<SubAdapter.ViewHolder> {
                             dbOpenHelper.deleteColumn(Long.parseLong(list.get(0)), "output");
                             Toast.makeText(context, "삭제", LENGTH_SHORT).show();
                             da.dismiss();   //다이얼로그 종료
+                            mCallback.adaterRefresh();
                         }
                     });
 
@@ -227,6 +230,7 @@ public class SubAdapter extends RecyclerView.Adapter<SubAdapter.ViewHolder> {
                         public void onClick(View view) {
                             Toast.makeText(context, "취소", LENGTH_SHORT).show();
                             da.dismiss();   //다이얼로그 종료
+
                         }
                     });
 
@@ -270,7 +274,6 @@ public class SubAdapter extends RecyclerView.Adapter<SubAdapter.ViewHolder> {
                             }
                         }
                     });
-
                     //다이얼로그 보여주기
                     da.show();
                 }catch(Exception e){
@@ -290,12 +293,14 @@ public class SubAdapter extends RecyclerView.Adapter<SubAdapter.ViewHolder> {
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView timeText;
+        TextView bankText;
         TextView titleText;
         TextView moneyText;
         LinearLayout linearLayout;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             timeText = itemView.findViewById(R.id.SubTimeText);
+            bankText = itemView.findViewById(R.id.SubBankText);
             titleText = itemView.findViewById(R.id.SubTitleText);
             moneyText = itemView.findViewById(R.id.SubMoneyText);
             linearLayout = itemView.findViewById(R.id.linearLayout2);
