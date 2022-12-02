@@ -26,7 +26,7 @@ public class DataBaseBackup {
         File sd = Environment.getExternalStorageDirectory();
         File data = Environment.getDataDirectory();
         if (sd.canWrite()) {
-            String currentDBPath ="//data/org.techtown.accountbook//databases//accountBook.db";  // 경로 수정 필요
+            String currentDBPath ="//data//org.techtown.accountbook//databases//accountBook.db";  // 경로 수정 필요
             String backupDBPath = "//Download//accountBook.db";
             File currentDB = new File(data, currentDBPath);
             File backupDB = new File(sd, backupDBPath);

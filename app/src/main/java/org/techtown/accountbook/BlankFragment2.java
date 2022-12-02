@@ -39,7 +39,7 @@ import java.util.List;
 
 // 수입 부분에 대한 어댑터 생성 필요
 
-public class BlankFragment2 extends Fragment {
+public class BlankFragment2 extends Fragment implements OnAdapterRefresh{
     DecimalFormat decFormat = new DecimalFormat("###,###");
     //현재 연도, 달, 그 달의 마지막 날짜를 받는다.
     private int moneyTotal = 0;
@@ -374,14 +374,23 @@ public class BlankFragment2 extends Fragment {
             int id = cursor.getInt(idInt);
             String postTime = cursor.getString(postTimeInt);
             String date = format.format(format.parse(postTime));
-            if(start.compareTo(date) <= 0 && last.compareTo(date) >= 0) {
+            if(start.compareTo(date) <= 0 && last.compareTo(date) > 0) {
                 int titleInt = cursor.getColumnIndex("title");
                 int moneyInt = cursor.getColumnIndex("money");
+                int bankInt = cursor.getColumnIndex("bankname");
+                int moveInt = cursor.getColumnIndex("move");
+                String bank = cursor.getString(bankInt);
                 String title = cursor.getString(titleInt);
                 int money = cursor.getInt(moneyInt);
-                moneyTotal += money;
+                if(cursor.getString(moveInt) != null) {
+                    String move = cursor.getString(moveInt);
+                    if (move.equals("계좌이동")) {
+                        Log.e("BlankFragment2", "계좌이동");
+                        bank = "계좌이동";
+                    }
+                }else moneyTotal += money;
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    items.add(new SubRecyclerItem(id, date, LocalTime.parse(postTime.split(" ")[1]), title, money));
+                    items.add(new SubRecyclerItem(id, date, LocalTime.parse(postTime.split(" ")[1]), bank, title, money));
                 }
             }
         }
@@ -393,7 +402,7 @@ public class BlankFragment2 extends Fragment {
             dbSelectInput();
             Collections.reverse(items); // 리스트를 내림차순으로 만들어준다.
             textTotal.setText(decFormat.format(moneyTotal)+"원");
-            adapter = new Fragment2Adapter(items);
+            adapter = new Fragment2Adapter(items, this);
             recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
             recyclerView.setAdapter(adapter);
         }catch (ParseException e) {
@@ -401,26 +410,38 @@ public class BlankFragment2 extends Fragment {
         }
     }
 
+    // 화면을 갱신해주는 함수
+    @Override
+    public void adaterRefresh() {
+        showDataBase();
+        Log.e("BlankFragment2", "BlankFragment2 refresh()");
+    }
+
     public class SubRecyclerItem{
         int id;
         String day;
         LocalTime time;
+        String bank;
         String title;
         double money;
         String getDay(){
             return this.day;
         }
         LocalTime getTime(){return this.time;}
+        String getBank(){
+            return this.bank;
+        }
         String getTitle(){
             return this.title;
         }
         double getMoney(){
             return this.money;
         }
-        public SubRecyclerItem(int id, String day, LocalTime time, String title, double money){
+        public SubRecyclerItem(int id, String day, LocalTime time, String bank, String title, double money){
             this.id = id;
             this.day = day;
             this.time = time;
+            this.bank = bank;
             this.title = title;
             this.money = money;
         }

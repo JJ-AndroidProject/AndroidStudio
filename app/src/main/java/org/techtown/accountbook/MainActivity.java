@@ -6,6 +6,7 @@ import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
@@ -132,6 +133,8 @@ class PageAdapter extends FragmentPagerAdapter{
         //Toast.makeText(context, "PageAdapter 작동", LENGTH_SHORT).show();
         Log.e("PageAdapter", "PageAdapter 작동");
     }
+
+
 
     // 탭 레이아웃에 있는 제목을 보여줌
     @NonNull
