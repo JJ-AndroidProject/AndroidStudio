@@ -90,7 +90,7 @@ public class BlankFragment3 extends Fragment {
 
 
             Description description = new Description();
-            description.setText("현재 수입 지출"); //라벨
+            description.setText("지출 분포"); //라벨
             description.setTextSize(23);
             description.setEnabled(true);
             pieChart.setDescription(description);
