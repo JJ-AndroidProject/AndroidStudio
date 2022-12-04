@@ -24,7 +24,6 @@ public class DBOpenHelper {
     private Context context;
 
     private class DatabaseHelper extends SQLiteOpenHelper {
-
         public DatabaseHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
             super(context, name, factory, version);
         }
@@ -155,6 +154,7 @@ class DBcommand{
         dbOpenHelper.open();
         dbOpenHelper.create();
     }
+
 
     // output 테이블에 데이터를 추가하는 부분(데이터가 제대로 들어 갔는지 로그로 확인)
     void insertDataOutput(String posttime, String bankname, String accountnumber, String title, String type, int money, String detail){

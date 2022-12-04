@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -87,6 +88,8 @@
             android:gravity="center"
             android:text="결제내역" />
         <EditText
+            android:imeOptions="actionNext"
+            android:singleLine="true"
             android:layout_weight="4"
             android:id="@+id/add_title"
             android:layout_width="0dp"
@@ -109,6 +112,8 @@
             android:gravity="center"
             android:text="금액" />
         <EditText
+            android:imeOptions="actionNext"
+            android:singleLine="true"
             android:layout_weight="4"
             android:id="@+id/add_money"
             android:layout_width="0dp"
@@ -138,6 +143,8 @@
             android:gravity="center"
             android:text="메모" />
         <EditText
+            android:imeOptions="actionDone"
+            android:singleLine="true"
             android:layout_weight="4"
             android:id="@+id/add_detail"
             android:layout_width="0dp"
