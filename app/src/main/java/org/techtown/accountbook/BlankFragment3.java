@@ -81,7 +81,7 @@ public class BlankFragment3 extends Fragment {
         pieChart.setDescription(description);
 
         Legend legend = pieChart.getLegend(); //하단 설명
-        legend.setEnabled(true); //커밋 수정
+        legend.setEnabled(true); //
         legend.setTextColor(Color.BLACK);
         legend.setTextSize(15);
         legend.setForm(Legend.LegendForm.SQUARE);
