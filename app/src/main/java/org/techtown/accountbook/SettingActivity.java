@@ -88,7 +88,7 @@ public class SettingActivity extends AppCompatActivity {
                             }
                         }
                         catch (Exception e){
-                            Toast.makeText(SettingActivity.this, "취소됨", LENGTH_SHORT).show();
+                            Toast.makeText(SettingActivity.this, "월 시작일을 입력해 주세요", LENGTH_SHORT).show();
                         }
 
                     }
@@ -96,7 +96,7 @@ public class SettingActivity extends AppCompatActivity {
                 msDialog.setNegativeButton("취소", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        Toast.makeText(SettingActivity.this, "취소", LENGTH_SHORT).show();
+
                     }
                 });
                 msDialog.show();

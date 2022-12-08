@@ -228,7 +228,7 @@ public class Fragment2Adapter extends RecyclerView.Adapter<Fragment2Adapter.View
                                 dbOpenHelper.open();
                                 dbOpenHelper.create();
                                 dbOpenHelper.deleteColumn(Long.parseLong(list.get(0)), "input");
-                                Toast.makeText(context, "삭제", LENGTH_SHORT).show();
+                                Toast.makeText(context, "삭제가 완료되었습니다", LENGTH_SHORT).show();
                                 da.dismiss();   //다이얼로그 종료
                                 mCallback.adaterRefresh();
                             }
@@ -238,7 +238,7 @@ public class Fragment2Adapter extends RecyclerView.Adapter<Fragment2Adapter.View
                         btndlgneg.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                Toast.makeText(context, "취소", LENGTH_SHORT).show();
+                                //Toast.makeText(getContext(), "취소", LENGTH_SHORT).show();
                                 da.dismiss();   //다이얼로그 종료
                             }
                         });
@@ -265,7 +265,6 @@ public class Fragment2Adapter extends RecyclerView.Adapter<Fragment2Adapter.View
 
                                     String postTime = format.format(format.parse(strposttime));
 
-                                    //이부분을 입력이 아니라 수정으로 바꿔주시면 되겠습니다
                                     DBcommand command = new DBcommand(context);
                                     list.set(1, postTime);
                                     list.set(2, strbankname);
@@ -280,7 +279,7 @@ public class Fragment2Adapter extends RecyclerView.Adapter<Fragment2Adapter.View
                                     da.dismiss();   //다이얼로그 종료
                                 } catch (Exception e) {
                                     e.printStackTrace();
-                                    Toast.makeText(context, "취소됨", LENGTH_SHORT).show();   //오류 발생 시
+                                    Toast.makeText(context, "결제내역과 금액은 필수 입력 사항입니다.", LENGTH_SHORT).show();   //오류 발생 시
                                 }
                             }
                         });
@@ -289,6 +288,7 @@ public class Fragment2Adapter extends RecyclerView.Adapter<Fragment2Adapter.View
                         da.show();
                     }catch(Exception e) {
                         e.printStackTrace();
+                        Toast.makeText(context, "Error", LENGTH_SHORT).show();
                     }
                 }
             });
