@@ -31,20 +31,6 @@ public class PasswordActivity extends AppCompatActivity {
         pw_3 = (EditText) findViewById(R.id.pw3);
         pw_4 = (EditText) findViewById(R.id.pw4);
 
-        //edittext 클릭 불가능하게
-
-        pw_1.setClickable(false);
-        pw_2.setClickable(false);
-        pw_3.setClickable(false);
-        pw_4.setClickable(false);
-        /*
-        pw_1.setFocusableInTouchMode(false);
-        pw_2.setFocusableInTouchMode(false);
-        pw_3.setFocusableInTouchMode(false);
-        pw_4.setFocusableInTouchMode(false);
-
-
-         */
 
         //액티비티가 켜질 시 키보드 보여줌
         pw_1.postDelayed(new Runnable() {
@@ -148,7 +134,7 @@ public class PasswordActivity extends AppCompatActivity {
                             }else{      //비밀번호가 틀렸다면
                                 Toast toast = Toast.makeText(PasswordActivity.this,
                                         "비밀번호가 틀렸습니다", Toast.LENGTH_SHORT);
-                                toast.setGravity(Gravity.TOP, 100, 100);
+                                toast.setGravity(Gravity.CENTER, 0, 0);
                                 toast.show();
 
                                 //커서 옮겨줌
@@ -230,72 +216,6 @@ public class PasswordActivity extends AppCompatActivity {
     }
 
 
-/*
-    public void isEqualPw(){
-        String inputPw = pw_1.getText().toString() + pw_2.getText().toString()
-                + pw_3.getText().toString() + pw_4.getText().toString();
-
-        String pw = PreferenceManager.getString(PasswordActivity.this, "passwordKey");
-
-        if(SettingActivity.isPasswordInput == 0){       // 비밀번호 기능을 사용하는 경우
-
-            //비밀번호가 맞았다면
-            if(inputPw.equals(pw)){
-                finish();
-            }else{      //비밀번호가 틀렸다면
-                try {
-                    //커서 옮겨줌
-                    pw_1.requestFocus();
-                    //입력했던 비밀번호 초기화
-                    pw_1.setText(null);
-                    pw_2.setText(null);
-                    pw_3.setText(null);
-
-                    manager.showSoftInput(pw_1, InputMethodManager.SHOW_IMPLICIT);
-
-                }
-                catch(Exception e){
-
-                }
-            }
-        }else if(SettingActivity.isPasswordInput == 1){     //비밀번호를 입력받는 경우
-
-            PreferenceManager.setString(PasswordActivity.this, "passwordKey", inputPw);
-            Toast.makeText(PasswordActivity.this, "비밀번호가 저장되었습니다",
-                    Toast.LENGTH_SHORT).show();
-            SettingActivity.isPasswordInput = 0;
-            finish();
-        }
-    }
-
- */
-    /*
-    private TextWatcher textWatcher = new TextWatcher() {
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            // 입력하기 전에 조치
-        }
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
-            // 입력난에 변화가 있을 시 조치
-
-            try {
-                int iS = Integer.parseInt(s.toString());
-                if (iS < 10 && iS >= 0){
-                    Toast.makeText(PasswordActivity.this, s, Toast.LENGTH_SHORT).show();
-                }
-            }catch (Exception e){
-
-            }
-
-        }
-
-        @Override
-        public void afterTextChanged(Editable editable) {
-
-        }
-
-    };
-
-     */
     @Override
     public void onBackPressed() {
         //뒤로가기 버튼으로 액티비티 종료되는 것 방지

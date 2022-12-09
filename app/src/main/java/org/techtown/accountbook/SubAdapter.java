@@ -228,7 +228,7 @@ public class SubAdapter extends RecyclerView.Adapter<SubAdapter.ViewHolder> {
                             dbOpenHelper.open();
                             dbOpenHelper.create();
                             dbOpenHelper.deleteColumn(Long.parseLong(list.get(0)), "output");
-                            Toast.makeText(context, "삭제", LENGTH_SHORT).show();
+                            Toast.makeText(context, "삭제가 완료되었습니다", LENGTH_SHORT).show();
                             da.dismiss();   //다이얼로그 종료
                             mCallback.adaterRefresh();
                         }
@@ -238,7 +238,7 @@ public class SubAdapter extends RecyclerView.Adapter<SubAdapter.ViewHolder> {
                     btndlgneg.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            Toast.makeText(context, "취소", LENGTH_SHORT).show();
+                            //Toast.makeText(getContext(), "취소", LENGTH_SHORT).show();
                             da.dismiss();   //다이얼로그 종료
 
                         }
@@ -280,7 +280,7 @@ public class SubAdapter extends RecyclerView.Adapter<SubAdapter.ViewHolder> {
                                 da.dismiss();   //다이얼로그 종료
                             } catch (Exception e) {
                                 e.printStackTrace();
-                                Toast.makeText(context, "취소됨", LENGTH_SHORT).show();   //오류 발생 시
+                                Toast.makeText(context, "결제내역과 금액은 필수 입력 사항입니다.", LENGTH_SHORT).show();   //오류 발생 시
                             }
                         }
                     });

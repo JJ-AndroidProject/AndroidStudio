@@ -312,7 +312,7 @@ public class BlankFragment2 extends Fragment implements OnAdapterRefresh{
                             detail.setText(null);
                         } catch (Exception e) {
                             e.printStackTrace();
-                            Toast.makeText(getContext(), "취소됨", LENGTH_SHORT).show();   //오류 발생 시
+                            Toast.makeText(getContext(), "결제내역과 금액은 필수 입력 사항입니다.", LENGTH_SHORT).show();   //오류 발생 시
                         }
                     }
                 });
@@ -321,7 +321,7 @@ public class BlankFragment2 extends Fragment implements OnAdapterRefresh{
                 btndlgneg.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Toast.makeText(getContext(), "취소", LENGTH_SHORT).show();
+                        //Toast.makeText(getContext(), "취소", LENGTH_SHORT).show();
                         da.dismiss();   //다이얼로그 종료
                     }
                 });
@@ -354,7 +354,7 @@ public class BlankFragment2 extends Fragment implements OnAdapterRefresh{
                             da.dismiss();
                         } catch (Exception e) {
                             e.printStackTrace();
-                            Toast.makeText(getContext(), "취소됨", LENGTH_SHORT).show();   //오류 발생 시
+                            Toast.makeText(getContext(), "결제내역과 금액은 필수 입력 사항입니다.", LENGTH_SHORT).show();   //오류 발생 시
                         }
                     }
                 });
