@@ -43,8 +43,10 @@ public class DBOpenHelper {
                     "money integer not null , " +
                     "detail text);";
             db.execSQL(outputTable);
-            // 수입 테이블
+
             //db.execSQL("DROP TABLE IF EXISTS input");
+
+            // 수입 테이블
             String inputTable = "create table if not exists input(" +
                     "id integer primary key autoincrement," +
                     "posttime text not null ," +
