@@ -81,12 +81,12 @@ public class BlankFragment3 extends Fragment {
             pieChart.setTransparentCircleRadius(61f);
             pieChart.setNoDataText("현재 지출이 아무것도 없습니다.");
 
-            pie.add(new PieEntry(140, "aasfasdg"));
-            pie.add(new PieEntry(204, "basgdasdg"));
-            pie.add(new PieEntry(440, "cqweasd"));
-            pie.add(new PieEntry(340, "dasdsad"));
-            pie.add(new PieEntry(510, "fgasdg"));
-            pie.add(new PieEntry(630, "gqwqwwq"));
+            pie.add(new PieEntry(140, "기타"));
+            pie.add(new PieEntry(204, "교통비"));
+            pie.add(new PieEntry(440, "유흥비"));
+            pie.add(new PieEntry(340, "저축"));
+            pie.add(new PieEntry(510, "문화생활비"));
+            pie.add(new PieEntry(630, "식비"));
 
 
             Description description = new Description();
