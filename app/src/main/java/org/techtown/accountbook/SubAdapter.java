@@ -5,6 +5,8 @@ import static android.widget.Toast.LENGTH_SHORT;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.os.Build;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +26,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoField;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,10 +35,12 @@ public class SubAdapter extends RecyclerView.Adapter<SubAdapter.ViewHolder> {
     Context context;
     private List<BlankFragment1.SubRecyclerItem> items;
     private ArrayList<String> list = new ArrayList<String>();
+    private OnAdapterRefresh mCallback;
 
 
-    public SubAdapter(List<BlankFragment1.SubRecyclerItem> items){
+    public SubAdapter(List<BlankFragment1.SubRecyclerItem> items, OnAdapterRefresh listener){
         this.items = items;
+        this.mCallback = listener;
     }
 
     @NonNull
@@ -55,6 +60,7 @@ public class SubAdapter extends RecyclerView.Adapter<SubAdapter.ViewHolder> {
             time = items.get(position).time.format(DateTimeFormatter.ofPattern("HH:mm"));
         }
         holder.timeText.setText(time);
+        holder.bankText.setText(items.get(position).bank);
         holder.titleText.setText(items.get(position).title);
         holder.moneyText.setText(decFormat.format((int)items.get(position).money)+"원");
 
@@ -101,32 +107,38 @@ public class SubAdapter extends RecyclerView.Adapter<SubAdapter.ViewHolder> {
                                     Integer.parseInt(divdate[0]), Integer.parseInt(divdate[1])-1, Integer.parseInt(divdate[2])).show();
                         }
                     });
-
-                    String strTime = items.get(position).getTime()+":00";      //시간 넣어주세용
-                    addTime.setText(strTime);
-
-                    String[] divtime = strTime.split(":");
-                    //시간 선택 시 스피너로 시간 선택할 수 있게 함
-                    addTime.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-
-                            //타임피커 다이얼로그 리스너
-                            TimePickerDialog.OnTimeSetListener myTimeSetListener = new TimePickerDialog.OnTimeSetListener() {
-                                @Override
-                                public void onTimeSet(TimePicker timePicker, int h, int m) {
-                                    addTime.setText(h + ":" + m);   // xx:xx (시간:분) 형태로 표기&저장
-                                }
-                            };
-
-                            //시간 표기된 텍스트뷰를 클릭하면 시간 선택 다이얼로그를 띄워줌
-                            TimePickerDialog picker = new TimePickerDialog(context, android.R.style.Theme_Holo_Light_NoActionBar, myTimeSetListener,
-                                    Integer.parseInt(divtime[0]), Integer.parseInt(divtime[1]), true);
-                            picker.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-                            picker.show();
-
+                    Log.e("TEST",items.get(position).getTime()+"");
+                    String strTime;
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        if(items.get(position).getTime().get(ChronoField.SECOND_OF_MINUTE) == 0){
+                            strTime = items.get(position).getTime()+":00";      //시간 넣어주세용
+                            addTime.setText(strTime);
+                        }else{
+                            strTime = items.get(position).getTime()+"";      //시간 넣어주세용
+                            addTime.setText(strTime);
                         }
-                    });
+                        String[] divtime = strTime.split(":");
+                        //시간 선택 시 스피너로 시간 선택할 수 있게 함
+                        addTime.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+
+                                //타임피커 다이얼로그 리스너
+                                TimePickerDialog.OnTimeSetListener myTimeSetListener = new TimePickerDialog.OnTimeSetListener() {
+                                    @Override
+                                    public void onTimeSet(TimePicker timePicker, int h, int m) {
+                                        addTime.setText(h + ":" + m);   // xx:xx (시간:분) 형태로 표기&저장
+                                    }
+                                };
+
+                                //시간 표기된 텍스트뷰를 클릭하면 시간 선택 다이얼로그를 띄워줌
+                                TimePickerDialog picker = new TimePickerDialog(context, android.R.style.Theme_Holo_Light_NoActionBar, myTimeSetListener,
+                                        Integer.parseInt(divtime[0]), Integer.parseInt(divtime[1]), true);
+                                picker.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+                                picker.show();
+                            }
+                        });
+                    }
 
                     String bankName = list.get(2);       //결제수단 넣어주세용
                     bankname.setText(bankName);
@@ -216,8 +228,9 @@ public class SubAdapter extends RecyclerView.Adapter<SubAdapter.ViewHolder> {
                             dbOpenHelper.open();
                             dbOpenHelper.create();
                             dbOpenHelper.deleteColumn(Long.parseLong(list.get(0)), "output");
-                            Toast.makeText(context, "삭제", LENGTH_SHORT).show();
+                            Toast.makeText(context, "삭제가 완료되었습니다", LENGTH_SHORT).show();
                             da.dismiss();   //다이얼로그 종료
+                            mCallback.adaterRefresh();
                         }
                     });
 
@@ -225,8 +238,9 @@ public class SubAdapter extends RecyclerView.Adapter<SubAdapter.ViewHolder> {
                     btndlgneg.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            Toast.makeText(context, "취소", LENGTH_SHORT).show();
+                            //Toast.makeText(getContext(), "취소", LENGTH_SHORT).show();
                             da.dismiss();   //다이얼로그 종료
+
                         }
                     });
 
@@ -266,11 +280,10 @@ public class SubAdapter extends RecyclerView.Adapter<SubAdapter.ViewHolder> {
                                 da.dismiss();   //다이얼로그 종료
                             } catch (Exception e) {
                                 e.printStackTrace();
-                                Toast.makeText(context, "취소됨", LENGTH_SHORT).show();   //오류 발생 시
+                                Toast.makeText(context, "결제내역과 금액은 필수 입력 사항입니다.", LENGTH_SHORT).show();   //오류 발생 시
                             }
                         }
                     });
-
                     //다이얼로그 보여주기
                     da.show();
                 }catch(Exception e){
@@ -290,12 +303,14 @@ public class SubAdapter extends RecyclerView.Adapter<SubAdapter.ViewHolder> {
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView timeText;
+        TextView bankText;
         TextView titleText;
         TextView moneyText;
         LinearLayout linearLayout;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             timeText = itemView.findViewById(R.id.SubTimeText);
+            bankText = itemView.findViewById(R.id.SubBankText);
             titleText = itemView.findViewById(R.id.SubTitleText);
             moneyText = itemView.findViewById(R.id.SubMoneyText);
             linearLayout = itemView.findViewById(R.id.linearLayout2);
